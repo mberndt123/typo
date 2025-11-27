@@ -37,7 +37,7 @@
   border-radius: 12px;
   background: var(--ifm-card-background-color);
   box-shadow: 0 4px 12px rgba(139, 92, 246, 0.06);
-  transition: all var(--typo-transition-normal);
+  transition: all var(--typr-transition-normal);
   animation: fadeInUp 0.8s ease-out both;
   animation-delay: calc(var(--index) * 0.1s);
   position: relative;
@@ -62,9 +62,9 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: var(--typo-gradient-primary);
+  background: var(--typr-gradient-primary);
   transform: translateX(-100%);
-  transition: transform var(--typo-transition-normal);
+  transition: transform var(--typr-transition-normal);
 }
 
 .featureCard:hover::before {
@@ -86,7 +86,7 @@
   bottom: 0;
   background: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
   opacity: 0;
-  transition: opacity var(--typo-transition-normal);
+  transition: opacity var(--typr-transition-normal);
 }
 
 .featureCard:hover::after {
@@ -98,7 +98,7 @@
   margin-bottom: 0.75rem;
   display: block;
   line-height: 1;
-  transition: all var(--typo-transition-normal);
+  transition: all var(--typr-transition-normal);
   position: relative;
   z-index: 2;
   filter: drop-shadow(0 2px 4px rgba(139, 92, 246, 0.2));
@@ -140,7 +140,7 @@
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
   font-size: 0.9em;
-  color: var(--typo-accent);
+  color: var(--typr-accent);
 }
 
 .codeExample {
@@ -189,18 +189,18 @@
 
 /* Dark mode adjustments */
 [data-theme='dark'] .featureCard {
-  background: var(--typo-gray-200);
-  border: 1px solid var(--typo-gray-300);
+  background: var(--typr-gray-200);
+  border: 1px solid var(--typr-gray-300);
 }
 
 [data-theme='dark'] .featureDescription code {
-  background: var(--typo-gray-300);
-  color: var(--typo-accent-light);
+  background: var(--typr-gray-300);
+  color: var(--typr-accent-light);
 }
 
 [data-theme='dark'] .codeExample {
-  background: var(--typo-gray-100);
-  border-color: var(--typo-gray-300);
+  background: var(--typr-gray-100);
+  border-color: var(--typr-gray-300);
 }
 
 /* Grid responsiveness */

@@ -24,7 +24,7 @@ export default function TestingShowcase() {
                             <h3>In-Memory Testing That Actually Works</h3>
                         </div>
                         <p className={styles.showcaseDescription}>
-                            Unlike other ORMs, Typo's generated stubs aren't just dumb maps. 
+                            Unlike other ORMs, Typr's generated stubs aren't just dumb maps. 
                             They support the full DSL, including joins, filtering, and ordering.
                         </p>
                         <CodeBlock language="scala" className={styles.showcaseCode}>
@@ -100,11 +100,11 @@ test("user with specific email domain") {
                             <h3>Property-Based Testing Support</h3>
                         </div>
                         <p className={styles.showcaseDescription}>
-                            Combine Typo with ScalaCheck for powerful property-based tests. 
+                            Combine Typr with ScalaCheck for powerful property-based tests. 
                             Generate arbitrary valid data that respects your schema constraints.
                         </p>
                         <CodeBlock language="scala" className={styles.showcaseCode}>
-{`// Typo + ScalaCheck = ❤️
+{`// Typr + ScalaCheck = ❤️
 forAll(genValidUser) { user =>
   val repo = UserRepoMock.empty
   repo.insert(user)

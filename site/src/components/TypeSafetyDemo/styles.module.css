@@ -76,12 +76,12 @@
 .codeWrapper {
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: var(--typo-shadow-md);
-  transition: all var(--typo-transition-normal);
+  box-shadow: var(--typr-shadow-md);
+  transition: all var(--typr-transition-normal);
 }
 
 .codeWrapper:hover {
-  box-shadow: var(--typo-shadow-lg);
+  box-shadow: var(--typr-shadow-lg);
   transform: translateY(-2px);
 }
 
@@ -159,8 +159,8 @@
 
 /* Dark mode adjustments */
 [data-theme='dark'] .codeBlock {
-  background: var(--typo-gray-100);
-  border-color: var(--typo-gray-300);
+  background: var(--typr-gray-100);
+  border-color: var(--typr-gray-300);
 }
 
 [data-theme='dark'] .demo::before {

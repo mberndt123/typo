@@ -84,7 +84,7 @@ UserRepo.selectAll.stream
         codeExample: `select
   .from(users)
   .join(posts).on(_.id, _.userId)
-  .where(_.email.like("%@typo%"))
+  .where(_.email.like("%@typr%"))
   .orderBy(_.createdAt.desc)
   .limit(10)`,
     },
@@ -112,7 +112,7 @@ export default function HomepageFeatures() {
     return (
         <section className={styles.features}>
             <div className="container">
-                <h2 className={styles.featuresTitle}>Why Developers Love Typo</h2>
+                <h2 className={styles.featuresTitle}>Why Developers Love Typr</h2>
                 <div className={styles.featureGrid}>
                     {FeatureList.map((props, idx) => (
                         <Feature key={idx} index={idx} {...props} />

@@ -3,10 +3,10 @@
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Typo",
-  tagline: "Typed postgres boilerplate generation for Scala. Hopes to avoid typos ",
-  url: "https://oyvindberg.github.io/",
-  baseUrl: "/typo",
+  title: "Typr",
+  tagline: "Typed postgres boilerplate generation. Hopes to avoid typos ",
+  url: "https://typr.dev",
+  baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
@@ -18,7 +18,7 @@ const config = {
       attributes: {
         rel: 'icon',
         type: 'image/svg+xml',
-        href: '/typo/img/favicon.svg',
+        href: '/img/favicon.svg',
       },
     },
   ],
@@ -26,7 +26,7 @@ const config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "oyvindberg", // Usually your GitHub org/user name.
-  projectName: "typo", // Usually your repo name.
+  projectName: "typr", // Usually your repo name.
   trailingSlash: true,
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -58,9 +58,9 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: "Typo",
+        title: "Typr",
         logo: {
-          alt: "Typo",
+          alt: "Typr",
           src: "img/logo.svg",
         },
         items: [
@@ -72,7 +72,7 @@ const config = {
           },
           {to: 'blog', label: 'Blog', position: 'left'}, // or position: 'right'
           {
-            href: "https://github.com/oyvindberg/typo",
+            href: "https://github.com/oyvindberg/typr",
             label: "GitHub",
             position: "right",
           },
@@ -86,7 +86,7 @@ const config = {
             items: [
               {
                 label: "Github",
-                to: "https://github.com/oyvindberg/typo",
+                to: "https://github.com/oyvindberg/typr",
               },
             ],
           },

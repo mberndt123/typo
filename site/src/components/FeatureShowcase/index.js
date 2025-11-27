@@ -9,7 +9,7 @@ const features = [
     items: [
       {
         title: "From Database Schema to Complete Scala Code",
-        description: "Point Typo at your PostgreSQL database and watch it generate everything: case classes, repositories, type-safe IDs, JSON codecs, and test helpers. No manual mapping code ever again.",
+        description: "Point Typr at your PostgreSQL database and watch it generate everything: case classes, repositories, type-safe IDs, JSON codecs, and test helpers. No manual mapping code ever again.",
         sqlCode: `-- Your PostgreSQL schema
 CREATE TABLE user (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -19,12 +19,12 @@ CREATE TABLE user (
   department_id UUID REFERENCES departments(id)
 );`,
         scalaCode: `// Generated automatically:
-case class UserId(value: TypoUUID)
+case class UserId(value: TyprUUID)
 case class UserRow(
   id: UserId,
   email: String, 
   name: String,
-  createdAt: Option[TypoLocalDateTime],
+  createdAt: Option[TyprLocalDateTime],
   departmentId: Option[DepartmentsId]
 )
 
@@ -90,7 +90,7 @@ orderRepo.select
       },
       {
         title: "Type-Safe Foreign Key Navigation",
-        description: "Typo's DSL provides joinFk for easy type-safe navigation through foreign key relationships. Your IDE knows exactly what's available at each level.",
+        description: "Typr's DSL provides joinFk for easy type-safe navigation through foreign key relationships. Your IDE knows exactly what's available at each level.",
         sqlCode: `-- Database with foreign key relationships
 CREATE TABLE product (
   id UUID PRIMARY KEY,
@@ -112,7 +112,7 @@ val query = productRepo.select
   }
   
 // Each joinFk automatically uses the foreign key constraint
-// No manual ON clauses needed - Typo knows the relationships!`,
+// No manual ON clauses needed - Typr knows the relationships!`,
         docs: "/docs/other-features/dsl-in-depth"
       }
     ]
@@ -123,8 +123,8 @@ val query = productRepo.select
       {
         title: "Strongly-Typed Primary Keys",
         description: "Every table gets its own ID type that flows through foreign key relationships. No more mixing up User IDs and Product IDs.",
-        code: `case class UserId(value: TypoUUID)
-case class ProductId(value: TypoUUID)
+        code: `case class UserId(value: TyprUUID)
+case class ProductId(value: TyprUUID)
 
 // Compile error if you mix them up!
 def getUserOrders(userId: UserId): List[OrderRow] = {
@@ -182,7 +182,7 @@ CREATE TABLE user_permission (
 case class UserPermissionRow(
   userId: UserId,
   permissionId: PermissionId,
-  grantedAt: Option[TypoLocalDateTime]
+  grantedAt: Option[TyprLocalDateTime]
 )
 
 // Repository uses composite key directly:
@@ -216,7 +216,7 @@ val activeOrdersWithDetails = orderRepo.select
 // Update with complex conditions
 productRepo.update
   .set(_.inStock, Some(false))
-  .set(_.lastModified, Some(TypoLocalDateTime.now))
+  .set(_.lastModified, Some(TyprLocalDateTime.now))
   .where(_.quantity === 0.?)
   .where(_.lastRestocked < thirtyDaysAgo.?)
   .execute
@@ -235,7 +235,7 @@ orderItemRepo.delete
     items: [
       {
         title: "Write Real SQL For Complex Queries",
-        description: "When you need aggregations, window functions, or complex analytics, write real SQL in dedicated .sql files. Typo analyzes your queries and generates perfectly typed Scala methods - the best of both worlds.",
+        description: "When you need aggregations, window functions, or complex analytics, write real SQL in dedicated .sql files. Typr analyzes your queries and generates perfectly typed Scala methods - the best of both worlds.",
         sqlCode: `-- sql/user-analytics.sql
 SELECT 
   u.name,
@@ -265,7 +265,7 @@ trait UserAnalyticsSqlRepo {
       },
       {
         title: "Smart Parameter Inference",
-        description: "Typo analyzes your SQL parameters against the database schema to infer exact types. Override nullability and types as needed with simple annotations.",
+        description: "Typr analyzes your SQL parameters against the database schema to infer exact types. Override nullability and types as needed with simple annotations.",
         code: `-- Advanced parameter syntax
 SELECT p.*, a.city, e.salary
 FROM persons p
@@ -300,7 +300,7 @@ RETURNING
 trait UpdateUserStatusSqlRepo {
   def apply(
     newStatus: String,
-    userId: TypoUUID
+    userId: TyprUUID
   )(implicit c: Connection): List[UpdateUserStatusSqlRow]
 }
 
@@ -360,7 +360,7 @@ val result = orderService.calculateMonthlyReport(userId)
       },
       {
         title: "Full DSL Support in Stubs",
-        description: "Unlike other testing libraries, Typo's mocks support the complete DSL including complex joins and filtering. Your business logic runs unchanged.",
+        description: "Unlike other testing libraries, Typr's mocks support the complete DSL including complex joins and filtering. Your business logic runs unchanged.",
         code: `// Complex queries work in memory!
 val topCustomers = userRepo.select
   .join(orderRepo.select)
@@ -391,7 +391,7 @@ case class ProductRow(
   tags: Option[Array[String]],        // TEXT[]
   categories: Option[Array[Int]],     // INTEGER[]
   prices: Option[Array[BigDecimal]],  // NUMERIC[]
-  attributes: Option[Array[TypoJsonb]] // JSONB[]
+  attributes: Option[Array[TyprJsonb]] // JSONB[]
 )
 
 // Array operations in queries
@@ -403,14 +403,14 @@ productRepo.select
       },
       {
         title: "Other PostgreSQL Types & Features",
-        description: "Support for geometric types, network types, JSON/JSONB, XML, and more. If PostgreSQL has it, Typo supports it.",
+        description: "Support for geometric types, network types, JSON/JSONB, XML, and more. If PostgreSQL has it, Typr supports it.",
         code: `// Geometric and network types
 case class LocationRow(
   id: LocationsId,
-  position: Option[TypoPoint],   // POINT
-  area: Option[TypoPolygon],     // POLYGON  
-  ipRange: Option[TypoInet],     // INET
-  metadata: Option[TypoJsonb]    // JSONB
+  position: Option[TyprPoint],   // POINT
+  area: Option[TyprPolygon],     // POLYGON  
+  ipRange: Option[TyprInet],     // INET
+  metadata: Option[TyprJsonb]    // JSONB
 )
 
 // Types are preserved and can be used in queries
@@ -502,8 +502,8 @@ def getUsersZIO: ZIO[Connection, Throwable, List[UserRow]] =
       },
       {
         title: "JSON Library Integration",
-        description: "Typo generates JSON codecs for Play JSON, Circe, and ZIO JSON - no manual derivation needed.",
-        code: `// Typo generates all JSON codecs for you!
+        description: "Typr generates JSON codecs for Play JSON, Circe, and ZIO JSON - no manual derivation needed.",
+        code: `// Typr generates all JSON codecs for you!
 
 // Play JSON - generated in UserRow companion
 implicit val usersReads: Reads[UserRow] = UserRow.reads
@@ -534,7 +534,7 @@ export default function FeatureShowcase() {
             Every Feature You Need, Nothing You Don't
           </h2>
           <p className={styles.subtitle}>
-            Typo delivers a comprehensive PostgreSQL development experience with unprecedented type safety, 
+            Typr delivers a comprehensive PostgreSQL development experience with unprecedented type safety, 
             testing capabilities, and developer productivity features.
           </p>
         </div>

@@ -7,7 +7,7 @@ export default function WhyTypo() {
         <section className={styles.whyTypo}>
             <div className="container">
                 <h2 className={styles.title}>
-                    Why Teams Choose Typo Over Everything Else
+                    Why Teams Choose Typr Over Everything Else
                 </h2>
                 
                 <div className={styles.comparisonGrid}>

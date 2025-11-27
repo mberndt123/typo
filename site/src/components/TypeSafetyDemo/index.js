@@ -30,7 +30,7 @@ CREATE TABLE posts (
                     </div>
                     <div className={styles.arrow}>
                         <span>→</span>
-                        <span className={styles.arrowText}>Typo generates</span>
+                        <span className={styles.arrowText}>Typr generates</span>
                     </div>
                     <div className={styles.scalaSide}>
                         <h3>Type-Safe Scala Code</h3>
@@ -51,7 +51,7 @@ case class PostRow(
   id: PostId,
   userId: UserId,  // Not just Long!
   title: String,
-  createdAt: TypoLocalDateTime
+  createdAt: TyprLocalDateTime
 )
 
 // Type-safe repositories

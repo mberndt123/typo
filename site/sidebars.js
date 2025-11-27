@@ -5,7 +5,7 @@ const sidebars = {
     tutorialSidebar: [
         {
             type: "category",
-            label: "What is typo?",
+            label: "What is Typr?",
             collapsible: true,
             collapsed: false,
             items: [

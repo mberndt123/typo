@@ -26,7 +26,7 @@ function HomepageHeader() {
                     <div className={styles.heroLeft}>
                         <div className={styles.logoSection}>
                             <TypoLogo size={80} animated={true} />
-                            <h1 className={styles.brandName}>Typo</h1>
+                            <h1 className={styles.brandName}>Typr</h1>
                         </div>
                         
                         <h2 className={styles.heroHeadline}>
@@ -36,7 +36,7 @@ function HomepageHeader() {
                         </h2>
                         
                         <p className={styles.heroSubtext}>
-                            Typo revolutionizes database development with unprecedented type safety, 
+                            Typr revolutionizes database development with unprecedented type safety, 
                             a fantastic testing story, and a DSL so intuitive it feels like cheating. 
                             Your database schema becomes your type system. Your domain model stays in sync automatically.
                         </p>
@@ -73,7 +73,7 @@ export default function Home() {
     const {siteConfig} = useDocusaurusContext();
     return (
         <Layout
-            title="Typo"
+            title="Typr"
             description="Typed PostgreSQL boilerplate generation for Scala"
         >
             <div className="mainContainer"></div>

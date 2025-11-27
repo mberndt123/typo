@@ -1,10 +1,10 @@
 .dsl {
   padding: 5rem 0;
-  background: linear-gradient(135deg, var(--typo-hero-bg-light) 0%, var(--ifm-background-color) 100%);
+  background: linear-gradient(135deg, var(--typr-hero-bg-light) 0%, var(--ifm-background-color) 100%);
 }
 
 [data-theme="dark"] .dsl {
-  background: linear-gradient(135deg, var(--typo-hero-bg-dark) 0%, var(--ifm-background-color) 100%);
+  background: linear-gradient(135deg, var(--typr-hero-bg-dark) 0%, var(--ifm-background-color) 100%);
 }
 
 .content {
@@ -22,7 +22,7 @@
 }
 
 .highlight {
-  background: var(--typo-gradient-accent);
+  background: var(--typr-gradient-accent);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

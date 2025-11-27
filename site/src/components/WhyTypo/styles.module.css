@@ -23,7 +23,7 @@
   border-radius: 12px;
   padding: 2rem;
   border: 1px solid var(--ifm-color-emphasis-200);
-  transition: all var(--typo-transition-normal);
+  transition: all var(--typr-transition-normal);
 }
 
 .comparisonItem:hover {
@@ -59,7 +59,7 @@
 }
 
 .testimonial {
-  background: var(--typo-gradient-primary);
+  background: var(--typr-gradient-primary);
   border-radius: 16px;
   padding: 3rem;
   text-align: center;
