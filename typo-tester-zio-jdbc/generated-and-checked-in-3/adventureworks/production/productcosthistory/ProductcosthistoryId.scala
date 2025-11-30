@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package productcosthistory
+package adventureworks.production.productcosthistory
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.production.product.ProductId
@@ -19,24 +17,29 @@ case class ProductcosthistoryId(
   productid: ProductId,
   startdate: TypoLocalDateTime
 )
+
 object ProductcosthistoryId {
-  given jsonDecoder: JsonDecoder[ProductcosthistoryId] = JsonDecoder[Json.Obj].mapOrFail { jsonObj =>
-    val productid = jsonObj.get("productid").toRight("Missing field 'productid'").flatMap(_.as(using ProductId.jsonDecoder))
-    val startdate = jsonObj.get("startdate").toRight("Missing field 'startdate'").flatMap(_.as(using TypoLocalDateTime.jsonDecoder))
-    if (productid.isRight && startdate.isRight)
-      Right(ProductcosthistoryId(productid = productid.toOption.get, startdate = startdate.toOption.get))
-    else Left(List[Either[String, Any]](productid, startdate).flatMap(_.left.toOption).mkString(", "))
-  }
-  given jsonEncoder: JsonEncoder[ProductcosthistoryId] = new JsonEncoder[ProductcosthistoryId] {
-    override def unsafeEncode(a: ProductcosthistoryId, indent: Option[Int], out: Write): Unit = {
-      out.write("{")
-      out.write(""""productid":""")
-      ProductId.jsonEncoder.unsafeEncode(a.productid, indent, out)
-      out.write(",")
-      out.write(""""startdate":""")
-      TypoLocalDateTime.jsonEncoder.unsafeEncode(a.startdate, indent, out)
-      out.write("}")
+  given jsonDecoder: JsonDecoder[ProductcosthistoryId] = {
+    JsonDecoder[Json.Obj].mapOrFail { jsonObj =>
+      val productid = jsonObj.get("productid").toRight("Missing field 'productid'").flatMap(_.as(using ProductId.jsonDecoder))
+      val startdate = jsonObj.get("startdate").toRight("Missing field 'startdate'").flatMap(_.as(using TypoLocalDateTime.jsonDecoder))
+      if (productid.isRight && startdate.isRight)
+        Right(ProductcosthistoryId(productid = productid.toOption.get, startdate = startdate.toOption.get))
+      else Left(List[Either[String, Any]](productid, startdate).flatMap(_.left.toOption).mkString(", "))
     }
   }
-  given ordering(using O0: Ordering[TypoLocalDateTime]): Ordering[ProductcosthistoryId] = Ordering.by(x => (x.productid, x.startdate))
+
+  given jsonEncoder: JsonEncoder[ProductcosthistoryId] = {
+    new JsonEncoder[ProductcosthistoryId] {
+      override def unsafeEncode(a: ProductcosthistoryId, indent: Option[Int], out: Write): Unit = {
+        out.write("{")
+        out.write(""""productid":""")
+        ProductId.jsonEncoder.unsafeEncode(a.productid, indent, out)
+        out.write(",")
+        out.write(""""startdate":""")
+        TypoLocalDateTime.jsonEncoder.unsafeEncode(a.startdate, indent, out)
+        out.write("}")
+      }
+    }
+  }
 }

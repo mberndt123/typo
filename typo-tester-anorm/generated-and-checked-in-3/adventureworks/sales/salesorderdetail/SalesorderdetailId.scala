@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sales
-package salesorderdetail
+package adventureworks.sales.salesorderdetail
 
 import adventureworks.sales.salesorderheader.SalesorderheaderId
 import play.api.libs.json.JsObject
@@ -22,21 +20,26 @@ case class SalesorderdetailId(
   salesorderid: SalesorderheaderId,
   salesorderdetailid: Int
 )
+
 object SalesorderdetailId {
-  given ordering: Ordering[SalesorderdetailId] = Ordering.by(x => (x.salesorderid, x.salesorderdetailid))
-  given reads: Reads[SalesorderdetailId] = Reads[SalesorderdetailId](json => JsResult.fromTry(
-      Try(
-        SalesorderdetailId(
-          salesorderid = json.\("salesorderid").as(summon[Reads[SalesorderheaderId]]),
-          salesorderdetailid = json.\("salesorderdetailid").as(Reads.IntReads)
+  given reads: Reads[SalesorderdetailId] = {
+    Reads[SalesorderdetailId](json => JsResult.fromTry(
+        Try(
+          SalesorderdetailId(
+            salesorderid = json.\("salesorderid").as(SalesorderheaderId.reads),
+            salesorderdetailid = json.\("salesorderdetailid").as(Reads.IntReads)
+          )
         )
-      )
-    ),
-  )
-  given writes: OWrites[SalesorderdetailId] = OWrites[SalesorderdetailId](o =>
-    new JsObject(ListMap[String, JsValue](
-      "salesorderid" -> summon[Writes[SalesorderheaderId]].writes(o.salesorderid),
-      "salesorderdetailid" -> Writes.IntWrites.writes(o.salesorderdetailid)
-    ))
-  )
+      ),
+    )
+  }
+
+  given writes: OWrites[SalesorderdetailId] = {
+    OWrites[SalesorderdetailId](o =>
+      new JsObject(ListMap[String, JsValue](
+        "salesorderid" -> SalesorderheaderId.writes.writes(o.salesorderid),
+        "salesorderdetailid" -> Writes.IntWrites.writes(o.salesorderdetailid)
+      ))
+    )
+  }
 }

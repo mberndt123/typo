@@ -3,28 +3,25 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package table_with_generated_columns
+package adventureworks.public.table_with_generated_columns
 
 import doobie.postgres.Text
 import io.circe.Decoder
 import io.circe.Encoder
 
 /** This class corresponds to a row in table `public.table-with-generated-columns` which has not been persisted yet */
-case class TableWithGeneratedColumnsRowUnsaved(
-  name: TableWithGeneratedColumnsId
-) {
-  def toRow(nameTypeAlwaysDefault: => String): TableWithGeneratedColumnsRow =
-    TableWithGeneratedColumnsRow(
-      name = name,
-      nameTypeAlways = nameTypeAlwaysDefault
-    )
+case class TableWithGeneratedColumnsRowUnsaved(name: TableWithGeneratedColumnsId) {
+  def toRow(nameTypeAlwaysDefault: => String): TableWithGeneratedColumnsRow = new TableWithGeneratedColumnsRow(name = name, nameTypeAlways = nameTypeAlwaysDefault)
 }
+
 object TableWithGeneratedColumnsRowUnsaved {
   given decoder: Decoder[TableWithGeneratedColumnsRowUnsaved] = Decoder.forProduct1[TableWithGeneratedColumnsRowUnsaved, TableWithGeneratedColumnsId]("name")(TableWithGeneratedColumnsRowUnsaved.apply)(using TableWithGeneratedColumnsId.decoder)
+
   given encoder: Encoder[TableWithGeneratedColumnsRowUnsaved] = Encoder.forProduct1[TableWithGeneratedColumnsRowUnsaved, TableWithGeneratedColumnsId]("name")(x => (x.name))(using TableWithGeneratedColumnsId.encoder)
-  given text: Text[TableWithGeneratedColumnsRowUnsaved] = Text.instance[TableWithGeneratedColumnsRowUnsaved]{ (row, sb) =>
-    TableWithGeneratedColumnsId.text.unsafeEncode(row.name, sb)
+
+  given pgText: Text[TableWithGeneratedColumnsRowUnsaved] = {
+    Text.instance[TableWithGeneratedColumnsRowUnsaved]{ (row, sb) =>
+      TableWithGeneratedColumnsId.pgText.unsafeEncode(row.name, sb)
+    }
   }
 }

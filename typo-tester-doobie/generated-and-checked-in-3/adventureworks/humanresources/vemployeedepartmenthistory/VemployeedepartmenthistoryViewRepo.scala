@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package humanresources
-package vemployeedepartmenthistory
+package adventureworks.humanresources.vemployeedepartmenthistory
 
 import doobie.free.connection.ConnectionIO
 import fs2.Stream
@@ -13,5 +11,6 @@ import typo.dsl.SelectBuilder
 
 trait VemployeedepartmenthistoryViewRepo {
   def select: SelectBuilder[VemployeedepartmenthistoryViewFields, VemployeedepartmenthistoryViewRow]
+
   def selectAll: Stream[ConnectionIO, VemployeedepartmenthistoryViewRow]
 }

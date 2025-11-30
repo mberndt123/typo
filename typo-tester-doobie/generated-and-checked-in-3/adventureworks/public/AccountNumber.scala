@@ -3,8 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
+package adventureworks.public
 
 import doobie.postgres.Text
 import doobie.util.Get
@@ -15,20 +14,29 @@ import io.circe.Encoder
 import typo.dsl.Bijection
 
 /** Domain `public.AccountNumber`
-  * No constraint
-  */
+ * No constraint
+ */
 case class AccountNumber(value: String)
+
 object AccountNumber {
   given arrayGet: Get[Array[AccountNumber]] = adventureworks.StringArrayMeta.get.map(_.map(AccountNumber.apply))
+
   given arrayPut: Put[Array[AccountNumber]] = adventureworks.StringArrayMeta.put.contramap(_.map(_.value))
-  given bijection: Bijection[AccountNumber, String] = Bijection[AccountNumber, String](_.value)(AccountNumber.apply)
+
+  given bijection: Bijection[AccountNumber, String] = Bijection.apply[AccountNumber, String](_.value)(AccountNumber.apply)
+
   given decoder: Decoder[AccountNumber] = Decoder.decodeString.map(AccountNumber.apply)
+
   given encoder: Encoder[AccountNumber] = Encoder.encodeString.contramap(_.value)
+
   given get: Get[AccountNumber] = Meta.StringMeta.get.map(AccountNumber.apply)
-  given ordering: Ordering[AccountNumber] = Ordering.by(_.value)
-  given put: Put[AccountNumber] = Meta.StringMeta.put.contramap(_.value)
-  given text: Text[AccountNumber] = new Text[AccountNumber] {
-    override def unsafeEncode(v: AccountNumber, sb: StringBuilder): Unit = Text.stringInstance.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: AccountNumber, sb: StringBuilder): Unit = Text.stringInstance.unsafeArrayEncode(v.value, sb)
+
+  given pgText: Text[AccountNumber] = {
+    new Text[AccountNumber] {
+      override def unsafeEncode(v: AccountNumber, sb: StringBuilder): Unit = Text.stringInstance.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: AccountNumber, sb: StringBuilder): Unit = Text.stringInstance.unsafeArrayEncode(v.value, sb)
+    }
   }
+
+  given put: Put[AccountNumber] = Meta.StringMeta.put.contramap(_.value)
 }

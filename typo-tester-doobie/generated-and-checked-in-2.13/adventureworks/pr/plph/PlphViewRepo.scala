@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package plph
+package adventureworks.pr.plph
 
 import doobie.free.connection.ConnectionIO
 import fs2.Stream
@@ -13,5 +11,6 @@ import typo.dsl.SelectBuilder
 
 trait PlphViewRepo {
   def select: SelectBuilder[PlphViewFields, PlphViewRow]
+
   def selectAll: Stream[ConnectionIO, PlphViewRow]
 }

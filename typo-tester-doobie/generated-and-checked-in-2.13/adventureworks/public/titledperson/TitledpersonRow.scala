@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package titledperson
+package adventureworks.public.titledperson
 
 import adventureworks.public.title.TitleId
 import adventureworks.public.title_domain.TitleDomainId
@@ -18,38 +16,48 @@ import io.circe.Encoder
 
 /** Table: public.titledperson */
 case class TitledpersonRow(
-  /** Points to [[title_domain.TitleDomainRow.code]] */
+  /** Points to [[adventureworks.public.title_domain.TitleDomainRow.code]] */
   titleShort: TitleDomainId,
-  /** Points to [[title.TitleRow.code]] */
+  /** Points to [[adventureworks.public.title.TitleRow.code]] */
   title: TitleId,
   name: String
 )
 
 object TitledpersonRow {
   implicit lazy val decoder: Decoder[TitledpersonRow] = Decoder.forProduct3[TitledpersonRow, TitleDomainId, TitleId, String]("title_short", "title", "name")(TitledpersonRow.apply)(TitleDomainId.decoder, TitleId.decoder, Decoder.decodeString)
+
   implicit lazy val encoder: Encoder[TitledpersonRow] = Encoder.forProduct3[TitledpersonRow, TitleDomainId, TitleId, String]("title_short", "title", "name")(x => (x.titleShort, x.title, x.name))(TitleDomainId.encoder, TitleId.encoder, Encoder.encodeString)
-  implicit lazy val read: Read[TitledpersonRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(TitleDomainId.get).asInstanceOf[Read[Any]],
-      new Read.Single(TitleId.get).asInstanceOf[Read[Any]],
-      new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]]
-  ))(scala.reflect.ClassTag.Any).map { arr =>
-    TitledpersonRow(
-      titleShort = arr(0).asInstanceOf[TitleDomainId],
-          title = arr(1).asInstanceOf[TitleId],
-          name = arr(2).asInstanceOf[String]
+
+  implicit lazy val pgText: Text[TitledpersonRow] = {
+    Text.instance[TitledpersonRow]{ (row, sb) =>
+      TitleDomainId.pgText.unsafeEncode(row.titleShort, sb)
+      sb.append(Text.DELIMETER)
+      TitleId.pgText.unsafeEncode(row.title, sb)
+      sb.append(Text.DELIMETER)
+      Text.stringInstance.unsafeEncode(row.name, sb)
+    }
+  }
+
+  implicit lazy val read: Read[TitledpersonRow] = {
+    new Read.CompositeOfInstances(Array(
+      new Read.Single(TitleDomainId.get).asInstanceOf[Read[Any]],
+        new Read.Single(TitleId.get).asInstanceOf[Read[Any]],
+        new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]]
+    ))(scala.reflect.ClassTag.Any).map { arr =>
+      TitledpersonRow(
+        titleShort = arr(0).asInstanceOf[TitleDomainId],
+            title = arr(1).asInstanceOf[TitleId],
+            name = arr(2).asInstanceOf[String]
+      )
+    }
+  }
+
+  implicit lazy val write: Write[TitledpersonRow] = {
+    new Write.Composite[TitledpersonRow](
+      List(new Write.Single(TitleDomainId.put),
+           new Write.Single(TitleId.put),
+           new Write.Single(Meta.StringMeta.put)),
+      a => List(a.titleShort, a.title, a.name)
     )
   }
-  implicit lazy val text: Text[TitledpersonRow] = Text.instance[TitledpersonRow]{ (row, sb) =>
-    TitleDomainId.text.unsafeEncode(row.titleShort, sb)
-    sb.append(Text.DELIMETER)
-    TitleId.text.unsafeEncode(row.title, sb)
-    sb.append(Text.DELIMETER)
-    Text.stringInstance.unsafeEncode(row.name, sb)
-  }
-  implicit lazy val write: Write[TitledpersonRow] = new Write.Composite[TitledpersonRow](
-    List(new Write.Single(TitleDomainId.put),
-         new Write.Single(TitleId.put),
-         new Write.Single(Meta.StringMeta.put)),
-    a => List(a.titleShort, a.title, a.name)
-  )
 }

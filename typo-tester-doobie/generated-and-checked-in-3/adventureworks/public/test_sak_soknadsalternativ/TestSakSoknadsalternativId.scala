@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package test_sak_soknadsalternativ
+package adventureworks.public.test_sak_soknadsalternativ
 
 import adventureworks.public.test_utdanningstilbud.TestUtdanningstilbudId
 import io.circe.Decoder
@@ -16,12 +14,14 @@ case class TestSakSoknadsalternativId(
   organisasjonskodeSaksbehandler: String,
   utdanningsmulighetKode: String
 )
+
 object TestSakSoknadsalternativId {
   given decoder: Decoder[TestSakSoknadsalternativId] = Decoder.forProduct2[TestSakSoknadsalternativId, String, String]("organisasjonskode_saksbehandler", "utdanningsmulighet_kode")(TestSakSoknadsalternativId.apply)(using Decoder.decodeString, Decoder.decodeString)
+
   given encoder: Encoder[TestSakSoknadsalternativId] = Encoder.forProduct2[TestSakSoknadsalternativId, String, String]("organisasjonskode_saksbehandler", "utdanningsmulighet_kode")(x => (x.organisasjonskodeSaksbehandler, x.utdanningsmulighetKode))(using Encoder.encodeString, Encoder.encodeString)
-  def from(TestUtdanningstilbudId: TestUtdanningstilbudId, organisasjonskodeSaksbehandler: String): TestSakSoknadsalternativId = TestSakSoknadsalternativId(
-    organisasjonskodeSaksbehandler = organisasjonskodeSaksbehandler,
-    utdanningsmulighetKode = TestUtdanningstilbudId.utdanningsmulighetKode
-  )
-  given ordering: Ordering[TestSakSoknadsalternativId] = Ordering.by(x => (x.organisasjonskodeSaksbehandler, x.utdanningsmulighetKode))
+
+  def from(
+    TestUtdanningstilbudId: TestUtdanningstilbudId,
+    organisasjonskodeSaksbehandler: String
+  ): TestSakSoknadsalternativId = new TestSakSoknadsalternativId(organisasjonskodeSaksbehandler = organisasjonskodeSaksbehandler, utdanningsmulighetKode = TestUtdanningstilbudId.utdanningsmulighetKode)
 }

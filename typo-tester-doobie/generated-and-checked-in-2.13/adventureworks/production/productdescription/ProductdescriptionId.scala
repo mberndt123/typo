@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package productdescription
+package adventureworks.production.productdescription
 
 import doobie.postgres.Text
 import doobie.util.Get
@@ -16,18 +14,27 @@ import io.circe.Encoder
 import typo.dsl.Bijection
 
 /** Type for the primary key of table `production.productdescription` */
-case class ProductdescriptionId(value: Int) extends AnyVal
+case class ProductdescriptionId(value: Int) extends scala.AnyVal
+
 object ProductdescriptionId {
   implicit lazy val arrayGet: Get[Array[ProductdescriptionId]] = adventureworks.IntegerArrayMeta.get.map(_.map(ProductdescriptionId.apply))
+
   implicit lazy val arrayPut: Put[Array[ProductdescriptionId]] = adventureworks.IntegerArrayMeta.put.contramap(_.map(_.value))
-  implicit lazy val bijection: Bijection[ProductdescriptionId, Int] = Bijection[ProductdescriptionId, Int](_.value)(ProductdescriptionId.apply)
+
+  implicit lazy val bijection: Bijection[ProductdescriptionId, Int] = Bijection.apply[ProductdescriptionId, Int](_.value)(ProductdescriptionId.apply)
+
   implicit lazy val decoder: Decoder[ProductdescriptionId] = Decoder.decodeInt.map(ProductdescriptionId.apply)
+
   implicit lazy val encoder: Encoder[ProductdescriptionId] = Encoder.encodeInt.contramap(_.value)
+
   implicit lazy val get: Get[ProductdescriptionId] = Meta.IntMeta.get.map(ProductdescriptionId.apply)
-  implicit lazy val ordering: Ordering[ProductdescriptionId] = Ordering.by(_.value)
-  implicit lazy val put: Put[ProductdescriptionId] = Meta.IntMeta.put.contramap(_.value)
-  implicit lazy val text: Text[ProductdescriptionId] = new Text[ProductdescriptionId] {
-    override def unsafeEncode(v: ProductdescriptionId, sb: StringBuilder): Unit = Text.intInstance.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: ProductdescriptionId, sb: StringBuilder): Unit = Text.intInstance.unsafeArrayEncode(v.value, sb)
+
+  implicit lazy val pgText: Text[ProductdescriptionId] = {
+    new Text[ProductdescriptionId] {
+      override def unsafeEncode(v: ProductdescriptionId, sb: StringBuilder): Unit = Text.intInstance.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: ProductdescriptionId, sb: StringBuilder): Unit = Text.intInstance.unsafeArrayEncode(v.value, sb)
+    }
   }
+
+  implicit lazy val put: Put[ProductdescriptionId] = Meta.IntMeta.put.contramap(_.value)
 }

@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pe
-package pa
+package adventureworks.pe.pa
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoUUID
@@ -24,54 +22,62 @@ import scala.util.Try
 
 /** View: pe.pa */
 case class PaViewRow(
-  /** Points to [[person.password.PasswordRow.businessentityid]] */
+  /** Points to [[adventureworks.person.password.PasswordRow.businessentityid]] */
   id: BusinessentityId,
-  /** Points to [[person.password.PasswordRow.businessentityid]] */
+  /** Points to [[adventureworks.person.password.PasswordRow.businessentityid]] */
   businessentityid: BusinessentityId,
-  /** Points to [[person.password.PasswordRow.passwordhash]] */
+  /** Points to [[adventureworks.person.password.PasswordRow.passwordhash]] */
   passwordhash: /* max 128 chars */ String,
-  /** Points to [[person.password.PasswordRow.passwordsalt]] */
+  /** Points to [[adventureworks.person.password.PasswordRow.passwordsalt]] */
   passwordsalt: /* max 10 chars */ String,
-  /** Points to [[person.password.PasswordRow.rowguid]] */
+  /** Points to [[adventureworks.person.password.PasswordRow.rowguid]] */
   rowguid: TypoUUID,
-  /** Points to [[person.password.PasswordRow.modifieddate]] */
+  /** Points to [[adventureworks.person.password.PasswordRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object PaViewRow {
-  given reads: Reads[PaViewRow] = Reads[PaViewRow](json => JsResult.fromTry(
-      Try(
-        PaViewRow(
-          id = json.\("id").as(BusinessentityId.reads),
-          businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
-          passwordhash = json.\("passwordhash").as(Reads.StringReads),
-          passwordsalt = json.\("passwordsalt").as(Reads.StringReads),
-          rowguid = json.\("rowguid").as(TypoUUID.reads),
-          modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+  given reads: Reads[PaViewRow] = {
+    Reads[PaViewRow](json => JsResult.fromTry(
+        Try(
+          PaViewRow(
+            id = json.\("id").as(BusinessentityId.reads),
+            businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
+            passwordhash = json.\("passwordhash").as(Reads.StringReads),
+            passwordsalt = json.\("passwordsalt").as(Reads.StringReads),
+            rowguid = json.\("rowguid").as(TypoUUID.reads),
+            modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[PaViewRow] = RowParser[PaViewRow] { row =>
-    Success(
-      PaViewRow(
-        id = row(idx + 0)(using BusinessentityId.column),
-        businessentityid = row(idx + 1)(using BusinessentityId.column),
-        passwordhash = row(idx + 2)(using Column.columnToString),
-        passwordsalt = row(idx + 3)(using Column.columnToString),
-        rowguid = row(idx + 4)(using TypoUUID.column),
-        modifieddate = row(idx + 5)(using TypoLocalDateTime.column)
-      )
+      ),
     )
   }
-  given writes: OWrites[PaViewRow] = OWrites[PaViewRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "id" -> BusinessentityId.writes.writes(o.id),
-      "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
-      "passwordhash" -> Writes.StringWrites.writes(o.passwordhash),
-      "passwordsalt" -> Writes.StringWrites.writes(o.passwordsalt),
-      "rowguid" -> TypoUUID.writes.writes(o.rowguid),
-      "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
-    ))
-  )
+
+  def rowParser(idx: Int): RowParser[PaViewRow] = {
+    RowParser[PaViewRow] { row =>
+      Success(
+        PaViewRow(
+          id = row(idx + 0)(using BusinessentityId.column),
+          businessentityid = row(idx + 1)(using BusinessentityId.column),
+          passwordhash = row(idx + 2)(using Column.columnToString),
+          passwordsalt = row(idx + 3)(using Column.columnToString),
+          rowguid = row(idx + 4)(using TypoUUID.column),
+          modifieddate = row(idx + 5)(using TypoLocalDateTime.column)
+        )
+      )
+    }
+  }
+
+  given writes: OWrites[PaViewRow] = {
+    OWrites[PaViewRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "id" -> BusinessentityId.writes.writes(o.id),
+        "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
+        "passwordhash" -> Writes.StringWrites.writes(o.passwordhash),
+        "passwordsalt" -> Writes.StringWrites.writes(o.passwordsalt),
+        "rowguid" -> TypoUUID.writes.writes(o.rowguid),
+        "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
+      ))
+    )
+  }
 }

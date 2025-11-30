@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pe
-package be
+package adventureworks.pe.be
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoUUID
@@ -19,51 +17,59 @@ import zio.json.internal.Write
 
 /** View: pe.be */
 case class BeViewRow(
-  /** Points to [[person.businessentity.BusinessentityRow.businessentityid]] */
+  /** Points to [[adventureworks.person.businessentity.BusinessentityRow.businessentityid]] */
   id: BusinessentityId,
-  /** Points to [[person.businessentity.BusinessentityRow.businessentityid]] */
+  /** Points to [[adventureworks.person.businessentity.BusinessentityRow.businessentityid]] */
   businessentityid: BusinessentityId,
-  /** Points to [[person.businessentity.BusinessentityRow.rowguid]] */
+  /** Points to [[adventureworks.person.businessentity.BusinessentityRow.rowguid]] */
   rowguid: TypoUUID,
-  /** Points to [[person.businessentity.BusinessentityRow.modifieddate]] */
+  /** Points to [[adventureworks.person.businessentity.BusinessentityRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object BeViewRow {
-  given jdbcDecoder: JdbcDecoder[BeViewRow] = new JdbcDecoder[BeViewRow] {
-    override def unsafeDecode(columIndex: Int, rs: ResultSet): (Int, BeViewRow) =
-      columIndex + 3 ->
-        BeViewRow(
-          id = BusinessentityId.jdbcDecoder.unsafeDecode(columIndex + 0, rs)._2,
-          businessentityid = BusinessentityId.jdbcDecoder.unsafeDecode(columIndex + 1, rs)._2,
-          rowguid = TypoUUID.jdbcDecoder.unsafeDecode(columIndex + 2, rs)._2,
-          modifieddate = TypoLocalDateTime.jdbcDecoder.unsafeDecode(columIndex + 3, rs)._2
-        )
+  given jdbcDecoder: JdbcDecoder[BeViewRow] = {
+    new JdbcDecoder[BeViewRow] {
+      override def unsafeDecode(columIndex: Int, rs: ResultSet): (Int, BeViewRow) =
+        columIndex + 3 ->
+          BeViewRow(
+            id = BusinessentityId.jdbcDecoder.unsafeDecode(columIndex + 0, rs)._2,
+            businessentityid = BusinessentityId.jdbcDecoder.unsafeDecode(columIndex + 1, rs)._2,
+            rowguid = TypoUUID.jdbcDecoder.unsafeDecode(columIndex + 2, rs)._2,
+            modifieddate = TypoLocalDateTime.jdbcDecoder.unsafeDecode(columIndex + 3, rs)._2
+          )
+    }
   }
-  given jsonDecoder: JsonDecoder[BeViewRow] = JsonDecoder[Json.Obj].mapOrFail { jsonObj =>
-    val id = jsonObj.get("id").toRight("Missing field 'id'").flatMap(_.as(using BusinessentityId.jsonDecoder))
-    val businessentityid = jsonObj.get("businessentityid").toRight("Missing field 'businessentityid'").flatMap(_.as(using BusinessentityId.jsonDecoder))
-    val rowguid = jsonObj.get("rowguid").toRight("Missing field 'rowguid'").flatMap(_.as(using TypoUUID.jsonDecoder))
-    val modifieddate = jsonObj.get("modifieddate").toRight("Missing field 'modifieddate'").flatMap(_.as(using TypoLocalDateTime.jsonDecoder))
-    if (id.isRight && businessentityid.isRight && rowguid.isRight && modifieddate.isRight)
-      Right(BeViewRow(id = id.toOption.get, businessentityid = businessentityid.toOption.get, rowguid = rowguid.toOption.get, modifieddate = modifieddate.toOption.get))
-    else Left(List[Either[String, Any]](id, businessentityid, rowguid, modifieddate).flatMap(_.left.toOption).mkString(", "))
+
+  given jsonDecoder: JsonDecoder[BeViewRow] = {
+    JsonDecoder[Json.Obj].mapOrFail { jsonObj =>
+      val id = jsonObj.get("id").toRight("Missing field 'id'").flatMap(_.as(using BusinessentityId.jsonDecoder))
+      val businessentityid = jsonObj.get("businessentityid").toRight("Missing field 'businessentityid'").flatMap(_.as(using BusinessentityId.jsonDecoder))
+      val rowguid = jsonObj.get("rowguid").toRight("Missing field 'rowguid'").flatMap(_.as(using TypoUUID.jsonDecoder))
+      val modifieddate = jsonObj.get("modifieddate").toRight("Missing field 'modifieddate'").flatMap(_.as(using TypoLocalDateTime.jsonDecoder))
+      if (id.isRight && businessentityid.isRight && rowguid.isRight && modifieddate.isRight)
+        Right(BeViewRow(id = id.toOption.get, businessentityid = businessentityid.toOption.get, rowguid = rowguid.toOption.get, modifieddate = modifieddate.toOption.get))
+      else Left(List[Either[String, Any]](id, businessentityid, rowguid, modifieddate).flatMap(_.left.toOption).mkString(", "))
+    }
   }
-  given jsonEncoder: JsonEncoder[BeViewRow] = new JsonEncoder[BeViewRow] {
-    override def unsafeEncode(a: BeViewRow, indent: Option[Int], out: Write): Unit = {
-      out.write("{")
-      out.write(""""id":""")
-      BusinessentityId.jsonEncoder.unsafeEncode(a.id, indent, out)
-      out.write(",")
-      out.write(""""businessentityid":""")
-      BusinessentityId.jsonEncoder.unsafeEncode(a.businessentityid, indent, out)
-      out.write(",")
-      out.write(""""rowguid":""")
-      TypoUUID.jsonEncoder.unsafeEncode(a.rowguid, indent, out)
-      out.write(",")
-      out.write(""""modifieddate":""")
-      TypoLocalDateTime.jsonEncoder.unsafeEncode(a.modifieddate, indent, out)
-      out.write("}")
+
+  given jsonEncoder: JsonEncoder[BeViewRow] = {
+    new JsonEncoder[BeViewRow] {
+      override def unsafeEncode(a: BeViewRow, indent: Option[Int], out: Write): Unit = {
+        out.write("{")
+        out.write(""""id":""")
+        BusinessentityId.jsonEncoder.unsafeEncode(a.id, indent, out)
+        out.write(",")
+        out.write(""""businessentityid":""")
+        BusinessentityId.jsonEncoder.unsafeEncode(a.businessentityid, indent, out)
+        out.write(",")
+        out.write(""""rowguid":""")
+        TypoUUID.jsonEncoder.unsafeEncode(a.rowguid, indent, out)
+        out.write(",")
+        out.write(""""modifieddate":""")
+        TypoLocalDateTime.jsonEncoder.unsafeEncode(a.modifieddate, indent, out)
+        out.write("}")
+      }
     }
   }
 }

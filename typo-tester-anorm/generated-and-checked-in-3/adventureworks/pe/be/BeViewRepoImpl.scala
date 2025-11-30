@@ -3,22 +3,18 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pe
-package be
+package adventureworks.pe.be
 
-import anorm.SqlStringInterpolation
 import java.sql.Connection
 import typo.dsl.SelectBuilder
-import typo.dsl.SelectBuilderSql
+import anorm.SqlStringInterpolation
 
 class BeViewRepoImpl extends BeViewRepo {
-  override def select: SelectBuilder[BeViewFields, BeViewRow] = {
-    SelectBuilderSql(""""pe"."be"""", BeViewFields.structure, BeViewRow.rowParser)
-  }
-  override def selectAll(using c: Connection): List[BeViewRow] = {
+  def select: SelectBuilder[BeViewFields, BeViewRow] = SelectBuilder.of(""""pe"."be"""", BeViewFields.structure, BeViewRow.rowParser)
+
+  def selectAll(using c: Connection): List[BeViewRow] = {
     SQL"""select "id", "businessentityid", "rowguid", "modifieddate"::text
-          from "pe"."be"
-       """.as(BeViewRow.rowParser(1).*)
+    from "pe"."be"
+    """.as(BeViewRow.rowParser(1).*)
   }
 }

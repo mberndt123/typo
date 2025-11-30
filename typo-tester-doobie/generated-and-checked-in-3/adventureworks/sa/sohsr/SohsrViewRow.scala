@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package sohsr
+package adventureworks.sa.sohsr
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.sales.salesorderheader.SalesorderheaderId
@@ -16,26 +14,30 @@ import io.circe.Encoder
 
 /** View: sa.sohsr */
 case class SohsrViewRow(
-  /** Points to [[sales.salesorderheadersalesreason.SalesorderheadersalesreasonRow.salesorderid]] */
+  /** Points to [[adventureworks.sales.salesorderheadersalesreason.SalesorderheadersalesreasonRow.salesorderid]] */
   salesorderid: SalesorderheaderId,
-  /** Points to [[sales.salesorderheadersalesreason.SalesorderheadersalesreasonRow.salesreasonid]] */
+  /** Points to [[adventureworks.sales.salesorderheadersalesreason.SalesorderheadersalesreasonRow.salesreasonid]] */
   salesreasonid: SalesreasonId,
-  /** Points to [[sales.salesorderheadersalesreason.SalesorderheadersalesreasonRow.modifieddate]] */
+  /** Points to [[adventureworks.sales.salesorderheadersalesreason.SalesorderheadersalesreasonRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object SohsrViewRow {
   given decoder: Decoder[SohsrViewRow] = Decoder.forProduct3[SohsrViewRow, SalesorderheaderId, SalesreasonId, TypoLocalDateTime]("salesorderid", "salesreasonid", "modifieddate")(SohsrViewRow.apply)(using SalesorderheaderId.decoder, SalesreasonId.decoder, TypoLocalDateTime.decoder)
+
   given encoder: Encoder[SohsrViewRow] = Encoder.forProduct3[SohsrViewRow, SalesorderheaderId, SalesreasonId, TypoLocalDateTime]("salesorderid", "salesreasonid", "modifieddate")(x => (x.salesorderid, x.salesreasonid, x.modifieddate))(using SalesorderheaderId.encoder, SalesreasonId.encoder, TypoLocalDateTime.encoder)
-  given read: Read[SohsrViewRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(SalesorderheaderId.get).asInstanceOf[Read[Any]],
-      new Read.Single(SalesreasonId.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
-  ))(using scala.reflect.ClassTag.Any).map { arr =>
-    SohsrViewRow(
-      salesorderid = arr(0).asInstanceOf[SalesorderheaderId],
-          salesreasonid = arr(1).asInstanceOf[SalesreasonId],
-          modifieddate = arr(2).asInstanceOf[TypoLocalDateTime]
-    )
+
+  given read: Read[SohsrViewRow] = {
+    new Read.CompositeOfInstances(Array(
+      new Read.Single(SalesorderheaderId.get).asInstanceOf[Read[Any]],
+        new Read.Single(SalesreasonId.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
+    ))(using scala.reflect.ClassTag.Any).map { arr =>
+      SohsrViewRow(
+        salesorderid = arr(0).asInstanceOf[SalesorderheaderId],
+            salesreasonid = arr(1).asInstanceOf[SalesreasonId],
+            modifieddate = arr(2).asInstanceOf[TypoLocalDateTime]
+      )
+    }
   }
 }

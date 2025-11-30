@@ -3,16 +3,14 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package hr
-package eph
+package adventureworks.hr.eph
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoShort
 import adventureworks.person.businessentity.BusinessentityId
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.Structure.Relation
 
 trait EphViewFields {
@@ -26,11 +24,11 @@ trait EphViewFields {
 
 object EphViewFields {
   lazy val structure: Relation[EphViewFields, EphViewRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[EphViewFields, EphViewRow] {
-  
+
     override lazy val fields: EphViewFields = new EphViewFields {
       override def id = Field[BusinessentityId, EphViewRow](_path, "id", None, None, x => x.id, (row, value) => row.copy(id = value))
       override def businessentityid = Field[BusinessentityId, EphViewRow](_path, "businessentityid", None, None, x => x.businessentityid, (row, value) => row.copy(businessentityid = value))
@@ -39,12 +37,11 @@ object EphViewFields {
       override def payfrequency = Field[TypoShort, EphViewRow](_path, "payfrequency", None, None, x => x.payfrequency, (row, value) => row.copy(payfrequency = value))
       override def modifieddate = Field[TypoLocalDateTime, EphViewRow](_path, "modifieddate", Some("text"), None, x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, EphViewRow]] =
-      List[FieldLikeNoHkt[?, EphViewRow]](fields.id, fields.businessentityid, fields.ratechangedate, fields.rate, fields.payfrequency, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, EphViewRow]] =
+      List[FieldLike[?, EphViewRow]](fields.id, fields.businessentityid, fields.ratechangedate, fields.rate, fields.payfrequency, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

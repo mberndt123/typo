@@ -3,10 +3,9 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sales
-package salesreason
+package adventureworks.sales.salesreason
 
+import adventureworks.Text
 import typo.dsl.Bijection
 import typo.dsl.PGType
 import zio.jdbc.JdbcDecoder
@@ -16,21 +15,33 @@ import zio.json.JsonDecoder
 import zio.json.JsonEncoder
 
 /** Type for the primary key of table `sales.salesreason` */
-case class SalesreasonId(value: Int) extends AnyVal
+case class SalesreasonId(value: Int) extends scala.AnyVal
+
 object SalesreasonId {
   given arrayJdbcDecoder: JdbcDecoder[Array[SalesreasonId]] = adventureworks.IntArrayDecoder.map(_.map(SalesreasonId.apply))
+
   given arrayJdbcEncoder: JdbcEncoder[Array[SalesreasonId]] = adventureworks.IntArrayEncoder.contramap(_.map(_.value))
+
   given arraySetter: Setter[Array[SalesreasonId]] = adventureworks.IntArraySetter.contramap(_.map(_.value))
-  given bijection: Bijection[SalesreasonId, Int] = Bijection[SalesreasonId, Int](_.value)(SalesreasonId.apply)
+
+  given bijection: Bijection[SalesreasonId, Int] = Bijection.apply[SalesreasonId, Int](_.value)(SalesreasonId.apply)
+
   given jdbcDecoder: JdbcDecoder[SalesreasonId] = JdbcDecoder.intDecoder.map(SalesreasonId.apply)
+
   given jdbcEncoder: JdbcEncoder[SalesreasonId] = JdbcEncoder.intEncoder.contramap(_.value)
+
   given jsonDecoder: JsonDecoder[SalesreasonId] = JsonDecoder.int.map(SalesreasonId.apply)
+
   given jsonEncoder: JsonEncoder[SalesreasonId] = JsonEncoder.int.contramap(_.value)
-  given ordering: Ordering[SalesreasonId] = Ordering.by(_.value)
-  given pgType: PGType[SalesreasonId] = PGType.PGTypeInt.as
-  given setter: Setter[SalesreasonId] = Setter.intSetter.contramap(_.value)
-  given text: Text[SalesreasonId] = new Text[SalesreasonId] {
-    override def unsafeEncode(v: SalesreasonId, sb: StringBuilder): Unit = Text.intInstance.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: SalesreasonId, sb: StringBuilder): Unit = Text.intInstance.unsafeArrayEncode(v.value, sb)
+
+  given pgText: Text[SalesreasonId] = {
+    new Text[SalesreasonId] {
+      override def unsafeEncode(v: SalesreasonId, sb: StringBuilder): Unit = Text.intInstance.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: SalesreasonId, sb: StringBuilder): Unit = Text.intInstance.unsafeArrayEncode(v.value, sb)
+    }
   }
+
+  given pgType: PGType[SalesreasonId] = PGType.PGTypeInt.as
+
+  given setter: Setter[SalesreasonId] = Setter.intSetter.contramap(_.value)
 }

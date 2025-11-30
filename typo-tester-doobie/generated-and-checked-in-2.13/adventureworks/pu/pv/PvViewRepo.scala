@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pu
-package pv
+package adventureworks.pu.pv
 
 import doobie.free.connection.ConnectionIO
 import fs2.Stream
@@ -13,5 +11,6 @@ import typo.dsl.SelectBuilder
 
 trait PvViewRepo {
   def select: SelectBuilder[PvViewFields, PvViewRow]
+
   def selectAll: Stream[ConnectionIO, PvViewRow]
 }

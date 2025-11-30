@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pm
+package adventureworks.pr.pm
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoUUID
@@ -18,42 +16,46 @@ import io.circe.Encoder
 
 /** View: pr.pm */
 case class PmViewRow(
-  /** Points to [[production.productmodel.ProductmodelRow.productmodelid]] */
+  /** Points to [[adventureworks.production.productmodel.ProductmodelRow.productmodelid]] */
   id: ProductmodelId,
-  /** Points to [[production.productmodel.ProductmodelRow.productmodelid]] */
+  /** Points to [[adventureworks.production.productmodel.ProductmodelRow.productmodelid]] */
   productmodelid: ProductmodelId,
-  /** Points to [[production.productmodel.ProductmodelRow.name]] */
+  /** Points to [[adventureworks.production.productmodel.ProductmodelRow.name]] */
   name: Name,
-  /** Points to [[production.productmodel.ProductmodelRow.catalogdescription]] */
+  /** Points to [[adventureworks.production.productmodel.ProductmodelRow.catalogdescription]] */
   catalogdescription: Option[TypoXml],
-  /** Points to [[production.productmodel.ProductmodelRow.instructions]] */
+  /** Points to [[adventureworks.production.productmodel.ProductmodelRow.instructions]] */
   instructions: Option[TypoXml],
-  /** Points to [[production.productmodel.ProductmodelRow.rowguid]] */
+  /** Points to [[adventureworks.production.productmodel.ProductmodelRow.rowguid]] */
   rowguid: TypoUUID,
-  /** Points to [[production.productmodel.ProductmodelRow.modifieddate]] */
+  /** Points to [[adventureworks.production.productmodel.ProductmodelRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object PmViewRow {
   given decoder: Decoder[PmViewRow] = Decoder.forProduct7[PmViewRow, ProductmodelId, ProductmodelId, Name, Option[TypoXml], Option[TypoXml], TypoUUID, TypoLocalDateTime]("id", "productmodelid", "name", "catalogdescription", "instructions", "rowguid", "modifieddate")(PmViewRow.apply)(using ProductmodelId.decoder, ProductmodelId.decoder, Name.decoder, Decoder.decodeOption(using TypoXml.decoder), Decoder.decodeOption(using TypoXml.decoder), TypoUUID.decoder, TypoLocalDateTime.decoder)
+
   given encoder: Encoder[PmViewRow] = Encoder.forProduct7[PmViewRow, ProductmodelId, ProductmodelId, Name, Option[TypoXml], Option[TypoXml], TypoUUID, TypoLocalDateTime]("id", "productmodelid", "name", "catalogdescription", "instructions", "rowguid", "modifieddate")(x => (x.id, x.productmodelid, x.name, x.catalogdescription, x.instructions, x.rowguid, x.modifieddate))(using ProductmodelId.encoder, ProductmodelId.encoder, Name.encoder, Encoder.encodeOption(using TypoXml.encoder), Encoder.encodeOption(using TypoXml.encoder), TypoUUID.encoder, TypoLocalDateTime.encoder)
-  given read: Read[PmViewRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(ProductmodelId.get).asInstanceOf[Read[Any]],
+
+  given read: Read[PmViewRow] = {
+    new Read.CompositeOfInstances(Array(
       new Read.Single(ProductmodelId.get).asInstanceOf[Read[Any]],
-      new Read.Single(Name.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(TypoXml.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(TypoXml.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoUUID.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
-  ))(using scala.reflect.ClassTag.Any).map { arr =>
-    PmViewRow(
-      id = arr(0).asInstanceOf[ProductmodelId],
-          productmodelid = arr(1).asInstanceOf[ProductmodelId],
-          name = arr(2).asInstanceOf[Name],
-          catalogdescription = arr(3).asInstanceOf[Option[TypoXml]],
-          instructions = arr(4).asInstanceOf[Option[TypoXml]],
-          rowguid = arr(5).asInstanceOf[TypoUUID],
-          modifieddate = arr(6).asInstanceOf[TypoLocalDateTime]
-    )
+        new Read.Single(ProductmodelId.get).asInstanceOf[Read[Any]],
+        new Read.Single(Name.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(TypoXml.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(TypoXml.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoUUID.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
+    ))(using scala.reflect.ClassTag.Any).map { arr =>
+      PmViewRow(
+        id = arr(0).asInstanceOf[ProductmodelId],
+            productmodelid = arr(1).asInstanceOf[ProductmodelId],
+            name = arr(2).asInstanceOf[Name],
+            catalogdescription = arr(3).asInstanceOf[Option[TypoXml]],
+            instructions = arr(4).asInstanceOf[Option[TypoXml]],
+            rowguid = arr(5).asInstanceOf[TypoUUID],
+            modifieddate = arr(6).asInstanceOf[TypoLocalDateTime]
+      )
+    }
   }
 }

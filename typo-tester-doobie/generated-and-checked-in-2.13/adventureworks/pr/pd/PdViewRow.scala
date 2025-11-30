@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pd
+package adventureworks.pr.pd
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoUUID
@@ -17,34 +15,38 @@ import io.circe.Encoder
 
 /** View: pr.pd */
 case class PdViewRow(
-  /** Points to [[production.productdescription.ProductdescriptionRow.productdescriptionid]] */
+  /** Points to [[adventureworks.production.productdescription.ProductdescriptionRow.productdescriptionid]] */
   id: ProductdescriptionId,
-  /** Points to [[production.productdescription.ProductdescriptionRow.productdescriptionid]] */
+  /** Points to [[adventureworks.production.productdescription.ProductdescriptionRow.productdescriptionid]] */
   productdescriptionid: ProductdescriptionId,
-  /** Points to [[production.productdescription.ProductdescriptionRow.description]] */
+  /** Points to [[adventureworks.production.productdescription.ProductdescriptionRow.description]] */
   description: /* max 400 chars */ String,
-  /** Points to [[production.productdescription.ProductdescriptionRow.rowguid]] */
+  /** Points to [[adventureworks.production.productdescription.ProductdescriptionRow.rowguid]] */
   rowguid: TypoUUID,
-  /** Points to [[production.productdescription.ProductdescriptionRow.modifieddate]] */
+  /** Points to [[adventureworks.production.productdescription.ProductdescriptionRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object PdViewRow {
   implicit lazy val decoder: Decoder[PdViewRow] = Decoder.forProduct5[PdViewRow, ProductdescriptionId, ProductdescriptionId, /* max 400 chars */ String, TypoUUID, TypoLocalDateTime]("id", "productdescriptionid", "description", "rowguid", "modifieddate")(PdViewRow.apply)(ProductdescriptionId.decoder, ProductdescriptionId.decoder, Decoder.decodeString, TypoUUID.decoder, TypoLocalDateTime.decoder)
+
   implicit lazy val encoder: Encoder[PdViewRow] = Encoder.forProduct5[PdViewRow, ProductdescriptionId, ProductdescriptionId, /* max 400 chars */ String, TypoUUID, TypoLocalDateTime]("id", "productdescriptionid", "description", "rowguid", "modifieddate")(x => (x.id, x.productdescriptionid, x.description, x.rowguid, x.modifieddate))(ProductdescriptionId.encoder, ProductdescriptionId.encoder, Encoder.encodeString, TypoUUID.encoder, TypoLocalDateTime.encoder)
-  implicit lazy val read: Read[PdViewRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(ProductdescriptionId.get).asInstanceOf[Read[Any]],
+
+  implicit lazy val read: Read[PdViewRow] = {
+    new Read.CompositeOfInstances(Array(
       new Read.Single(ProductdescriptionId.get).asInstanceOf[Read[Any]],
-      new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoUUID.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
-  ))(scala.reflect.ClassTag.Any).map { arr =>
-    PdViewRow(
-      id = arr(0).asInstanceOf[ProductdescriptionId],
-          productdescriptionid = arr(1).asInstanceOf[ProductdescriptionId],
-          description = arr(2).asInstanceOf[/* max 400 chars */ String],
-          rowguid = arr(3).asInstanceOf[TypoUUID],
-          modifieddate = arr(4).asInstanceOf[TypoLocalDateTime]
-    )
+        new Read.Single(ProductdescriptionId.get).asInstanceOf[Read[Any]],
+        new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoUUID.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
+    ))(scala.reflect.ClassTag.Any).map { arr =>
+      PdViewRow(
+        id = arr(0).asInstanceOf[ProductdescriptionId],
+            productdescriptionid = arr(1).asInstanceOf[ProductdescriptionId],
+            description = arr(2).asInstanceOf[/* max 400 chars */ String],
+            rowguid = arr(3).asInstanceOf[TypoUUID],
+            modifieddate = arr(4).asInstanceOf[TypoLocalDateTime]
+      )
+    }
   }
 }

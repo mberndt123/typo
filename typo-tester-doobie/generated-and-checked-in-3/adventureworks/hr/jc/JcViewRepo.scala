@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package hr
-package jc
+package adventureworks.hr.jc
 
 import doobie.free.connection.ConnectionIO
 import fs2.Stream
@@ -13,5 +11,6 @@ import typo.dsl.SelectBuilder
 
 trait JcViewRepo {
   def select: SelectBuilder[JcViewFields, JcViewRow]
+
   def selectAll: Stream[ConnectionIO, JcViewRow]
 }

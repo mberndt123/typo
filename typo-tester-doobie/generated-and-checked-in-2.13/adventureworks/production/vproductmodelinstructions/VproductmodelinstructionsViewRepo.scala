@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package vproductmodelinstructions
+package adventureworks.production.vproductmodelinstructions
 
 import doobie.free.connection.ConnectionIO
 import fs2.Stream
@@ -13,5 +11,6 @@ import typo.dsl.SelectBuilder
 
 trait VproductmodelinstructionsViewRepo {
   def select: SelectBuilder[VproductmodelinstructionsViewFields, VproductmodelinstructionsViewRow]
+
   def selectAll: Stream[ConnectionIO, VproductmodelinstructionsViewRow]
 }

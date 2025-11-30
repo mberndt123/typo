@@ -3,11 +3,10 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN
  */
-package testdb
-package hardcoded
-package myschema
-package person
+package testdb.hardcoded.myschema.person
 
+import testdb.hardcoded.myschema.Number
+import testdb.hardcoded.myschema.Sector
 import testdb.hardcoded.myschema.football_club.FootballClubFields
 import testdb.hardcoded.myschema.football_club.FootballClubId
 import testdb.hardcoded.myschema.football_club.FootballClubRow
@@ -17,7 +16,7 @@ import testdb.hardcoded.myschema.marital_status.MaritalStatusRow
 import typo.dsl.ForeignKey
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.IdField
 import typo.dsl.SqlExpr.OptField
 import typo.dsl.Structure.Relation
@@ -45,11 +44,11 @@ trait PersonFields {
 
 object PersonFields {
   lazy val structure: Relation[PersonFields, PersonRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[PersonFields, PersonRow] {
-  
+
     override lazy val fields: PersonFields = new PersonFields {
       override def id = IdField[PersonId, PersonRow](_path, "id", None, Some("int8"), x => x.id, (row, value) => row.copy(id = value))
       override def favouriteFootballClubId = Field[FootballClubId, PersonRow](_path, "favourite_football_club_id", None, None, x => x.favouriteFootballClubId, (row, value) => row.copy(favouriteFootballClubId = value))
@@ -64,12 +63,11 @@ object PersonFields {
       override def sector = Field[Sector, PersonRow](_path, "sector", None, Some("myschema.sector"), x => x.sector, (row, value) => row.copy(sector = value))
       override def favoriteNumber = Field[Number, PersonRow](_path, "favorite_number", None, Some("myschema.number"), x => x.favoriteNumber, (row, value) => row.copy(favoriteNumber = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, PersonRow]] =
-      List[FieldLikeNoHkt[?, PersonRow]](fields.id, fields.favouriteFootballClubId, fields.name, fields.nickName, fields.blogUrl, fields.email, fields.phone, fields.likesPizza, fields.maritalStatusId, fields.workEmail, fields.sector, fields.favoriteNumber)
-  
+
+    override lazy val columns: List[FieldLike[?, PersonRow]] =
+      List[FieldLike[?, PersonRow]](fields.id, fields.favouriteFootballClubId, fields.name, fields.nickName, fields.blogUrl, fields.email, fields.phone, fields.likesPizza, fields.maritalStatusId, fields.workEmail, fields.sector, fields.favoriteNumber)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sales
-package vsalespersonsalesbyfiscalyears
+package adventureworks.sales.vsalespersonsalesbyfiscalyears
 
 import typo.dsl.SelectBuilder
 import zio.jdbc.ZConnection
@@ -13,5 +11,6 @@ import zio.stream.ZStream
 
 trait VsalespersonsalesbyfiscalyearsViewRepo {
   def select: SelectBuilder[VsalespersonsalesbyfiscalyearsViewFields, VsalespersonsalesbyfiscalyearsViewRow]
+
   def selectAll: ZStream[ZConnection, Throwable, VsalespersonsalesbyfiscalyearsViewRow]
 }

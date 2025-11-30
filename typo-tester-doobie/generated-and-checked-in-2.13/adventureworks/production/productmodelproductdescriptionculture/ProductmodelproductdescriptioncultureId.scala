@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package productmodelproductdescriptionculture
+package adventureworks.production.productmodelproductdescriptionculture
 
 import adventureworks.production.culture.CultureId
 import adventureworks.production.productdescription.ProductdescriptionId
@@ -19,8 +17,9 @@ case class ProductmodelproductdescriptioncultureId(
   productdescriptionid: ProductdescriptionId,
   cultureid: CultureId
 )
+
 object ProductmodelproductdescriptioncultureId {
   implicit lazy val decoder: Decoder[ProductmodelproductdescriptioncultureId] = Decoder.forProduct3[ProductmodelproductdescriptioncultureId, ProductmodelId, ProductdescriptionId, CultureId]("productmodelid", "productdescriptionid", "cultureid")(ProductmodelproductdescriptioncultureId.apply)(ProductmodelId.decoder, ProductdescriptionId.decoder, CultureId.decoder)
+
   implicit lazy val encoder: Encoder[ProductmodelproductdescriptioncultureId] = Encoder.forProduct3[ProductmodelproductdescriptioncultureId, ProductmodelId, ProductdescriptionId, CultureId]("productmodelid", "productdescriptionid", "cultureid")(x => (x.productmodelid, x.productdescriptionid, x.cultureid))(ProductmodelId.encoder, ProductdescriptionId.encoder, CultureId.encoder)
-  implicit lazy val ordering: Ordering[ProductmodelproductdescriptioncultureId] = Ordering.by(x => (x.productmodelid, x.productdescriptionid, x.cultureid))
 }

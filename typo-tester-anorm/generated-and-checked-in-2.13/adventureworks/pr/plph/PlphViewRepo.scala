@@ -3,14 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package plph
+package adventureworks.pr.plph
 
 import java.sql.Connection
 import typo.dsl.SelectBuilder
 
 trait PlphViewRepo {
   def select: SelectBuilder[PlphViewFields, PlphViewRow]
+
   def selectAll(implicit c: Connection): List[PlphViewRow]
 }

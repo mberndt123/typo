@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pdoc
+package adventureworks.pr.pdoc
 
 import typo.dsl.SelectBuilder
 import zio.jdbc.ZConnection
@@ -13,5 +11,6 @@ import zio.stream.ZStream
 
 trait PdocViewRepo {
   def select: SelectBuilder[PdocViewFields, PdocViewRow]
+
   def selectAll: ZStream[ZConnection, Throwable, PdocViewRow]
 }

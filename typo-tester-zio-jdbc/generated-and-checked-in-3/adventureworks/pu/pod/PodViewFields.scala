@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pu
-package pod
+package adventureworks.pu.pod
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoShort
@@ -13,7 +11,7 @@ import adventureworks.production.product.ProductId
 import adventureworks.purchasing.purchaseorderheader.PurchaseorderheaderId
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.Structure.Relation
 
 trait PodViewFields {
@@ -31,11 +29,11 @@ trait PodViewFields {
 
 object PodViewFields {
   lazy val structure: Relation[PodViewFields, PodViewRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[PodViewFields, PodViewRow] {
-  
+
     override lazy val fields: PodViewFields = new PodViewFields {
       override def id = Field[Int, PodViewRow](_path, "id", None, None, x => x.id, (row, value) => row.copy(id = value))
       override def purchaseorderid = Field[PurchaseorderheaderId, PodViewRow](_path, "purchaseorderid", None, None, x => x.purchaseorderid, (row, value) => row.copy(purchaseorderid = value))
@@ -48,12 +46,11 @@ object PodViewFields {
       override def rejectedqty = Field[BigDecimal, PodViewRow](_path, "rejectedqty", None, None, x => x.rejectedqty, (row, value) => row.copy(rejectedqty = value))
       override def modifieddate = Field[TypoLocalDateTime, PodViewRow](_path, "modifieddate", Some("text"), None, x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, PodViewRow]] =
-      List[FieldLikeNoHkt[?, PodViewRow]](fields.id, fields.purchaseorderid, fields.purchaseorderdetailid, fields.duedate, fields.orderqty, fields.productid, fields.unitprice, fields.receivedqty, fields.rejectedqty, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, PodViewRow]] =
+      List[FieldLike[?, PodViewRow]](fields.id, fields.purchaseorderid, fields.purchaseorderdetailid, fields.duedate, fields.orderqty, fields.productid, fields.unitprice, fields.receivedqty, fields.rejectedqty, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

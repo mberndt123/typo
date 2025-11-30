@@ -3,8 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
+package adventureworks.public
 
 import doobie.postgres.Text
 import doobie.util.Get
@@ -15,20 +14,29 @@ import io.circe.Encoder
 import typo.dsl.Bijection
 
 /** Domain `public.Flag`
-  * No constraint
-  */
+ * No constraint
+ */
 case class Flag(value: Boolean)
+
 object Flag {
   given arrayGet: Get[Array[Flag]] = adventureworks.BooleanArrayMeta.get.map(_.map(Flag.apply))
+
   given arrayPut: Put[Array[Flag]] = adventureworks.BooleanArrayMeta.put.contramap(_.map(_.value))
-  given bijection: Bijection[Flag, Boolean] = Bijection[Flag, Boolean](_.value)(Flag.apply)
+
+  given bijection: Bijection[Flag, Boolean] = Bijection.apply[Flag, Boolean](_.value)(Flag.apply)
+
   given decoder: Decoder[Flag] = Decoder.decodeBoolean.map(Flag.apply)
+
   given encoder: Encoder[Flag] = Encoder.encodeBoolean.contramap(_.value)
+
   given get: Get[Flag] = Meta.BooleanMeta.get.map(Flag.apply)
-  given ordering: Ordering[Flag] = Ordering.by(_.value)
-  given put: Put[Flag] = Meta.BooleanMeta.put.contramap(_.value)
-  given text: Text[Flag] = new Text[Flag] {
-    override def unsafeEncode(v: Flag, sb: StringBuilder): Unit = Text.booleanInstance.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: Flag, sb: StringBuilder): Unit = Text.booleanInstance.unsafeArrayEncode(v.value, sb)
+
+  given pgText: Text[Flag] = {
+    new Text[Flag] {
+      override def unsafeEncode(v: Flag, sb: StringBuilder): Unit = Text.booleanInstance.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: Flag, sb: StringBuilder): Unit = Text.booleanInstance.unsafeArrayEncode(v.value, sb)
+    }
   }
+
+  given put: Put[Flag] = Meta.BooleanMeta.put.contramap(_.value)
 }

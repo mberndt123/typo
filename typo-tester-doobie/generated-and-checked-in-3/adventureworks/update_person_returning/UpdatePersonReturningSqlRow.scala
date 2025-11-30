@@ -3,8 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package update_person_returning
+package adventureworks.update_person_returning
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.userdefined.FirstName
@@ -14,22 +13,26 @@ import io.circe.Encoder
 
 /** SQL file: update_person_returning.sql */
 case class UpdatePersonReturningSqlRow(
-  /** Points to [[person.person.PersonRow.firstname]] */
+  /** Points to [[adventureworks.person.person.PersonRow.firstname]] */
   firstname: /* user-picked */ FirstName,
-  /** Points to [[person.person.PersonRow.modifieddate]] */
+  /** Points to [[adventureworks.person.person.PersonRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object UpdatePersonReturningSqlRow {
   given decoder: Decoder[UpdatePersonReturningSqlRow] = Decoder.forProduct2[UpdatePersonReturningSqlRow, /* user-picked */ FirstName, TypoLocalDateTime]("firstname", "modifieddate")(UpdatePersonReturningSqlRow.apply)(using FirstName.decoder, TypoLocalDateTime.decoder)
+
   given encoder: Encoder[UpdatePersonReturningSqlRow] = Encoder.forProduct2[UpdatePersonReturningSqlRow, /* user-picked */ FirstName, TypoLocalDateTime]("firstname", "modifieddate")(x => (x.firstname, x.modifieddate))(using FirstName.encoder, TypoLocalDateTime.encoder)
-  given read: Read[UpdatePersonReturningSqlRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(/* user-picked */ FirstName.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
-  ))(using scala.reflect.ClassTag.Any).map { arr =>
-    UpdatePersonReturningSqlRow(
-      firstname = arr(0).asInstanceOf[/* user-picked */ FirstName],
-          modifieddate = arr(1).asInstanceOf[TypoLocalDateTime]
-    )
+
+  given read: Read[UpdatePersonReturningSqlRow] = {
+    new Read.CompositeOfInstances(Array(
+      new Read.Single(/* user-picked */ FirstName.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
+    ))(using scala.reflect.ClassTag.Any).map { arr =>
+      UpdatePersonReturningSqlRow(
+        firstname = arr(0).asInstanceOf[/* user-picked */ FirstName],
+            modifieddate = arr(1).asInstanceOf[TypoLocalDateTime]
+      )
+    }
   }
 }

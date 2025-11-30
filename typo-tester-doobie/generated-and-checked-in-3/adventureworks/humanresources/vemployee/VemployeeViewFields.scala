@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package humanresources
-package vemployee
+package adventureworks.humanresources.vemployee
 
 import adventureworks.customtypes.TypoXml
 import adventureworks.person.businessentity.BusinessentityId
@@ -14,7 +12,7 @@ import adventureworks.public.Phone
 import adventureworks.userdefined.FirstName
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.OptField
 import typo.dsl.Structure.Relation
 
@@ -41,11 +39,11 @@ trait VemployeeViewFields {
 
 object VemployeeViewFields {
   lazy val structure: Relation[VemployeeViewFields, VemployeeViewRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[VemployeeViewFields, VemployeeViewRow] {
-  
+
     override lazy val fields: VemployeeViewFields = new VemployeeViewFields {
       override def businessentityid = Field[BusinessentityId, VemployeeViewRow](_path, "businessentityid", None, None, x => x.businessentityid, (row, value) => row.copy(businessentityid = value))
       override def title = OptField[/* max 8 chars */ String, VemployeeViewRow](_path, "title", None, None, x => x.title, (row, value) => row.copy(title = value))
@@ -66,12 +64,11 @@ object VemployeeViewFields {
       override def countryregionname = Field[Name, VemployeeViewRow](_path, "countryregionname", None, None, x => x.countryregionname, (row, value) => row.copy(countryregionname = value))
       override def additionalcontactinfo = OptField[TypoXml, VemployeeViewRow](_path, "additionalcontactinfo", None, None, x => x.additionalcontactinfo, (row, value) => row.copy(additionalcontactinfo = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, VemployeeViewRow]] =
-      List[FieldLikeNoHkt[?, VemployeeViewRow]](fields.businessentityid, fields.title, fields.firstname, fields.middlename, fields.lastname, fields.suffix, fields.jobtitle, fields.phonenumber, fields.phonenumbertype, fields.emailaddress, fields.emailpromotion, fields.addressline1, fields.addressline2, fields.city, fields.stateprovincename, fields.postalcode, fields.countryregionname, fields.additionalcontactinfo)
-  
+
+    override lazy val columns: List[FieldLike[?, VemployeeViewRow]] =
+      List[FieldLike[?, VemployeeViewRow]](fields.businessentityid, fields.title, fields.firstname, fields.middlename, fields.lastname, fields.suffix, fields.jobtitle, fields.phonenumber, fields.phonenumbertype, fields.emailaddress, fields.emailpromotion, fields.addressline1, fields.addressline2, fields.city, fields.stateprovincename, fields.postalcode, fields.countryregionname, fields.additionalcontactinfo)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

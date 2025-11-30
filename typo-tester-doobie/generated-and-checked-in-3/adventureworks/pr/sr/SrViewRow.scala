@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package sr
+package adventureworks.pr.sr
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.production.scrapreason.ScrapreasonId
@@ -16,30 +14,34 @@ import io.circe.Encoder
 
 /** View: pr.sr */
 case class SrViewRow(
-  /** Points to [[production.scrapreason.ScrapreasonRow.scrapreasonid]] */
+  /** Points to [[adventureworks.production.scrapreason.ScrapreasonRow.scrapreasonid]] */
   id: ScrapreasonId,
-  /** Points to [[production.scrapreason.ScrapreasonRow.scrapreasonid]] */
+  /** Points to [[adventureworks.production.scrapreason.ScrapreasonRow.scrapreasonid]] */
   scrapreasonid: ScrapreasonId,
-  /** Points to [[production.scrapreason.ScrapreasonRow.name]] */
+  /** Points to [[adventureworks.production.scrapreason.ScrapreasonRow.name]] */
   name: Name,
-  /** Points to [[production.scrapreason.ScrapreasonRow.modifieddate]] */
+  /** Points to [[adventureworks.production.scrapreason.ScrapreasonRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object SrViewRow {
   given decoder: Decoder[SrViewRow] = Decoder.forProduct4[SrViewRow, ScrapreasonId, ScrapreasonId, Name, TypoLocalDateTime]("id", "scrapreasonid", "name", "modifieddate")(SrViewRow.apply)(using ScrapreasonId.decoder, ScrapreasonId.decoder, Name.decoder, TypoLocalDateTime.decoder)
+
   given encoder: Encoder[SrViewRow] = Encoder.forProduct4[SrViewRow, ScrapreasonId, ScrapreasonId, Name, TypoLocalDateTime]("id", "scrapreasonid", "name", "modifieddate")(x => (x.id, x.scrapreasonid, x.name, x.modifieddate))(using ScrapreasonId.encoder, ScrapreasonId.encoder, Name.encoder, TypoLocalDateTime.encoder)
-  given read: Read[SrViewRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(ScrapreasonId.get).asInstanceOf[Read[Any]],
+
+  given read: Read[SrViewRow] = {
+    new Read.CompositeOfInstances(Array(
       new Read.Single(ScrapreasonId.get).asInstanceOf[Read[Any]],
-      new Read.Single(Name.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
-  ))(using scala.reflect.ClassTag.Any).map { arr =>
-    SrViewRow(
-      id = arr(0).asInstanceOf[ScrapreasonId],
-          scrapreasonid = arr(1).asInstanceOf[ScrapreasonId],
-          name = arr(2).asInstanceOf[Name],
-          modifieddate = arr(3).asInstanceOf[TypoLocalDateTime]
-    )
+        new Read.Single(ScrapreasonId.get).asInstanceOf[Read[Any]],
+        new Read.Single(Name.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
+    ))(using scala.reflect.ClassTag.Any).map { arr =>
+      SrViewRow(
+        id = arr(0).asInstanceOf[ScrapreasonId],
+            scrapreasonid = arr(1).asInstanceOf[ScrapreasonId],
+            name = arr(2).asInstanceOf[Name],
+            modifieddate = arr(3).asInstanceOf[TypoLocalDateTime]
+      )
+    }
   }
 }

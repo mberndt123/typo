@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package humanresources
-package vemployeedepartmenthistory
+package adventureworks.humanresources.vemployeedepartmenthistory
 
 import adventureworks.customtypes.TypoLocalDate
 import adventureworks.person.businessentity.BusinessentityId
@@ -25,79 +23,87 @@ import scala.util.Try
 
 /** View: humanresources.vemployeedepartmenthistory */
 case class VemployeedepartmenthistoryViewRow(
-  /** Points to [[employee.EmployeeRow.businessentityid]] */
+  /** Points to [[adventureworks.humanresources.employee.EmployeeRow.businessentityid]] */
   businessentityid: BusinessentityId,
-  /** Points to [[person.person.PersonRow.title]] */
+  /** Points to [[adventureworks.person.person.PersonRow.title]] */
   title: Option[/* max 8 chars */ String],
-  /** Points to [[person.person.PersonRow.firstname]] */
+  /** Points to [[adventureworks.person.person.PersonRow.firstname]] */
   firstname: /* user-picked */ FirstName,
-  /** Points to [[person.person.PersonRow.middlename]] */
+  /** Points to [[adventureworks.person.person.PersonRow.middlename]] */
   middlename: Option[Name],
-  /** Points to [[person.person.PersonRow.lastname]] */
+  /** Points to [[adventureworks.person.person.PersonRow.lastname]] */
   lastname: Name,
-  /** Points to [[person.person.PersonRow.suffix]] */
+  /** Points to [[adventureworks.person.person.PersonRow.suffix]] */
   suffix: Option[/* max 10 chars */ String],
-  /** Points to [[shift.ShiftRow.name]] */
+  /** Points to [[adventureworks.humanresources.shift.ShiftRow.name]] */
   shift: Name,
-  /** Points to [[department.DepartmentRow.name]] */
+  /** Points to [[adventureworks.humanresources.department.DepartmentRow.name]] */
   department: Name,
-  /** Points to [[department.DepartmentRow.groupname]] */
+  /** Points to [[adventureworks.humanresources.department.DepartmentRow.groupname]] */
   groupname: Name,
-  /** Points to [[employeedepartmenthistory.EmployeedepartmenthistoryRow.startdate]] */
+  /** Points to [[adventureworks.humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.startdate]] */
   startdate: TypoLocalDate,
-  /** Points to [[employeedepartmenthistory.EmployeedepartmenthistoryRow.enddate]] */
+  /** Points to [[adventureworks.humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.enddate]] */
   enddate: Option[TypoLocalDate]
 )
 
 object VemployeedepartmenthistoryViewRow {
-  given reads: Reads[VemployeedepartmenthistoryViewRow] = Reads[VemployeedepartmenthistoryViewRow](json => JsResult.fromTry(
-      Try(
-        VemployeedepartmenthistoryViewRow(
-          businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
-          title = json.\("title").toOption.map(_.as(Reads.StringReads)),
-          firstname = json.\("firstname").as(FirstName.reads),
-          middlename = json.\("middlename").toOption.map(_.as(Name.reads)),
-          lastname = json.\("lastname").as(Name.reads),
-          suffix = json.\("suffix").toOption.map(_.as(Reads.StringReads)),
-          shift = json.\("shift").as(Name.reads),
-          department = json.\("department").as(Name.reads),
-          groupname = json.\("groupname").as(Name.reads),
-          startdate = json.\("startdate").as(TypoLocalDate.reads),
-          enddate = json.\("enddate").toOption.map(_.as(TypoLocalDate.reads))
+  given reads: Reads[VemployeedepartmenthistoryViewRow] = {
+    Reads[VemployeedepartmenthistoryViewRow](json => JsResult.fromTry(
+        Try(
+          VemployeedepartmenthistoryViewRow(
+            businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
+            title = json.\("title").toOption.map(_.as(Reads.StringReads)),
+            firstname = json.\("firstname").as(FirstName.reads),
+            middlename = json.\("middlename").toOption.map(_.as(Name.reads)),
+            lastname = json.\("lastname").as(Name.reads),
+            suffix = json.\("suffix").toOption.map(_.as(Reads.StringReads)),
+            shift = json.\("shift").as(Name.reads),
+            department = json.\("department").as(Name.reads),
+            groupname = json.\("groupname").as(Name.reads),
+            startdate = json.\("startdate").as(TypoLocalDate.reads),
+            enddate = json.\("enddate").toOption.map(_.as(TypoLocalDate.reads))
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[VemployeedepartmenthistoryViewRow] = RowParser[VemployeedepartmenthistoryViewRow] { row =>
-    Success(
-      VemployeedepartmenthistoryViewRow(
-        businessentityid = row(idx + 0)(using BusinessentityId.column),
-        title = row(idx + 1)(using Column.columnToOption(using Column.columnToString)),
-        firstname = row(idx + 2)(using /* user-picked */ FirstName.column),
-        middlename = row(idx + 3)(using Column.columnToOption(using Name.column)),
-        lastname = row(idx + 4)(using Name.column),
-        suffix = row(idx + 5)(using Column.columnToOption(using Column.columnToString)),
-        shift = row(idx + 6)(using Name.column),
-        department = row(idx + 7)(using Name.column),
-        groupname = row(idx + 8)(using Name.column),
-        startdate = row(idx + 9)(using TypoLocalDate.column),
-        enddate = row(idx + 10)(using Column.columnToOption(using TypoLocalDate.column))
-      )
+      ),
     )
   }
-  given writes: OWrites[VemployeedepartmenthistoryViewRow] = OWrites[VemployeedepartmenthistoryViewRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
-      "title" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.title),
-      "firstname" -> FirstName.writes.writes(o.firstname),
-      "middlename" -> Writes.OptionWrites(using Name.writes).writes(o.middlename),
-      "lastname" -> Name.writes.writes(o.lastname),
-      "suffix" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.suffix),
-      "shift" -> Name.writes.writes(o.shift),
-      "department" -> Name.writes.writes(o.department),
-      "groupname" -> Name.writes.writes(o.groupname),
-      "startdate" -> TypoLocalDate.writes.writes(o.startdate),
-      "enddate" -> Writes.OptionWrites(using TypoLocalDate.writes).writes(o.enddate)
-    ))
-  )
+
+  def rowParser(idx: Int): RowParser[VemployeedepartmenthistoryViewRow] = {
+    RowParser[VemployeedepartmenthistoryViewRow] { row =>
+      Success(
+        VemployeedepartmenthistoryViewRow(
+          businessentityid = row(idx + 0)(using BusinessentityId.column),
+          title = row(idx + 1)(using Column.columnToOption(using Column.columnToString)),
+          firstname = row(idx + 2)(using /* user-picked */ FirstName.column),
+          middlename = row(idx + 3)(using Column.columnToOption(using Name.column)),
+          lastname = row(idx + 4)(using Name.column),
+          suffix = row(idx + 5)(using Column.columnToOption(using Column.columnToString)),
+          shift = row(idx + 6)(using Name.column),
+          department = row(idx + 7)(using Name.column),
+          groupname = row(idx + 8)(using Name.column),
+          startdate = row(idx + 9)(using TypoLocalDate.column),
+          enddate = row(idx + 10)(using Column.columnToOption(using TypoLocalDate.column))
+        )
+      )
+    }
+  }
+
+  given writes: OWrites[VemployeedepartmenthistoryViewRow] = {
+    OWrites[VemployeedepartmenthistoryViewRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
+        "title" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.title),
+        "firstname" -> FirstName.writes.writes(o.firstname),
+        "middlename" -> Writes.OptionWrites(using Name.writes).writes(o.middlename),
+        "lastname" -> Name.writes.writes(o.lastname),
+        "suffix" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.suffix),
+        "shift" -> Name.writes.writes(o.shift),
+        "department" -> Name.writes.writes(o.department),
+        "groupname" -> Name.writes.writes(o.groupname),
+        "startdate" -> TypoLocalDate.writes.writes(o.startdate),
+        "enddate" -> Writes.OptionWrites(using TypoLocalDate.writes).writes(o.enddate)
+      ))
+    )
+  }
 }

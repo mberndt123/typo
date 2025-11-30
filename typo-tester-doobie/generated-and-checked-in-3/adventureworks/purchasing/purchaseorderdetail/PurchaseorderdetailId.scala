@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package purchasing
-package purchaseorderdetail
+package adventureworks.purchasing.purchaseorderdetail
 
 import adventureworks.purchasing.purchaseorderheader.PurchaseorderheaderId
 import io.circe.Decoder
@@ -16,8 +14,9 @@ case class PurchaseorderdetailId(
   purchaseorderid: PurchaseorderheaderId,
   purchaseorderdetailid: Int
 )
+
 object PurchaseorderdetailId {
   given decoder: Decoder[PurchaseorderdetailId] = Decoder.forProduct2[PurchaseorderdetailId, PurchaseorderheaderId, Int]("purchaseorderid", "purchaseorderdetailid")(PurchaseorderdetailId.apply)(using PurchaseorderheaderId.decoder, Decoder.decodeInt)
+
   given encoder: Encoder[PurchaseorderdetailId] = Encoder.forProduct2[PurchaseorderdetailId, PurchaseorderheaderId, Int]("purchaseorderid", "purchaseorderdetailid")(x => (x.purchaseorderid, x.purchaseorderdetailid))(using PurchaseorderheaderId.encoder, Encoder.encodeInt)
-  given ordering: Ordering[PurchaseorderdetailId] = Ordering.by(x => (x.purchaseorderid, x.purchaseorderdetailid))
 }

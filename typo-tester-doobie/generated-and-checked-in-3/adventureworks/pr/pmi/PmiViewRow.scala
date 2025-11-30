@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pmi
+package adventureworks.pr.pmi
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.production.illustration.IllustrationId
@@ -16,26 +14,30 @@ import io.circe.Encoder
 
 /** View: pr.pmi */
 case class PmiViewRow(
-  /** Points to [[production.productmodelillustration.ProductmodelillustrationRow.productmodelid]] */
+  /** Points to [[adventureworks.production.productmodelillustration.ProductmodelillustrationRow.productmodelid]] */
   productmodelid: ProductmodelId,
-  /** Points to [[production.productmodelillustration.ProductmodelillustrationRow.illustrationid]] */
+  /** Points to [[adventureworks.production.productmodelillustration.ProductmodelillustrationRow.illustrationid]] */
   illustrationid: IllustrationId,
-  /** Points to [[production.productmodelillustration.ProductmodelillustrationRow.modifieddate]] */
+  /** Points to [[adventureworks.production.productmodelillustration.ProductmodelillustrationRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object PmiViewRow {
   given decoder: Decoder[PmiViewRow] = Decoder.forProduct3[PmiViewRow, ProductmodelId, IllustrationId, TypoLocalDateTime]("productmodelid", "illustrationid", "modifieddate")(PmiViewRow.apply)(using ProductmodelId.decoder, IllustrationId.decoder, TypoLocalDateTime.decoder)
+
   given encoder: Encoder[PmiViewRow] = Encoder.forProduct3[PmiViewRow, ProductmodelId, IllustrationId, TypoLocalDateTime]("productmodelid", "illustrationid", "modifieddate")(x => (x.productmodelid, x.illustrationid, x.modifieddate))(using ProductmodelId.encoder, IllustrationId.encoder, TypoLocalDateTime.encoder)
-  given read: Read[PmiViewRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(ProductmodelId.get).asInstanceOf[Read[Any]],
-      new Read.Single(IllustrationId.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
-  ))(using scala.reflect.ClassTag.Any).map { arr =>
-    PmiViewRow(
-      productmodelid = arr(0).asInstanceOf[ProductmodelId],
-          illustrationid = arr(1).asInstanceOf[IllustrationId],
-          modifieddate = arr(2).asInstanceOf[TypoLocalDateTime]
-    )
+
+  given read: Read[PmiViewRow] = {
+    new Read.CompositeOfInstances(Array(
+      new Read.Single(ProductmodelId.get).asInstanceOf[Read[Any]],
+        new Read.Single(IllustrationId.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
+    ))(using scala.reflect.ClassTag.Any).map { arr =>
+      PmiViewRow(
+        productmodelid = arr(0).asInstanceOf[ProductmodelId],
+            illustrationid = arr(1).asInstanceOf[IllustrationId],
+            modifieddate = arr(2).asInstanceOf[TypoLocalDateTime]
+      )
+    }
   }
 }

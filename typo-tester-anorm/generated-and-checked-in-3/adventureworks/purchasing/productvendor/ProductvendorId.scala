@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package purchasing
-package productvendor
+package adventureworks.purchasing.productvendor
 
 import adventureworks.person.businessentity.BusinessentityId
 import adventureworks.production.product.ProductId
@@ -14,7 +12,6 @@ import play.api.libs.json.JsResult
 import play.api.libs.json.JsValue
 import play.api.libs.json.OWrites
 import play.api.libs.json.Reads
-import play.api.libs.json.Writes
 import scala.collection.immutable.ListMap
 import scala.util.Try
 
@@ -23,21 +20,26 @@ case class ProductvendorId(
   productid: ProductId,
   businessentityid: BusinessentityId
 )
+
 object ProductvendorId {
-  given ordering: Ordering[ProductvendorId] = Ordering.by(x => (x.productid, x.businessentityid))
-  given reads: Reads[ProductvendorId] = Reads[ProductvendorId](json => JsResult.fromTry(
-      Try(
-        ProductvendorId(
-          productid = json.\("productid").as(summon[Reads[ProductId]]),
-          businessentityid = json.\("businessentityid").as(summon[Reads[BusinessentityId]])
+  given reads: Reads[ProductvendorId] = {
+    Reads[ProductvendorId](json => JsResult.fromTry(
+        Try(
+          ProductvendorId(
+            productid = json.\("productid").as(ProductId.reads),
+            businessentityid = json.\("businessentityid").as(BusinessentityId.reads)
+          )
         )
-      )
-    ),
-  )
-  given writes: OWrites[ProductvendorId] = OWrites[ProductvendorId](o =>
-    new JsObject(ListMap[String, JsValue](
-      "productid" -> summon[Writes[ProductId]].writes(o.productid),
-      "businessentityid" -> summon[Writes[BusinessentityId]].writes(o.businessentityid)
-    ))
-  )
+      ),
+    )
+  }
+
+  given writes: OWrites[ProductvendorId] = {
+    OWrites[ProductvendorId](o =>
+      new JsObject(ListMap[String, JsValue](
+        "productid" -> ProductId.writes.writes(o.productid),
+        "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid)
+      ))
+    )
+  }
 }

@@ -3,8 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package customtypes
+package adventureworks.customtypes
 
 import cats.data.NonEmptyList
 import doobie.postgres.Text
@@ -19,21 +18,37 @@ import typo.dsl.Bijection
 case class TypoLocalDate(value: LocalDate)
 
 object TypoLocalDate {
-  def now = TypoLocalDate(LocalDate.now)
-  def apply(str: String): TypoLocalDate = TypoLocalDate(LocalDate.parse(str))
-  implicit lazy val arrayGet: Get[Array[TypoLocalDate]] = Get.Advanced.array[AnyRef](NonEmptyList.one("date[]"))
-    .map(_.map(v => TypoLocalDate(LocalDate.parse(v.asInstanceOf[String]))))
-  implicit lazy val arrayPut: Put[Array[TypoLocalDate]] = Put.Advanced.array[AnyRef](NonEmptyList.one("date[]"), "date")
-    .contramap(_.map(v => v.value.toString))
-  implicit lazy val bijection: Bijection[TypoLocalDate, LocalDate] = Bijection[TypoLocalDate, LocalDate](_.value)(TypoLocalDate.apply)
-  implicit lazy val decoder: Decoder[TypoLocalDate] = Decoder.decodeLocalDate.map(TypoLocalDate.apply)
-  implicit lazy val encoder: Encoder[TypoLocalDate] = Encoder.encodeLocalDate.contramap(_.value)
-  implicit lazy val get: Get[TypoLocalDate] = Get.Advanced.other[String](NonEmptyList.one("date"))
-    .map(v => TypoLocalDate(LocalDate.parse(v)))
-  implicit lazy val ordering: Ordering[TypoLocalDate] = Ordering.by(_.value)
-  implicit lazy val put: Put[TypoLocalDate] = Put.Advanced.other[String](NonEmptyList.one("date")).contramap(v => v.value.toString)
-  implicit lazy val text: Text[TypoLocalDate] = new Text[TypoLocalDate] {
-    override def unsafeEncode(v: TypoLocalDate, sb: StringBuilder): Unit = Text.stringInstance.unsafeEncode(v.value.toString, sb)
-    override def unsafeArrayEncode(v: TypoLocalDate, sb: StringBuilder): Unit = Text.stringInstance.unsafeArrayEncode(v.value.toString, sb)
+  def apply(str: String): TypoLocalDate = new TypoLocalDate(LocalDate.parse(str))
+
+  implicit lazy val arrayGet: Get[Array[TypoLocalDate]] = {
+    Get.Advanced.array[AnyRef](NonEmptyList.one("date[]"))
+      .map(_.map(v => new TypoLocalDate(LocalDate.parse(v.asInstanceOf[String]))))
   }
+
+  implicit lazy val arrayPut: Put[Array[TypoLocalDate]] = {
+    Put.Advanced.array[AnyRef](NonEmptyList.one("date[]"), "date")
+      .contramap(_.map(v => v.value.toString()))
+  }
+
+  implicit lazy val bijection: Bijection[TypoLocalDate, LocalDate] = Bijection.apply[TypoLocalDate, LocalDate](_.value)(TypoLocalDate.apply)
+
+  implicit lazy val decoder: Decoder[TypoLocalDate] = Decoder.decodeLocalDate.map(TypoLocalDate.apply)
+
+  implicit lazy val encoder: Encoder[TypoLocalDate] = Encoder.encodeLocalDate.contramap(_.value)
+
+  implicit lazy val get: Get[TypoLocalDate] = {
+    Get.Advanced.other[String](NonEmptyList.one("date"))
+      .map(v => new TypoLocalDate(LocalDate.parse(v)))
+  }
+
+  def now: TypoLocalDate = new TypoLocalDate(LocalDate.now())
+
+  implicit lazy val pgText: Text[TypoLocalDate] = {
+    new Text[TypoLocalDate] {
+      override def unsafeEncode(v: TypoLocalDate, sb: StringBuilder): Unit = Text.stringInstance.unsafeEncode(v.value.toString(), sb)
+      override def unsafeArrayEncode(v: TypoLocalDate, sb: StringBuilder): Unit = Text.stringInstance.unsafeArrayEncode(v.value.toString(), sb)
+    }
+  }
+
+  implicit lazy val put: Put[TypoLocalDate] = Put.Advanced.other[String](NonEmptyList.one("date")).contramap(v => v.value.toString())
 }

@@ -3,14 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package purchasing
-package vvendorwithcontacts
+package adventureworks.purchasing.vvendorwithcontacts
 
 import java.sql.Connection
 import typo.dsl.SelectBuilder
 
 trait VvendorwithcontactsViewRepo {
   def select: SelectBuilder[VvendorwithcontactsViewFields, VvendorwithcontactsViewRow]
+
   def selectAll(implicit c: Connection): List[VvendorwithcontactsViewRow]
 }

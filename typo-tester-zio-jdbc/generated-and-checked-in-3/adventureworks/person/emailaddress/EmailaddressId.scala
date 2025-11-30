@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package person
-package emailaddress
+package adventureworks.person.emailaddress
 
 import adventureworks.person.businessentity.BusinessentityId
 import zio.json.JsonDecoder
@@ -18,24 +16,29 @@ case class EmailaddressId(
   businessentityid: BusinessentityId,
   emailaddressid: Int
 )
+
 object EmailaddressId {
-  given jsonDecoder: JsonDecoder[EmailaddressId] = JsonDecoder[Json.Obj].mapOrFail { jsonObj =>
-    val businessentityid = jsonObj.get("businessentityid").toRight("Missing field 'businessentityid'").flatMap(_.as(using BusinessentityId.jsonDecoder))
-    val emailaddressid = jsonObj.get("emailaddressid").toRight("Missing field 'emailaddressid'").flatMap(_.as(using JsonDecoder.int))
-    if (businessentityid.isRight && emailaddressid.isRight)
-      Right(EmailaddressId(businessentityid = businessentityid.toOption.get, emailaddressid = emailaddressid.toOption.get))
-    else Left(List[Either[String, Any]](businessentityid, emailaddressid).flatMap(_.left.toOption).mkString(", "))
-  }
-  given jsonEncoder: JsonEncoder[EmailaddressId] = new JsonEncoder[EmailaddressId] {
-    override def unsafeEncode(a: EmailaddressId, indent: Option[Int], out: Write): Unit = {
-      out.write("{")
-      out.write(""""businessentityid":""")
-      BusinessentityId.jsonEncoder.unsafeEncode(a.businessentityid, indent, out)
-      out.write(",")
-      out.write(""""emailaddressid":""")
-      JsonEncoder.int.unsafeEncode(a.emailaddressid, indent, out)
-      out.write("}")
+  given jsonDecoder: JsonDecoder[EmailaddressId] = {
+    JsonDecoder[Json.Obj].mapOrFail { jsonObj =>
+      val businessentityid = jsonObj.get("businessentityid").toRight("Missing field 'businessentityid'").flatMap(_.as(using BusinessentityId.jsonDecoder))
+      val emailaddressid = jsonObj.get("emailaddressid").toRight("Missing field 'emailaddressid'").flatMap(_.as(using JsonDecoder.int))
+      if (businessentityid.isRight && emailaddressid.isRight)
+        Right(EmailaddressId(businessentityid = businessentityid.toOption.get, emailaddressid = emailaddressid.toOption.get))
+      else Left(List[Either[String, Any]](businessentityid, emailaddressid).flatMap(_.left.toOption).mkString(", "))
     }
   }
-  given ordering: Ordering[EmailaddressId] = Ordering.by(x => (x.businessentityid, x.emailaddressid))
+
+  given jsonEncoder: JsonEncoder[EmailaddressId] = {
+    new JsonEncoder[EmailaddressId] {
+      override def unsafeEncode(a: EmailaddressId, indent: Option[Int], out: Write): Unit = {
+        out.write("{")
+        out.write(""""businessentityid":""")
+        BusinessentityId.jsonEncoder.unsafeEncode(a.businessentityid, indent, out)
+        out.write(",")
+        out.write(""""emailaddressid":""")
+        JsonEncoder.int.unsafeEncode(a.emailaddressid, indent, out)
+        out.write("}")
+      }
+    }
+  }
 }

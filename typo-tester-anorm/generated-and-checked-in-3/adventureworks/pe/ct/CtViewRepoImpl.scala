@@ -3,22 +3,18 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pe
-package ct
+package adventureworks.pe.ct
 
-import anorm.SqlStringInterpolation
 import java.sql.Connection
 import typo.dsl.SelectBuilder
-import typo.dsl.SelectBuilderSql
+import anorm.SqlStringInterpolation
 
 class CtViewRepoImpl extends CtViewRepo {
-  override def select: SelectBuilder[CtViewFields, CtViewRow] = {
-    SelectBuilderSql(""""pe"."ct"""", CtViewFields.structure, CtViewRow.rowParser)
-  }
-  override def selectAll(using c: Connection): List[CtViewRow] = {
+  def select: SelectBuilder[CtViewFields, CtViewRow] = SelectBuilder.of(""""pe"."ct"""", CtViewFields.structure, CtViewRow.rowParser)
+
+  def selectAll(using c: Connection): List[CtViewRow] = {
     SQL"""select "id", "contacttypeid", "name", "modifieddate"::text
-          from "pe"."ct"
-       """.as(CtViewRow.rowParser(1).*)
+    from "pe"."ct"
+    """.as(CtViewRow.rowParser(1).*)
   }
 }

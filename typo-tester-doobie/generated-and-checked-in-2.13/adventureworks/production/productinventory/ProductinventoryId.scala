@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package productinventory
+package adventureworks.production.productinventory
 
 import adventureworks.production.location.LocationId
 import adventureworks.production.product.ProductId
@@ -17,8 +15,9 @@ case class ProductinventoryId(
   productid: ProductId,
   locationid: LocationId
 )
+
 object ProductinventoryId {
   implicit lazy val decoder: Decoder[ProductinventoryId] = Decoder.forProduct2[ProductinventoryId, ProductId, LocationId]("productid", "locationid")(ProductinventoryId.apply)(ProductId.decoder, LocationId.decoder)
+
   implicit lazy val encoder: Encoder[ProductinventoryId] = Encoder.forProduct2[ProductinventoryId, ProductId, LocationId]("productid", "locationid")(x => (x.productid, x.locationid))(ProductId.encoder, LocationId.encoder)
-  implicit lazy val ordering: Ordering[ProductinventoryId] = Ordering.by(x => (x.productid, x.locationid))
 }

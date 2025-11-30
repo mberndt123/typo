@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package d
+package adventureworks.pr.d
 
 import adventureworks.customtypes.TypoBytea
 import adventureworks.customtypes.TypoLocalDateTime
@@ -16,7 +14,7 @@ import adventureworks.production.document.DocumentId
 import adventureworks.public.Flag
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.OptField
 import typo.dsl.Structure.Relation
 
@@ -38,11 +36,11 @@ trait DViewFields {
 
 object DViewFields {
   lazy val structure: Relation[DViewFields, DViewRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[DViewFields, DViewRow] {
-  
+
     override lazy val fields: DViewFields = new DViewFields {
       override def title = Field[/* max 50 chars */ String, DViewRow](_path, "title", None, None, x => x.title, (row, value) => row.copy(title = value))
       override def owner = Field[BusinessentityId, DViewRow](_path, "owner", None, None, x => x.owner, (row, value) => row.copy(owner = value))
@@ -58,12 +56,11 @@ object DViewFields {
       override def modifieddate = Field[TypoLocalDateTime, DViewRow](_path, "modifieddate", Some("text"), None, x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
       override def documentnode = Field[DocumentId, DViewRow](_path, "documentnode", None, None, x => x.documentnode, (row, value) => row.copy(documentnode = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, DViewRow]] =
-      List[FieldLikeNoHkt[?, DViewRow]](fields.title, fields.owner, fields.folderflag, fields.filename, fields.fileextension, fields.revision, fields.changenumber, fields.status, fields.documentsummary, fields.document, fields.rowguid, fields.modifieddate, fields.documentnode)
-  
+
+    override lazy val columns: List[FieldLike[?, DViewRow]] =
+      List[FieldLike[?, DViewRow]](fields.title, fields.owner, fields.folderflag, fields.filename, fields.fileextension, fields.revision, fields.changenumber, fields.status, fields.documentsummary, fields.document, fields.rowguid, fields.modifieddate, fields.documentnode)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

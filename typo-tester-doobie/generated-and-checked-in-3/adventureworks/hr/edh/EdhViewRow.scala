@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package hr
-package edh
+package adventureworks.hr.edh
 
 import adventureworks.customtypes.TypoLocalDate
 import adventureworks.customtypes.TypoLocalDateTime
@@ -18,42 +16,46 @@ import io.circe.Encoder
 
 /** View: hr.edh */
 case class EdhViewRow(
-  /** Points to [[humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.businessentityid]] */
+  /** Points to [[adventureworks.humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.businessentityid]] */
   id: BusinessentityId,
-  /** Points to [[humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.businessentityid]] */
+  /** Points to [[adventureworks.humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.businessentityid]] */
   businessentityid: BusinessentityId,
-  /** Points to [[humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.departmentid]] */
+  /** Points to [[adventureworks.humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.departmentid]] */
   departmentid: DepartmentId,
-  /** Points to [[humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.shiftid]] */
+  /** Points to [[adventureworks.humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.shiftid]] */
   shiftid: ShiftId,
-  /** Points to [[humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.startdate]] */
+  /** Points to [[adventureworks.humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.startdate]] */
   startdate: TypoLocalDate,
-  /** Points to [[humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.enddate]] */
+  /** Points to [[adventureworks.humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.enddate]] */
   enddate: Option[TypoLocalDate],
-  /** Points to [[humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.modifieddate]] */
+  /** Points to [[adventureworks.humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object EdhViewRow {
   given decoder: Decoder[EdhViewRow] = Decoder.forProduct7[EdhViewRow, BusinessentityId, BusinessentityId, DepartmentId, ShiftId, TypoLocalDate, Option[TypoLocalDate], TypoLocalDateTime]("id", "businessentityid", "departmentid", "shiftid", "startdate", "enddate", "modifieddate")(EdhViewRow.apply)(using BusinessentityId.decoder, BusinessentityId.decoder, DepartmentId.decoder, ShiftId.decoder, TypoLocalDate.decoder, Decoder.decodeOption(using TypoLocalDate.decoder), TypoLocalDateTime.decoder)
+
   given encoder: Encoder[EdhViewRow] = Encoder.forProduct7[EdhViewRow, BusinessentityId, BusinessentityId, DepartmentId, ShiftId, TypoLocalDate, Option[TypoLocalDate], TypoLocalDateTime]("id", "businessentityid", "departmentid", "shiftid", "startdate", "enddate", "modifieddate")(x => (x.id, x.businessentityid, x.departmentid, x.shiftid, x.startdate, x.enddate, x.modifieddate))(using BusinessentityId.encoder, BusinessentityId.encoder, DepartmentId.encoder, ShiftId.encoder, TypoLocalDate.encoder, Encoder.encodeOption(using TypoLocalDate.encoder), TypoLocalDateTime.encoder)
-  given read: Read[EdhViewRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(BusinessentityId.get).asInstanceOf[Read[Any]],
+
+  given read: Read[EdhViewRow] = {
+    new Read.CompositeOfInstances(Array(
       new Read.Single(BusinessentityId.get).asInstanceOf[Read[Any]],
-      new Read.Single(DepartmentId.get).asInstanceOf[Read[Any]],
-      new Read.Single(ShiftId.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoLocalDate.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(TypoLocalDate.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
-  ))(using scala.reflect.ClassTag.Any).map { arr =>
-    EdhViewRow(
-      id = arr(0).asInstanceOf[BusinessentityId],
-          businessentityid = arr(1).asInstanceOf[BusinessentityId],
-          departmentid = arr(2).asInstanceOf[DepartmentId],
-          shiftid = arr(3).asInstanceOf[ShiftId],
-          startdate = arr(4).asInstanceOf[TypoLocalDate],
-          enddate = arr(5).asInstanceOf[Option[TypoLocalDate]],
-          modifieddate = arr(6).asInstanceOf[TypoLocalDateTime]
-    )
+        new Read.Single(BusinessentityId.get).asInstanceOf[Read[Any]],
+        new Read.Single(DepartmentId.get).asInstanceOf[Read[Any]],
+        new Read.Single(ShiftId.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoLocalDate.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(TypoLocalDate.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
+    ))(using scala.reflect.ClassTag.Any).map { arr =>
+      EdhViewRow(
+        id = arr(0).asInstanceOf[BusinessentityId],
+            businessentityid = arr(1).asInstanceOf[BusinessentityId],
+            departmentid = arr(2).asInstanceOf[DepartmentId],
+            shiftid = arr(3).asInstanceOf[ShiftId],
+            startdate = arr(4).asInstanceOf[TypoLocalDate],
+            enddate = arr(5).asInstanceOf[Option[TypoLocalDate]],
+            modifieddate = arr(6).asInstanceOf[TypoLocalDateTime]
+      )
+    }
   }
 }

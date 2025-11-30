@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package productmodelillustration
+package adventureworks.production.productmodelillustration
 
 import adventureworks.production.illustration.IllustrationId
 import adventureworks.production.productmodel.ProductmodelId
@@ -19,24 +17,29 @@ case class ProductmodelillustrationId(
   productmodelid: ProductmodelId,
   illustrationid: IllustrationId
 )
+
 object ProductmodelillustrationId {
-  implicit lazy val jsonDecoder: JsonDecoder[ProductmodelillustrationId] = JsonDecoder[Json.Obj].mapOrFail { jsonObj =>
-    val productmodelid = jsonObj.get("productmodelid").toRight("Missing field 'productmodelid'").flatMap(_.as(ProductmodelId.jsonDecoder))
-    val illustrationid = jsonObj.get("illustrationid").toRight("Missing field 'illustrationid'").flatMap(_.as(IllustrationId.jsonDecoder))
-    if (productmodelid.isRight && illustrationid.isRight)
-      Right(ProductmodelillustrationId(productmodelid = productmodelid.toOption.get, illustrationid = illustrationid.toOption.get))
-    else Left(List[Either[String, Any]](productmodelid, illustrationid).flatMap(_.left.toOption).mkString(", "))
-  }
-  implicit lazy val jsonEncoder: JsonEncoder[ProductmodelillustrationId] = new JsonEncoder[ProductmodelillustrationId] {
-    override def unsafeEncode(a: ProductmodelillustrationId, indent: Option[Int], out: Write): Unit = {
-      out.write("{")
-      out.write(""""productmodelid":""")
-      ProductmodelId.jsonEncoder.unsafeEncode(a.productmodelid, indent, out)
-      out.write(",")
-      out.write(""""illustrationid":""")
-      IllustrationId.jsonEncoder.unsafeEncode(a.illustrationid, indent, out)
-      out.write("}")
+  implicit lazy val jsonDecoder: JsonDecoder[ProductmodelillustrationId] = {
+    JsonDecoder[Json.Obj].mapOrFail { jsonObj =>
+      val productmodelid = jsonObj.get("productmodelid").toRight("Missing field 'productmodelid'").flatMap(_.as(ProductmodelId.jsonDecoder))
+      val illustrationid = jsonObj.get("illustrationid").toRight("Missing field 'illustrationid'").flatMap(_.as(IllustrationId.jsonDecoder))
+      if (productmodelid.isRight && illustrationid.isRight)
+        Right(ProductmodelillustrationId(productmodelid = productmodelid.toOption.get, illustrationid = illustrationid.toOption.get))
+      else Left(List[Either[String, Any]](productmodelid, illustrationid).flatMap(_.left.toOption).mkString(", "))
     }
   }
-  implicit lazy val ordering: Ordering[ProductmodelillustrationId] = Ordering.by(x => (x.productmodelid, x.illustrationid))
+
+  implicit lazy val jsonEncoder: JsonEncoder[ProductmodelillustrationId] = {
+    new JsonEncoder[ProductmodelillustrationId] {
+      override def unsafeEncode(a: ProductmodelillustrationId, indent: Option[Int], out: Write): Unit = {
+        out.write("{")
+        out.write(""""productmodelid":""")
+        ProductmodelId.jsonEncoder.unsafeEncode(a.productmodelid, indent, out)
+        out.write(",")
+        out.write(""""illustrationid":""")
+        IllustrationId.jsonEncoder.unsafeEncode(a.illustrationid, indent, out)
+        out.write("}")
+      }
+    }
+  }
 }

@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package tr
+package adventureworks.sa.tr
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoShort
@@ -20,46 +18,50 @@ import io.circe.Encoder
 
 /** View: sa.tr */
 case class TrViewRow(
-  /** Points to [[sales.salestaxrate.SalestaxrateRow.salestaxrateid]] */
+  /** Points to [[adventureworks.sales.salestaxrate.SalestaxrateRow.salestaxrateid]] */
   id: SalestaxrateId,
-  /** Points to [[sales.salestaxrate.SalestaxrateRow.salestaxrateid]] */
+  /** Points to [[adventureworks.sales.salestaxrate.SalestaxrateRow.salestaxrateid]] */
   salestaxrateid: SalestaxrateId,
-  /** Points to [[sales.salestaxrate.SalestaxrateRow.stateprovinceid]] */
+  /** Points to [[adventureworks.sales.salestaxrate.SalestaxrateRow.stateprovinceid]] */
   stateprovinceid: StateprovinceId,
-  /** Points to [[sales.salestaxrate.SalestaxrateRow.taxtype]] */
+  /** Points to [[adventureworks.sales.salestaxrate.SalestaxrateRow.taxtype]] */
   taxtype: TypoShort,
-  /** Points to [[sales.salestaxrate.SalestaxrateRow.taxrate]] */
+  /** Points to [[adventureworks.sales.salestaxrate.SalestaxrateRow.taxrate]] */
   taxrate: BigDecimal,
-  /** Points to [[sales.salestaxrate.SalestaxrateRow.name]] */
+  /** Points to [[adventureworks.sales.salestaxrate.SalestaxrateRow.name]] */
   name: Name,
-  /** Points to [[sales.salestaxrate.SalestaxrateRow.rowguid]] */
+  /** Points to [[adventureworks.sales.salestaxrate.SalestaxrateRow.rowguid]] */
   rowguid: TypoUUID,
-  /** Points to [[sales.salestaxrate.SalestaxrateRow.modifieddate]] */
+  /** Points to [[adventureworks.sales.salestaxrate.SalestaxrateRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object TrViewRow {
   implicit lazy val decoder: Decoder[TrViewRow] = Decoder.forProduct8[TrViewRow, SalestaxrateId, SalestaxrateId, StateprovinceId, TypoShort, BigDecimal, Name, TypoUUID, TypoLocalDateTime]("id", "salestaxrateid", "stateprovinceid", "taxtype", "taxrate", "name", "rowguid", "modifieddate")(TrViewRow.apply)(SalestaxrateId.decoder, SalestaxrateId.decoder, StateprovinceId.decoder, TypoShort.decoder, Decoder.decodeBigDecimal, Name.decoder, TypoUUID.decoder, TypoLocalDateTime.decoder)
+
   implicit lazy val encoder: Encoder[TrViewRow] = Encoder.forProduct8[TrViewRow, SalestaxrateId, SalestaxrateId, StateprovinceId, TypoShort, BigDecimal, Name, TypoUUID, TypoLocalDateTime]("id", "salestaxrateid", "stateprovinceid", "taxtype", "taxrate", "name", "rowguid", "modifieddate")(x => (x.id, x.salestaxrateid, x.stateprovinceid, x.taxtype, x.taxrate, x.name, x.rowguid, x.modifieddate))(SalestaxrateId.encoder, SalestaxrateId.encoder, StateprovinceId.encoder, TypoShort.encoder, Encoder.encodeBigDecimal, Name.encoder, TypoUUID.encoder, TypoLocalDateTime.encoder)
-  implicit lazy val read: Read[TrViewRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(SalestaxrateId.get).asInstanceOf[Read[Any]],
+
+  implicit lazy val read: Read[TrViewRow] = {
+    new Read.CompositeOfInstances(Array(
       new Read.Single(SalestaxrateId.get).asInstanceOf[Read[Any]],
-      new Read.Single(StateprovinceId.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoShort.get).asInstanceOf[Read[Any]],
-      new Read.Single(Meta.ScalaBigDecimalMeta.get).asInstanceOf[Read[Any]],
-      new Read.Single(Name.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoUUID.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
-  ))(scala.reflect.ClassTag.Any).map { arr =>
-    TrViewRow(
-      id = arr(0).asInstanceOf[SalestaxrateId],
-          salestaxrateid = arr(1).asInstanceOf[SalestaxrateId],
-          stateprovinceid = arr(2).asInstanceOf[StateprovinceId],
-          taxtype = arr(3).asInstanceOf[TypoShort],
-          taxrate = arr(4).asInstanceOf[BigDecimal],
-          name = arr(5).asInstanceOf[Name],
-          rowguid = arr(6).asInstanceOf[TypoUUID],
-          modifieddate = arr(7).asInstanceOf[TypoLocalDateTime]
-    )
+        new Read.Single(SalestaxrateId.get).asInstanceOf[Read[Any]],
+        new Read.Single(StateprovinceId.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoShort.get).asInstanceOf[Read[Any]],
+        new Read.Single(Meta.ScalaBigDecimalMeta.get).asInstanceOf[Read[Any]],
+        new Read.Single(Name.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoUUID.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
+    ))(scala.reflect.ClassTag.Any).map { arr =>
+      TrViewRow(
+        id = arr(0).asInstanceOf[SalestaxrateId],
+            salestaxrateid = arr(1).asInstanceOf[SalestaxrateId],
+            stateprovinceid = arr(2).asInstanceOf[StateprovinceId],
+            taxtype = arr(3).asInstanceOf[TypoShort],
+            taxrate = arr(4).asInstanceOf[BigDecimal],
+            name = arr(5).asInstanceOf[Name],
+            rowguid = arr(6).asInstanceOf[TypoUUID],
+            modifieddate = arr(7).asInstanceOf[TypoLocalDateTime]
+      )
+    }
   }
 }

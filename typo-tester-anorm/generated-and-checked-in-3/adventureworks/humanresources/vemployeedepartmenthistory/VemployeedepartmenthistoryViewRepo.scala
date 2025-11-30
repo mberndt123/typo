@@ -3,14 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package humanresources
-package vemployeedepartmenthistory
+package adventureworks.humanresources.vemployeedepartmenthistory
 
 import java.sql.Connection
 import typo.dsl.SelectBuilder
 
 trait VemployeedepartmenthistoryViewRepo {
   def select: SelectBuilder[VemployeedepartmenthistoryViewFields, VemployeedepartmenthistoryViewRow]
+
   def selectAll(using c: Connection): List[VemployeedepartmenthistoryViewRow]
 }

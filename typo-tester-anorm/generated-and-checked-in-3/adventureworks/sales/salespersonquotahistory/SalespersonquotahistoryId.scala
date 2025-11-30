@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sales
-package salespersonquotahistory
+package adventureworks.sales.salespersonquotahistory
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.person.businessentity.BusinessentityId
@@ -14,7 +12,6 @@ import play.api.libs.json.JsResult
 import play.api.libs.json.JsValue
 import play.api.libs.json.OWrites
 import play.api.libs.json.Reads
-import play.api.libs.json.Writes
 import scala.collection.immutable.ListMap
 import scala.util.Try
 
@@ -23,21 +20,26 @@ case class SalespersonquotahistoryId(
   businessentityid: BusinessentityId,
   quotadate: TypoLocalDateTime
 )
+
 object SalespersonquotahistoryId {
-  given ordering(using O0: Ordering[TypoLocalDateTime]): Ordering[SalespersonquotahistoryId] = Ordering.by(x => (x.businessentityid, x.quotadate))
-  given reads: Reads[SalespersonquotahistoryId] = Reads[SalespersonquotahistoryId](json => JsResult.fromTry(
-      Try(
-        SalespersonquotahistoryId(
-          businessentityid = json.\("businessentityid").as(summon[Reads[BusinessentityId]]),
-          quotadate = json.\("quotadate").as(summon[Reads[TypoLocalDateTime]])
+  given reads: Reads[SalespersonquotahistoryId] = {
+    Reads[SalespersonquotahistoryId](json => JsResult.fromTry(
+        Try(
+          SalespersonquotahistoryId(
+            businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
+            quotadate = json.\("quotadate").as(TypoLocalDateTime.reads)
+          )
         )
-      )
-    ),
-  )
-  given writes: OWrites[SalespersonquotahistoryId] = OWrites[SalespersonquotahistoryId](o =>
-    new JsObject(ListMap[String, JsValue](
-      "businessentityid" -> summon[Writes[BusinessentityId]].writes(o.businessentityid),
-      "quotadate" -> summon[Writes[TypoLocalDateTime]].writes(o.quotadate)
-    ))
-  )
+      ),
+    )
+  }
+
+  given writes: OWrites[SalespersonquotahistoryId] = {
+    OWrites[SalespersonquotahistoryId](o =>
+      new JsObject(ListMap[String, JsValue](
+        "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
+        "quotadate" -> TypoLocalDateTime.writes.writes(o.quotadate)
+      ))
+    )
+  }
 }

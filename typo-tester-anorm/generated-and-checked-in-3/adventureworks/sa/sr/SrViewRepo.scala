@@ -3,14 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package sr
+package adventureworks.sa.sr
 
 import java.sql.Connection
 import typo.dsl.SelectBuilder
 
 trait SrViewRepo {
   def select: SelectBuilder[SrViewFields, SrViewRow]
+
   def selectAll(using c: Connection): List[SrViewRow]
 }

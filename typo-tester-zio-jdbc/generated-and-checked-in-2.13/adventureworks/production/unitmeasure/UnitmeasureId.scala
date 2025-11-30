@@ -3,10 +3,9 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package unitmeasure
+package adventureworks.production.unitmeasure
 
+import adventureworks.Text
 import typo.dsl.Bijection
 import typo.dsl.PGType
 import zio.jdbc.JdbcDecoder
@@ -16,21 +15,33 @@ import zio.json.JsonDecoder
 import zio.json.JsonEncoder
 
 /** Type for the primary key of table `production.unitmeasure` */
-case class UnitmeasureId(value: /* bpchar, max 3 chars */ String) extends AnyVal
+case class UnitmeasureId(value: /* bpchar, max 3 chars */ String) extends scala.AnyVal
+
 object UnitmeasureId {
   implicit lazy val arrayJdbcDecoder: JdbcDecoder[Array[UnitmeasureId]] = adventureworks.StringArrayDecoder.map(_.map(UnitmeasureId.apply))
+
   implicit lazy val arrayJdbcEncoder: JdbcEncoder[Array[UnitmeasureId]] = adventureworks.StringArrayEncoder.contramap(_.map(_.value))
+
   implicit lazy val arraySetter: Setter[Array[UnitmeasureId]] = adventureworks.StringArraySetter.contramap(_.map(_.value))
-  implicit lazy val bijection: Bijection[UnitmeasureId, /* bpchar, max 3 chars */ String] = Bijection[UnitmeasureId, /* bpchar, max 3 chars */ String](_.value)(UnitmeasureId.apply)
+
+  implicit lazy val bijection: Bijection[UnitmeasureId, /* bpchar, max 3 chars */ String] = Bijection.apply[UnitmeasureId, /* bpchar, max 3 chars */ String](_.value)(UnitmeasureId.apply)
+
   implicit lazy val jdbcDecoder: JdbcDecoder[UnitmeasureId] = JdbcDecoder.stringDecoder.map(UnitmeasureId.apply)
+
   implicit lazy val jdbcEncoder: JdbcEncoder[UnitmeasureId] = JdbcEncoder.stringEncoder.contramap(_.value)
+
   implicit lazy val jsonDecoder: JsonDecoder[UnitmeasureId] = JsonDecoder.string.map(UnitmeasureId.apply)
+
   implicit lazy val jsonEncoder: JsonEncoder[UnitmeasureId] = JsonEncoder.string.contramap(_.value)
-  implicit lazy val ordering: Ordering[UnitmeasureId] = Ordering.by(_.value)
-  implicit lazy val pgType: PGType[UnitmeasureId] = PGType.PGTypeString.as
-  implicit lazy val setter: Setter[UnitmeasureId] = Setter.stringSetter.contramap(_.value)
-  implicit lazy val text: Text[UnitmeasureId] = new Text[UnitmeasureId] {
-    override def unsafeEncode(v: UnitmeasureId, sb: StringBuilder): Unit = Text.stringInstance.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: UnitmeasureId, sb: StringBuilder): Unit = Text.stringInstance.unsafeArrayEncode(v.value, sb)
+
+  implicit lazy val pgText: Text[UnitmeasureId] = {
+    new Text[UnitmeasureId] {
+      override def unsafeEncode(v: UnitmeasureId, sb: StringBuilder): Unit = Text.stringInstance.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: UnitmeasureId, sb: StringBuilder): Unit = Text.stringInstance.unsafeArrayEncode(v.value, sb)
+    }
   }
+
+  implicit lazy val pgType: PGType[UnitmeasureId] = PGType.PGTypeString.as
+
+  implicit lazy val setter: Setter[UnitmeasureId] = Setter.stringSetter.contramap(_.value)
 }

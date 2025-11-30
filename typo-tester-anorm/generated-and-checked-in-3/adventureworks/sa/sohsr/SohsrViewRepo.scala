@@ -3,14 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package sohsr
+package adventureworks.sa.sohsr
 
 import java.sql.Connection
 import typo.dsl.SelectBuilder
 
 trait SohsrViewRepo {
   def select: SelectBuilder[SohsrViewFields, SohsrViewRow]
+
   def selectAll(using c: Connection): List[SohsrViewRow]
 }

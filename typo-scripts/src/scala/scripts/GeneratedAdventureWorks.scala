@@ -4,11 +4,11 @@ import bleep.{FileWatching, cli}
 import ryddig.{Formatter, LogLevel, LogPatterns, Loggers}
 import typo.*
 import typo.internal.metadb.OpenEnum
+import typo.internal.codegen.*
 import typo.internal.sqlfiles.readSqlFileDirectories
 import typo.internal.{FileSync, generate}
 
 import java.nio.file.Path
-import java.util.concurrent.atomic.AtomicReference
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
@@ -40,24 +40,26 @@ object GeneratedAdventureWorks {
           ),
           Duration.Inf
         )
-        val oldFilesRef = new AtomicReference(Map.empty[RelPath, sc.Code])
-        val variants = List(
-          (DbLibName.Anorm, JsonLibName.PlayJson, "typo-tester-anorm", "2.13", Dialect.Scala2XSource3),
-          (DbLibName.Anorm, JsonLibName.PlayJson, "typo-tester-anorm", "3", Dialect.Scala3),
-          (DbLibName.Doobie, JsonLibName.Circe, "typo-tester-doobie", "2.13", Dialect.Scala2XSource3),
-          (DbLibName.Doobie, JsonLibName.Circe, "typo-tester-doobie", "3", Dialect.Scala3),
-          (DbLibName.ZioJdbc, JsonLibName.ZioJson, "typo-tester-zio-jdbc", "2.13", Dialect.Scala2XSource3),
-          (DbLibName.ZioJdbc, JsonLibName.ZioJson, "typo-tester-zio-jdbc", "3", Dialect.Scala3)
+        val variants: Seq[(Lang, DbLibName, Option[JsonLibName], String, String)] = List(
+          (LangScala(Dialect.Scala2XSource3, TypeSupportScala), DbLibName.Anorm, Some(JsonLibName.PlayJson), "typo-tester-anorm", "-2.13"),
+          (LangScala(Dialect.Scala3, TypeSupportScala), DbLibName.Anorm, Some(JsonLibName.PlayJson), "typo-tester-anorm", "-3"),
+          (LangScala(Dialect.Scala2XSource3, TypeSupportScala), DbLibName.Doobie, Some(JsonLibName.Circe), "typo-tester-doobie", "-2.13"),
+          (LangScala(Dialect.Scala3, TypeSupportScala), DbLibName.Doobie, Some(JsonLibName.Circe), "typo-tester-doobie", "-3"),
+          (LangScala(Dialect.Scala2XSource3, TypeSupportScala), DbLibName.ZioJdbc, Some(JsonLibName.ZioJson), "typo-tester-zio-jdbc", "-2.13"),
+          (LangScala(Dialect.Scala3, TypeSupportScala), DbLibName.ZioJdbc, Some(JsonLibName.ZioJson), "typo-tester-zio-jdbc", "-3"),
+          (LangJava, DbLibName.Typo, None, "typo-tester-typo-java", ""),
+          (LangScala(Dialect.Scala3, TypeSupportJava), DbLibName.Typo, None, "typo-tester-typo-scala", "")
         )
 
         def go(): Unit = {
           val newSqlScripts = Await.result(readSqlFileDirectories(typoLogger, scriptsPath, ds), Duration.Inf)
 
-          variants.foreach { case (dbLib, jsonLib, projectPath, scalaVersion, dialect) =>
+          variants.foreach { case (lang, dbLib, jsonLib, projectPath, suffix) =>
             val options = Options(
               pkg = "adventureworks",
-              Some(dbLib),
-              List(jsonLib),
+              lang = lang,
+              dbLib = Some(dbLib),
+              jsonLibs = jsonLib.toList,
               typeOverride = TypeOverride.relation {
                 case (_, "firstname")                     => "adventureworks.userdefined.FirstName"
                 case ("sales.creditcard", "creditcardid") => "adventureworks.userdefined.CustomCreditcardId"
@@ -67,22 +69,15 @@ object GeneratedAdventureWorks {
               enablePrimaryKeyType = !Selector.relationNames("billofmaterials"),
               enableTestInserts = Selector.All,
               readonlyRepo = Selector.relationNames("purchaseorderdetail"),
-              enableDsl = true,
-              dialect = dialect
+              enableDsl = true
             )
-            val targetSources = buildDir.resolve(s"$projectPath/generated-and-checked-in-$scalaVersion")
+            val targetSources = buildDir.resolve(s"$projectPath/generated-and-checked-in$suffix")
 
             val newFiles: Generated =
               generate(options, metadb, ProjectGraph(name = "", targetSources, None, selector, newSqlScripts, Nil), relationNameToOpenEnum).head
 
-            val knownUnchanged: Set[RelPath] = {
-              val oldFiles = oldFilesRef.get()
-              newFiles.files.iterator.collect { case (relPath, contents) if oldFiles.get(relPath).contains(contents) => relPath }.toSet
-            }
-            oldFilesRef.set(newFiles.files)
-
             newFiles
-              .overwriteFolder(dialect, softWrite = FileSync.SoftWrite.Yes(knownUnchanged))
+              .overwriteFolder(softWrite = FileSync.SoftWrite.Yes(Set.empty))
               .filter { case (_, synced) => synced != FileSync.Synced.Unchanged }
               .foreach { case (path, synced) => logger.withContext("path", path).warn(synced.toString) }
 

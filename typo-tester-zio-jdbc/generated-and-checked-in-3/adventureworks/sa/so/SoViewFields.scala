@@ -3,16 +3,14 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package so
+package adventureworks.sa.so
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoUUID
 import adventureworks.sales.specialoffer.SpecialofferId
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.OptField
 import typo.dsl.Structure.Relation
 
@@ -33,11 +31,11 @@ trait SoViewFields {
 
 object SoViewFields {
   lazy val structure: Relation[SoViewFields, SoViewRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[SoViewFields, SoViewRow] {
-  
+
     override lazy val fields: SoViewFields = new SoViewFields {
       override def id = Field[SpecialofferId, SoViewRow](_path, "id", None, None, x => x.id, (row, value) => row.copy(id = value))
       override def specialofferid = Field[SpecialofferId, SoViewRow](_path, "specialofferid", None, None, x => x.specialofferid, (row, value) => row.copy(specialofferid = value))
@@ -52,12 +50,11 @@ object SoViewFields {
       override def rowguid = Field[TypoUUID, SoViewRow](_path, "rowguid", None, None, x => x.rowguid, (row, value) => row.copy(rowguid = value))
       override def modifieddate = Field[TypoLocalDateTime, SoViewRow](_path, "modifieddate", Some("text"), None, x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, SoViewRow]] =
-      List[FieldLikeNoHkt[?, SoViewRow]](fields.id, fields.specialofferid, fields.description, fields.discountpct, fields.`type`, fields.category, fields.startdate, fields.enddate, fields.minqty, fields.maxqty, fields.rowguid, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, SoViewRow]] =
+      List[FieldLike[?, SoViewRow]](fields.id, fields.specialofferid, fields.description, fields.discountpct, fields.`type`, fields.category, fields.startdate, fields.enddate, fields.minqty, fields.maxqty, fields.rowguid, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

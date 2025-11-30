@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package vproductanddescription
+package adventureworks.production.vproductanddescription
 
 import adventureworks.production.culture.CultureId
 import adventureworks.production.product.ProductId
@@ -17,34 +15,38 @@ import io.circe.Encoder
 
 /** Materialized View: production.vproductanddescription */
 case class VproductanddescriptionMVRow(
-  /** Points to [[product.ProductRow.productid]] */
+  /** Points to [[adventureworks.production.product.ProductRow.productid]] */
   productid: ProductId,
-  /** Points to [[product.ProductRow.name]] */
+  /** Points to [[adventureworks.production.product.ProductRow.name]] */
   name: Name,
-  /** Points to [[productmodel.ProductmodelRow.name]] */
+  /** Points to [[adventureworks.production.productmodel.ProductmodelRow.name]] */
   productmodel: Name,
-  /** Points to [[productmodelproductdescriptionculture.ProductmodelproductdescriptioncultureRow.cultureid]] */
+  /** Points to [[adventureworks.production.productmodelproductdescriptionculture.ProductmodelproductdescriptioncultureRow.cultureid]] */
   cultureid: CultureId,
-  /** Points to [[productdescription.ProductdescriptionRow.description]] */
+  /** Points to [[adventureworks.production.productdescription.ProductdescriptionRow.description]] */
   description: /* max 400 chars */ String
 )
 
 object VproductanddescriptionMVRow {
   implicit lazy val decoder: Decoder[VproductanddescriptionMVRow] = Decoder.forProduct5[VproductanddescriptionMVRow, ProductId, Name, Name, CultureId, /* max 400 chars */ String]("productid", "name", "productmodel", "cultureid", "description")(VproductanddescriptionMVRow.apply)(ProductId.decoder, Name.decoder, Name.decoder, CultureId.decoder, Decoder.decodeString)
+
   implicit lazy val encoder: Encoder[VproductanddescriptionMVRow] = Encoder.forProduct5[VproductanddescriptionMVRow, ProductId, Name, Name, CultureId, /* max 400 chars */ String]("productid", "name", "productmodel", "cultureid", "description")(x => (x.productid, x.name, x.productmodel, x.cultureid, x.description))(ProductId.encoder, Name.encoder, Name.encoder, CultureId.encoder, Encoder.encodeString)
-  implicit lazy val read: Read[VproductanddescriptionMVRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(ProductId.get).asInstanceOf[Read[Any]],
-      new Read.Single(Name.get).asInstanceOf[Read[Any]],
-      new Read.Single(Name.get).asInstanceOf[Read[Any]],
-      new Read.Single(CultureId.get).asInstanceOf[Read[Any]],
-      new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]]
-  ))(scala.reflect.ClassTag.Any).map { arr =>
-    VproductanddescriptionMVRow(
-      productid = arr(0).asInstanceOf[ProductId],
-          name = arr(1).asInstanceOf[Name],
-          productmodel = arr(2).asInstanceOf[Name],
-          cultureid = arr(3).asInstanceOf[CultureId],
-          description = arr(4).asInstanceOf[/* max 400 chars */ String]
-    )
+
+  implicit lazy val read: Read[VproductanddescriptionMVRow] = {
+    new Read.CompositeOfInstances(Array(
+      new Read.Single(ProductId.get).asInstanceOf[Read[Any]],
+        new Read.Single(Name.get).asInstanceOf[Read[Any]],
+        new Read.Single(Name.get).asInstanceOf[Read[Any]],
+        new Read.Single(CultureId.get).asInstanceOf[Read[Any]],
+        new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]]
+    ))(scala.reflect.ClassTag.Any).map { arr =>
+      VproductanddescriptionMVRow(
+        productid = arr(0).asInstanceOf[ProductId],
+            name = arr(1).asInstanceOf[Name],
+            productmodel = arr(2).asInstanceOf[Name],
+            cultureid = arr(3).asInstanceOf[CultureId],
+            description = arr(4).asInstanceOf[/* max 400 chars */ String]
+      )
+    }
   }
 }

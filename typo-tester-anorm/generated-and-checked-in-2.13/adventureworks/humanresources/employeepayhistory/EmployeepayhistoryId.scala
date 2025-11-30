@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package humanresources
-package employeepayhistory
+package adventureworks.humanresources.employeepayhistory
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.person.businessentity.BusinessentityId
@@ -22,21 +20,26 @@ case class EmployeepayhistoryId(
   businessentityid: BusinessentityId,
   ratechangedate: TypoLocalDateTime
 )
+
 object EmployeepayhistoryId {
-  implicit def ordering(implicit O0: Ordering[TypoLocalDateTime]): Ordering[EmployeepayhistoryId] = Ordering.by(x => (x.businessentityid, x.ratechangedate))
-  implicit lazy val reads: Reads[EmployeepayhistoryId] = Reads[EmployeepayhistoryId](json => JsResult.fromTry(
-      Try(
-        EmployeepayhistoryId(
-          businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
-          ratechangedate = json.\("ratechangedate").as(TypoLocalDateTime.reads)
+  implicit lazy val reads: Reads[EmployeepayhistoryId] = {
+    Reads[EmployeepayhistoryId](json => JsResult.fromTry(
+        Try(
+          EmployeepayhistoryId(
+            businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
+            ratechangedate = json.\("ratechangedate").as(TypoLocalDateTime.reads)
+          )
         )
-      )
-    ),
-  )
-  implicit lazy val writes: OWrites[EmployeepayhistoryId] = OWrites[EmployeepayhistoryId](o =>
-    new JsObject(ListMap[String, JsValue](
-      "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
-      "ratechangedate" -> TypoLocalDateTime.writes.writes(o.ratechangedate)
-    ))
-  )
+      ),
+    )
+  }
+
+  implicit lazy val writes: OWrites[EmployeepayhistoryId] = {
+    OWrites[EmployeepayhistoryId](o =>
+      new JsObject(ListMap[String, JsValue](
+        "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
+        "ratechangedate" -> TypoLocalDateTime.writes.writes(o.ratechangedate)
+      ))
+    )
+  }
 }

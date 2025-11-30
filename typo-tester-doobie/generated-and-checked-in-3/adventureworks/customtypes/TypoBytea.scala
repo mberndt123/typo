@@ -3,8 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package customtypes
+package adventureworks.customtypes
 
 import cats.data.NonEmptyList
 import doobie.postgres.Text
@@ -18,15 +17,23 @@ import typo.dsl.Bijection
 case class TypoBytea(value: Array[Byte])
 
 object TypoBytea {
-  given bijection: Bijection[TypoBytea, Array[Byte]] = Bijection[TypoBytea, Array[Byte]](_.value)(TypoBytea.apply)
+  given bijection: Bijection[TypoBytea, Array[Byte]] = Bijection.apply[TypoBytea, Array[Byte]](_.value)(TypoBytea.apply)
+
   given decoder: Decoder[TypoBytea] = Decoder.decodeArray[Byte](using Decoder.decodeByte, implicitly).map(TypoBytea.apply)
+
   given encoder: Encoder[TypoBytea] = Encoder.encodeIterable[Byte, Array](using Encoder.encodeByte, implicitly).contramap(_.value)
-  given get: Get[TypoBytea] = Get.Advanced.other[Array[Byte]](NonEmptyList.one("bytea"))
-    .map(v => TypoBytea(v))
-  given ordering(using O0: Ordering[Array[Byte]]): Ordering[TypoBytea] = Ordering.by(_.value)
-  given put: Put[TypoBytea] = Put.Advanced.other[Array[Byte]](NonEmptyList.one("bytea")).contramap(v => v.value)
-  given text: Text[TypoBytea] = new Text[TypoBytea] {
-    override def unsafeEncode(v: TypoBytea, sb: StringBuilder): Unit = Text.byteArrayInstance.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: TypoBytea, sb: StringBuilder): Unit = Text.byteArrayInstance.unsafeArrayEncode(v.value, sb)
+
+  given get: Get[TypoBytea] = {
+    Get.Advanced.other[Array[Byte]](NonEmptyList.one("bytea"))
+      .map(v => new TypoBytea(v))
   }
+
+  given pgText: Text[TypoBytea] = {
+    new Text[TypoBytea] {
+      override def unsafeEncode(v: TypoBytea, sb: StringBuilder): Unit = Text.byteArrayInstance.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: TypoBytea, sb: StringBuilder): Unit = Text.byteArrayInstance.unsafeArrayEncode(v.value, sb)
+    }
+  }
+
+  given put: Put[TypoBytea] = Put.Advanced.other[Array[Byte]](NonEmptyList.one("bytea")).contramap(v => v.value)
 }

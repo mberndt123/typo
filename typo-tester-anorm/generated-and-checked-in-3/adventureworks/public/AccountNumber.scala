@@ -3,9 +3,9 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
+package adventureworks.public
 
+import adventureworks.Text
 import anorm.Column
 import anorm.ParameterMetaData
 import anorm.ToStatement
@@ -15,24 +15,36 @@ import play.api.libs.json.Writes
 import typo.dsl.Bijection
 
 /** Domain `public.AccountNumber`
-  * No constraint
-  */
+ * No constraint
+ */
 case class AccountNumber(value: String)
+
 object AccountNumber {
   given arrayColumn: Column[Array[AccountNumber]] = Column.columnToArray(using column, implicitly)
+
   given arrayToStatement: ToStatement[Array[AccountNumber]] = ToStatement.arrayToParameter(using ParameterMetaData.StringParameterMetaData).contramap(_.map(_.value))
-  given bijection: Bijection[AccountNumber, String] = Bijection[AccountNumber, String](_.value)(AccountNumber.apply)
+
+  given bijection: Bijection[AccountNumber, String] = Bijection.apply[AccountNumber, String](_.value)(AccountNumber.apply)
+
   given column: Column[AccountNumber] = Column.columnToString.map(AccountNumber.apply)
-  given ordering: Ordering[AccountNumber] = Ordering.by(_.value)
-  given parameterMetadata: ParameterMetaData[AccountNumber] = new ParameterMetaData[AccountNumber] {
-    override def sqlType: String = """"public"."AccountNumber""""
-    override def jdbcType: Int = Types.OTHER
+
+  given parameterMetadata: ParameterMetaData[AccountNumber] = {
+    new ParameterMetaData[AccountNumber] {
+      override def sqlType: String = """"public"."AccountNumber""""
+      override def jdbcType: Int = Types.OTHER
+    }
   }
+
+  given pgText: Text[AccountNumber] = {
+    new Text[AccountNumber] {
+      override def unsafeEncode(v: AccountNumber, sb: StringBuilder): Unit = Text.stringInstance.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: AccountNumber, sb: StringBuilder): Unit = Text.stringInstance.unsafeArrayEncode(v.value, sb)
+    }
+  }
+
   given reads: Reads[AccountNumber] = Reads.StringReads.map(AccountNumber.apply)
-  given text: Text[AccountNumber] = new Text[AccountNumber] {
-    override def unsafeEncode(v: AccountNumber, sb: StringBuilder): Unit = Text.stringInstance.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: AccountNumber, sb: StringBuilder): Unit = Text.stringInstance.unsafeArrayEncode(v.value, sb)
-  }
+
   given toStatement: ToStatement[AccountNumber] = ToStatement.stringToStatement.contramap(_.value)
+
   given writes: Writes[AccountNumber] = Writes.StringWrites.contramap(_.value)
 }

@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package person
-package businessentitycontact
+package adventureworks.person.businessentitycontact
 
 import adventureworks.person.businessentity.BusinessentityId
 import adventureworks.person.contacttype.ContacttypeId
@@ -18,8 +16,9 @@ case class BusinessentitycontactId(
   personid: BusinessentityId,
   contacttypeid: ContacttypeId
 )
+
 object BusinessentitycontactId {
   given decoder: Decoder[BusinessentitycontactId] = Decoder.forProduct3[BusinessentitycontactId, BusinessentityId, BusinessentityId, ContacttypeId]("businessentityid", "personid", "contacttypeid")(BusinessentitycontactId.apply)(using BusinessentityId.decoder, BusinessentityId.decoder, ContacttypeId.decoder)
+
   given encoder: Encoder[BusinessentitycontactId] = Encoder.forProduct3[BusinessentitycontactId, BusinessentityId, BusinessentityId, ContacttypeId]("businessentityid", "personid", "contacttypeid")(x => (x.businessentityid, x.personid, x.contacttypeid))(using BusinessentityId.encoder, BusinessentityId.encoder, ContacttypeId.encoder)
-  given ordering: Ordering[BusinessentitycontactId] = Ordering.by(x => (x.businessentityid, x.personid, x.contacttypeid))
 }

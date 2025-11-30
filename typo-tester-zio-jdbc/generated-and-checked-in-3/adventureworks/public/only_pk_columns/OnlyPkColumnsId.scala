@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package only_pk_columns
+package adventureworks.public.only_pk_columns
 
 import zio.json.JsonDecoder
 import zio.json.JsonEncoder
@@ -17,24 +15,29 @@ case class OnlyPkColumnsId(
   keyColumn1: String,
   keyColumn2: Int
 )
+
 object OnlyPkColumnsId {
-  given jsonDecoder: JsonDecoder[OnlyPkColumnsId] = JsonDecoder[Json.Obj].mapOrFail { jsonObj =>
-    val keyColumn1 = jsonObj.get("key_column_1").toRight("Missing field 'key_column_1'").flatMap(_.as(using JsonDecoder.string))
-    val keyColumn2 = jsonObj.get("key_column_2").toRight("Missing field 'key_column_2'").flatMap(_.as(using JsonDecoder.int))
-    if (keyColumn1.isRight && keyColumn2.isRight)
-      Right(OnlyPkColumnsId(keyColumn1 = keyColumn1.toOption.get, keyColumn2 = keyColumn2.toOption.get))
-    else Left(List[Either[String, Any]](keyColumn1, keyColumn2).flatMap(_.left.toOption).mkString(", "))
-  }
-  given jsonEncoder: JsonEncoder[OnlyPkColumnsId] = new JsonEncoder[OnlyPkColumnsId] {
-    override def unsafeEncode(a: OnlyPkColumnsId, indent: Option[Int], out: Write): Unit = {
-      out.write("{")
-      out.write(""""key_column_1":""")
-      JsonEncoder.string.unsafeEncode(a.keyColumn1, indent, out)
-      out.write(",")
-      out.write(""""key_column_2":""")
-      JsonEncoder.int.unsafeEncode(a.keyColumn2, indent, out)
-      out.write("}")
+  given jsonDecoder: JsonDecoder[OnlyPkColumnsId] = {
+    JsonDecoder[Json.Obj].mapOrFail { jsonObj =>
+      val keyColumn1 = jsonObj.get("key_column_1").toRight("Missing field 'key_column_1'").flatMap(_.as(using JsonDecoder.string))
+      val keyColumn2 = jsonObj.get("key_column_2").toRight("Missing field 'key_column_2'").flatMap(_.as(using JsonDecoder.int))
+      if (keyColumn1.isRight && keyColumn2.isRight)
+        Right(OnlyPkColumnsId(keyColumn1 = keyColumn1.toOption.get, keyColumn2 = keyColumn2.toOption.get))
+      else Left(List[Either[String, Any]](keyColumn1, keyColumn2).flatMap(_.left.toOption).mkString(", "))
     }
   }
-  given ordering: Ordering[OnlyPkColumnsId] = Ordering.by(x => (x.keyColumn1, x.keyColumn2))
+
+  given jsonEncoder: JsonEncoder[OnlyPkColumnsId] = {
+    new JsonEncoder[OnlyPkColumnsId] {
+      override def unsafeEncode(a: OnlyPkColumnsId, indent: Option[Int], out: Write): Unit = {
+        out.write("{")
+        out.write(""""key_column_1":""")
+        JsonEncoder.string.unsafeEncode(a.keyColumn1, indent, out)
+        out.write(",")
+        out.write(""""key_column_2":""")
+        JsonEncoder.int.unsafeEncode(a.keyColumn2, indent, out)
+        out.write("}")
+      }
+    }
+  }
 }

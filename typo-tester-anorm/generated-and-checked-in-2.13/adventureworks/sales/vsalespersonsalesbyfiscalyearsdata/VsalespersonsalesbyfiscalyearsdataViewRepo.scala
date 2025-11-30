@@ -3,14 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sales
-package vsalespersonsalesbyfiscalyearsdata
+package adventureworks.sales.vsalespersonsalesbyfiscalyearsdata
 
 import java.sql.Connection
 import typo.dsl.SelectBuilder
 
 trait VsalespersonsalesbyfiscalyearsdataViewRepo {
   def select: SelectBuilder[VsalespersonsalesbyfiscalyearsdataViewFields, VsalespersonsalesbyfiscalyearsdataViewRow]
+
   def selectAll(implicit c: Connection): List[VsalespersonsalesbyfiscalyearsdataViewRow]
 }

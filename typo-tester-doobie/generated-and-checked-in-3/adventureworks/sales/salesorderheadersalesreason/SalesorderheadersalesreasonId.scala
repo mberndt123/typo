@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sales
-package salesorderheadersalesreason
+package adventureworks.sales.salesorderheadersalesreason
 
 import adventureworks.sales.salesorderheader.SalesorderheaderId
 import adventureworks.sales.salesreason.SalesreasonId
@@ -17,8 +15,9 @@ case class SalesorderheadersalesreasonId(
   salesorderid: SalesorderheaderId,
   salesreasonid: SalesreasonId
 )
+
 object SalesorderheadersalesreasonId {
   given decoder: Decoder[SalesorderheadersalesreasonId] = Decoder.forProduct2[SalesorderheadersalesreasonId, SalesorderheaderId, SalesreasonId]("salesorderid", "salesreasonid")(SalesorderheadersalesreasonId.apply)(using SalesorderheaderId.decoder, SalesreasonId.decoder)
+
   given encoder: Encoder[SalesorderheadersalesreasonId] = Encoder.forProduct2[SalesorderheadersalesreasonId, SalesorderheaderId, SalesreasonId]("salesorderid", "salesreasonid")(x => (x.salesorderid, x.salesreasonid))(using SalesorderheaderId.encoder, SalesreasonId.encoder)
-  given ordering: Ordering[SalesorderheadersalesreasonId] = Ordering.by(x => (x.salesorderid, x.salesreasonid))
 }

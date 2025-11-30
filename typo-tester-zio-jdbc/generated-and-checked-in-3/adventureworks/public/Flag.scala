@@ -3,9 +3,9 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
+package adventureworks.public
 
+import adventureworks.Text
 import java.sql.Types
 import typo.dsl.Bijection
 import typo.dsl.PGType
@@ -16,23 +16,35 @@ import zio.json.JsonDecoder
 import zio.json.JsonEncoder
 
 /** Domain `public.Flag`
-  * No constraint
-  */
+ * No constraint
+ */
 case class Flag(value: Boolean)
+
 object Flag {
   given arrayJdbcDecoder: JdbcDecoder[Array[Flag]] = adventureworks.BooleanArrayDecoder.map(_.map(Flag.apply))
+
   given arrayJdbcEncoder: JdbcEncoder[Array[Flag]] = adventureworks.BooleanArrayEncoder.contramap(_.map(_.value))
+
   given arraySetter: Setter[Array[Flag]] = adventureworks.BooleanArraySetter.contramap(_.map(_.value))
-  given bijection: Bijection[Flag, Boolean] = Bijection[Flag, Boolean](_.value)(Flag.apply)
+
+  given bijection: Bijection[Flag, Boolean] = Bijection.apply[Flag, Boolean](_.value)(Flag.apply)
+
   given jdbcDecoder: JdbcDecoder[Flag] = JdbcDecoder.booleanDecoder.map(Flag.apply)
+
   given jdbcEncoder: JdbcEncoder[Flag] = JdbcEncoder.booleanEncoder.contramap(_.value)
+
   given jsonDecoder: JsonDecoder[Flag] = JsonDecoder.boolean.map(Flag.apply)
+
   given jsonEncoder: JsonEncoder[Flag] = JsonEncoder.boolean.contramap(_.value)
-  given ordering: Ordering[Flag] = Ordering.by(_.value)
-  given pgType: PGType[Flag] = PGType.instance(""""public"."Flag"""", Types.OTHER)
-  given setter: Setter[Flag] = Setter.booleanSetter.contramap(_.value)
-  given text: Text[Flag] = new Text[Flag] {
-    override def unsafeEncode(v: Flag, sb: StringBuilder): Unit = Text.booleanInstance.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: Flag, sb: StringBuilder): Unit = Text.booleanInstance.unsafeArrayEncode(v.value, sb)
+
+  given pgText: Text[Flag] = {
+    new Text[Flag] {
+      override def unsafeEncode(v: Flag, sb: StringBuilder): Unit = Text.booleanInstance.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: Flag, sb: StringBuilder): Unit = Text.booleanInstance.unsafeArrayEncode(v.value, sb)
+    }
   }
+
+  given pgType: PGType[Flag] = PGType.instance(""""public"."Flag"""", Types.OTHER)
+
+  given setter: Setter[Flag] = Setter.booleanSetter.contramap(_.value)
 }

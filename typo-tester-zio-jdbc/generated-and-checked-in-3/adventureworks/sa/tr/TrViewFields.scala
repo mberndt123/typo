@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package tr
+package adventureworks.sa.tr
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoShort
@@ -15,7 +13,7 @@ import adventureworks.public.Name
 import adventureworks.sales.salestaxrate.SalestaxrateId
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.Structure.Relation
 
 trait TrViewFields {
@@ -31,11 +29,11 @@ trait TrViewFields {
 
 object TrViewFields {
   lazy val structure: Relation[TrViewFields, TrViewRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[TrViewFields, TrViewRow] {
-  
+
     override lazy val fields: TrViewFields = new TrViewFields {
       override def id = Field[SalestaxrateId, TrViewRow](_path, "id", None, None, x => x.id, (row, value) => row.copy(id = value))
       override def salestaxrateid = Field[SalestaxrateId, TrViewRow](_path, "salestaxrateid", None, None, x => x.salestaxrateid, (row, value) => row.copy(salestaxrateid = value))
@@ -46,12 +44,11 @@ object TrViewFields {
       override def rowguid = Field[TypoUUID, TrViewRow](_path, "rowguid", None, None, x => x.rowguid, (row, value) => row.copy(rowguid = value))
       override def modifieddate = Field[TypoLocalDateTime, TrViewRow](_path, "modifieddate", Some("text"), None, x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, TrViewRow]] =
-      List[FieldLikeNoHkt[?, TrViewRow]](fields.id, fields.salestaxrateid, fields.stateprovinceid, fields.taxtype, fields.taxrate, fields.name, fields.rowguid, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, TrViewRow]] =
+      List[FieldLike[?, TrViewRow]](fields.id, fields.salestaxrateid, fields.stateprovinceid, fields.taxtype, fields.taxrate, fields.name, fields.rowguid, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

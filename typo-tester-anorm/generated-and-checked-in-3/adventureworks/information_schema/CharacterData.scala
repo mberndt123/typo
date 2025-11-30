@@ -3,9 +3,9 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package information_schema
+package adventureworks.information_schema
 
+import adventureworks.Text
 import anorm.Column
 import anorm.ParameterMetaData
 import anorm.ToStatement
@@ -15,24 +15,36 @@ import play.api.libs.json.Writes
 import typo.dsl.Bijection
 
 /** Domain `information_schema.character_data`
-  * No constraint
-  */
+ * No constraint
+ */
 case class CharacterData(value: String)
+
 object CharacterData {
   given arrayColumn: Column[Array[CharacterData]] = Column.columnToArray(using column, implicitly)
+
   given arrayToStatement: ToStatement[Array[CharacterData]] = ToStatement.arrayToParameter(using ParameterMetaData.StringParameterMetaData).contramap(_.map(_.value))
-  given bijection: Bijection[CharacterData, String] = Bijection[CharacterData, String](_.value)(CharacterData.apply)
+
+  given bijection: Bijection[CharacterData, String] = Bijection.apply[CharacterData, String](_.value)(CharacterData.apply)
+
   given column: Column[CharacterData] = Column.columnToString.map(CharacterData.apply)
-  given ordering: Ordering[CharacterData] = Ordering.by(_.value)
-  given parameterMetadata: ParameterMetaData[CharacterData] = new ParameterMetaData[CharacterData] {
-    override def sqlType: String = """"information_schema"."character_data""""
-    override def jdbcType: Int = Types.OTHER
+
+  given parameterMetadata: ParameterMetaData[CharacterData] = {
+    new ParameterMetaData[CharacterData] {
+      override def sqlType: String = """"information_schema"."character_data""""
+      override def jdbcType: Int = Types.OTHER
+    }
   }
+
+  given pgText: Text[CharacterData] = {
+    new Text[CharacterData] {
+      override def unsafeEncode(v: CharacterData, sb: StringBuilder): Unit = Text.stringInstance.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: CharacterData, sb: StringBuilder): Unit = Text.stringInstance.unsafeArrayEncode(v.value, sb)
+    }
+  }
+
   given reads: Reads[CharacterData] = Reads.StringReads.map(CharacterData.apply)
-  given text: Text[CharacterData] = new Text[CharacterData] {
-    override def unsafeEncode(v: CharacterData, sb: StringBuilder): Unit = Text.stringInstance.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: CharacterData, sb: StringBuilder): Unit = Text.stringInstance.unsafeArrayEncode(v.value, sb)
-  }
+
   given toStatement: ToStatement[CharacterData] = ToStatement.stringToStatement.contramap(_.value)
+
   given writes: Writes[CharacterData] = Writes.StringWrites.contramap(_.value)
 }

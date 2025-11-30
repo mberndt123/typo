@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pdoc
+package adventureworks.pr.pdoc
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.production.document.DocumentId
@@ -16,30 +14,34 @@ import io.circe.Encoder
 
 /** View: pr.pdoc */
 case class PdocViewRow(
-  /** Points to [[production.productdocument.ProductdocumentRow.productid]] */
+  /** Points to [[adventureworks.production.productdocument.ProductdocumentRow.productid]] */
   id: ProductId,
-  /** Points to [[production.productdocument.ProductdocumentRow.productid]] */
+  /** Points to [[adventureworks.production.productdocument.ProductdocumentRow.productid]] */
   productid: ProductId,
-  /** Points to [[production.productdocument.ProductdocumentRow.modifieddate]] */
+  /** Points to [[adventureworks.production.productdocument.ProductdocumentRow.modifieddate]] */
   modifieddate: TypoLocalDateTime,
-  /** Points to [[production.productdocument.ProductdocumentRow.documentnode]] */
+  /** Points to [[adventureworks.production.productdocument.ProductdocumentRow.documentnode]] */
   documentnode: DocumentId
 )
 
 object PdocViewRow {
   given decoder: Decoder[PdocViewRow] = Decoder.forProduct4[PdocViewRow, ProductId, ProductId, TypoLocalDateTime, DocumentId]("id", "productid", "modifieddate", "documentnode")(PdocViewRow.apply)(using ProductId.decoder, ProductId.decoder, TypoLocalDateTime.decoder, DocumentId.decoder)
+
   given encoder: Encoder[PdocViewRow] = Encoder.forProduct4[PdocViewRow, ProductId, ProductId, TypoLocalDateTime, DocumentId]("id", "productid", "modifieddate", "documentnode")(x => (x.id, x.productid, x.modifieddate, x.documentnode))(using ProductId.encoder, ProductId.encoder, TypoLocalDateTime.encoder, DocumentId.encoder)
-  given read: Read[PdocViewRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(ProductId.get).asInstanceOf[Read[Any]],
+
+  given read: Read[PdocViewRow] = {
+    new Read.CompositeOfInstances(Array(
       new Read.Single(ProductId.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]],
-      new Read.Single(DocumentId.get).asInstanceOf[Read[Any]]
-  ))(using scala.reflect.ClassTag.Any).map { arr =>
-    PdocViewRow(
-      id = arr(0).asInstanceOf[ProductId],
-          productid = arr(1).asInstanceOf[ProductId],
-          modifieddate = arr(2).asInstanceOf[TypoLocalDateTime],
-          documentnode = arr(3).asInstanceOf[DocumentId]
-    )
+        new Read.Single(ProductId.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]],
+        new Read.Single(DocumentId.get).asInstanceOf[Read[Any]]
+    ))(using scala.reflect.ClassTag.Any).map { arr =>
+      PdocViewRow(
+        id = arr(0).asInstanceOf[ProductId],
+            productid = arr(1).asInstanceOf[ProductId],
+            modifieddate = arr(2).asInstanceOf[TypoLocalDateTime],
+            documentnode = arr(3).asInstanceOf[DocumentId]
+      )
+    }
   }
 }

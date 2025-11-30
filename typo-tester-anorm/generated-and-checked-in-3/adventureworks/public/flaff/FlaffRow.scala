@@ -3,10 +3,10 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package flaff
+package adventureworks.public.flaff
 
+import adventureworks.Text
+import adventureworks.public.ShortText
 import anorm.Column
 import anorm.RowParser
 import anorm.Success
@@ -20,66 +20,97 @@ import scala.collection.immutable.ListMap
 import scala.util.Try
 
 /** Table: public.flaff
-    Composite primary key: code, another_code, some_number, specifier */
+ * Composite primary key: code, another_code, some_number, specifier
+ */
 case class FlaffRow(
-  /** Points to [[FlaffRow.code]] */
+  /** Points to [[adventureworks.public.flaff.FlaffRow.code]] */
   code: ShortText,
-  /** Points to [[FlaffRow.anotherCode]] */
+  /** Points to [[adventureworks.public.flaff.FlaffRow.anotherCode]] */
   anotherCode: /* max 20 chars */ String,
-  /** Points to [[FlaffRow.someNumber]] */
+  /** Points to [[adventureworks.public.flaff.FlaffRow.someNumber]] */
   someNumber: Int,
   specifier: ShortText,
-  /** Points to [[FlaffRow.specifier]] */
+  /** Points to [[adventureworks.public.flaff.FlaffRow.specifier]] */
   parentspecifier: Option[ShortText]
-){
-   val compositeId: FlaffId = FlaffId(code, anotherCode, someNumber, specifier)
-   val id = compositeId
- }
-
-object FlaffRow {
-  def apply(compositeId: FlaffId, parentspecifier: Option[ShortText]) =
-    new FlaffRow(compositeId.code, compositeId.anotherCode, compositeId.someNumber, compositeId.specifier, parentspecifier)
-  given reads: Reads[FlaffRow] = Reads[FlaffRow](json => JsResult.fromTry(
-      Try(
-        FlaffRow(
-          code = json.\("code").as(ShortText.reads),
-          anotherCode = json.\("another_code").as(Reads.StringReads),
-          someNumber = json.\("some_number").as(Reads.IntReads),
-          specifier = json.\("specifier").as(ShortText.reads),
-          parentspecifier = json.\("parentspecifier").toOption.map(_.as(ShortText.reads))
-        )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[FlaffRow] = RowParser[FlaffRow] { row =>
-    Success(
-      FlaffRow(
-        code = row(idx + 0)(using ShortText.column),
-        anotherCode = row(idx + 1)(using Column.columnToString),
-        someNumber = row(idx + 2)(using Column.columnToInt),
-        specifier = row(idx + 3)(using ShortText.column),
-        parentspecifier = row(idx + 4)(using Column.columnToOption(using ShortText.column))
-      )
+) {
+  def compositeId: FlaffId = {
+    new FlaffId(
+      code,
+      anotherCode,
+      someNumber,
+      specifier
     )
   }
-  given text: Text[FlaffRow] = Text.instance[FlaffRow]{ (row, sb) =>
-    ShortText.text.unsafeEncode(row.code, sb)
-    sb.append(Text.DELIMETER)
-    Text.stringInstance.unsafeEncode(row.anotherCode, sb)
-    sb.append(Text.DELIMETER)
-    Text.intInstance.unsafeEncode(row.someNumber, sb)
-    sb.append(Text.DELIMETER)
-    ShortText.text.unsafeEncode(row.specifier, sb)
-    sb.append(Text.DELIMETER)
-    Text.option(using ShortText.text).unsafeEncode(row.parentspecifier, sb)
+
+  def id: FlaffId = this.compositeId
+}
+
+object FlaffRow {
+  def apply(
+    compositeId: FlaffId,
+    parentspecifier: Option[ShortText]
+  ): FlaffRow = {
+    new FlaffRow(
+      compositeId.code,
+      compositeId.anotherCode,
+      compositeId.someNumber,
+      compositeId.specifier,
+      parentspecifier
+    )
   }
-  given writes: OWrites[FlaffRow] = OWrites[FlaffRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "code" -> ShortText.writes.writes(o.code),
-      "another_code" -> Writes.StringWrites.writes(o.anotherCode),
-      "some_number" -> Writes.IntWrites.writes(o.someNumber),
-      "specifier" -> ShortText.writes.writes(o.specifier),
-      "parentspecifier" -> Writes.OptionWrites(using ShortText.writes).writes(o.parentspecifier)
-    ))
-  )
+
+  given pgText: Text[FlaffRow] = {
+    Text.instance[FlaffRow]{ (row, sb) =>
+      ShortText.pgText.unsafeEncode(row.code, sb)
+      sb.append(Text.DELIMETER)
+      Text.stringInstance.unsafeEncode(row.anotherCode, sb)
+      sb.append(Text.DELIMETER)
+      Text.intInstance.unsafeEncode(row.someNumber, sb)
+      sb.append(Text.DELIMETER)
+      ShortText.pgText.unsafeEncode(row.specifier, sb)
+      sb.append(Text.DELIMETER)
+      Text.option(using ShortText.pgText).unsafeEncode(row.parentspecifier, sb)
+    }
+  }
+
+  given reads: Reads[FlaffRow] = {
+    Reads[FlaffRow](json => JsResult.fromTry(
+        Try(
+          FlaffRow(
+            code = json.\("code").as(ShortText.reads),
+            anotherCode = json.\("another_code").as(Reads.StringReads),
+            someNumber = json.\("some_number").as(Reads.IntReads),
+            specifier = json.\("specifier").as(ShortText.reads),
+            parentspecifier = json.\("parentspecifier").toOption.map(_.as(ShortText.reads))
+          )
+        )
+      ),
+    )
+  }
+
+  def rowParser(idx: Int): RowParser[FlaffRow] = {
+    RowParser[FlaffRow] { row =>
+      Success(
+        FlaffRow(
+          code = row(idx + 0)(using ShortText.column),
+          anotherCode = row(idx + 1)(using Column.columnToString),
+          someNumber = row(idx + 2)(using Column.columnToInt),
+          specifier = row(idx + 3)(using ShortText.column),
+          parentspecifier = row(idx + 4)(using Column.columnToOption(using ShortText.column))
+        )
+      )
+    }
+  }
+
+  given writes: OWrites[FlaffRow] = {
+    OWrites[FlaffRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "code" -> ShortText.writes.writes(o.code),
+        "another_code" -> Writes.StringWrites.writes(o.anotherCode),
+        "some_number" -> Writes.IntWrites.writes(o.someNumber),
+        "specifier" -> ShortText.writes.writes(o.specifier),
+        "parentspecifier" -> Writes.OptionWrites(using ShortText.writes).writes(o.parentspecifier)
+      ))
+    )
+  }
 }

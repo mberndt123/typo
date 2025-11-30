@@ -3,20 +3,19 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package person_row_join
+package adventureworks.person_row_join
 
 import doobie.free.connection.ConnectionIO
-import doobie.syntax.string.toSqlInterpolator
 import fs2.Stream
+import doobie.syntax.string.toSqlInterpolator
 
 class PersonRowJoinSqlRepoImpl extends PersonRowJoinSqlRepo {
-  override def apply(): Stream[ConnectionIO, PersonRowJoinSqlRow] = {
+  def apply: Stream[ConnectionIO, PersonRowJoinSqlRow] = {
     val sql =
       sql"""SELECT s.businessentityid,
-                   (select array_agg(ROW(a.emailaddress, a.rowguid)) from person.emailaddress a where a.businessentityid = s.businessentityid) as email,
-                   (select ARRAY[ROW(a.emailaddress, a.rowguid)] from person.emailaddress a where a.businessentityid = s.businessentityid) as emails
-            FROM sales.salesperson s
+             (select array_agg(ROW(a.emailaddress, a.rowguid)) from person.emailaddress a where a.businessentityid = s.businessentityid) as email,
+             (select ARRAY[ROW(a.emailaddress, a.rowguid)] from person.emailaddress a where a.businessentityid = s.businessentityid) as emails
+      FROM sales.salesperson s
       """
     sql.query(using PersonRowJoinSqlRow.read).stream
   }

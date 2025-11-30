@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package sr
+package adventureworks.pr.sr
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.production.scrapreason.ScrapreasonId
@@ -22,44 +20,52 @@ import scala.util.Try
 
 /** View: pr.sr */
 case class SrViewRow(
-  /** Points to [[production.scrapreason.ScrapreasonRow.scrapreasonid]] */
+  /** Points to [[adventureworks.production.scrapreason.ScrapreasonRow.scrapreasonid]] */
   id: ScrapreasonId,
-  /** Points to [[production.scrapreason.ScrapreasonRow.scrapreasonid]] */
+  /** Points to [[adventureworks.production.scrapreason.ScrapreasonRow.scrapreasonid]] */
   scrapreasonid: ScrapreasonId,
-  /** Points to [[production.scrapreason.ScrapreasonRow.name]] */
+  /** Points to [[adventureworks.production.scrapreason.ScrapreasonRow.name]] */
   name: Name,
-  /** Points to [[production.scrapreason.ScrapreasonRow.modifieddate]] */
+  /** Points to [[adventureworks.production.scrapreason.ScrapreasonRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object SrViewRow {
-  given reads: Reads[SrViewRow] = Reads[SrViewRow](json => JsResult.fromTry(
-      Try(
-        SrViewRow(
-          id = json.\("id").as(ScrapreasonId.reads),
-          scrapreasonid = json.\("scrapreasonid").as(ScrapreasonId.reads),
-          name = json.\("name").as(Name.reads),
-          modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+  given reads: Reads[SrViewRow] = {
+    Reads[SrViewRow](json => JsResult.fromTry(
+        Try(
+          SrViewRow(
+            id = json.\("id").as(ScrapreasonId.reads),
+            scrapreasonid = json.\("scrapreasonid").as(ScrapreasonId.reads),
+            name = json.\("name").as(Name.reads),
+            modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[SrViewRow] = RowParser[SrViewRow] { row =>
-    Success(
-      SrViewRow(
-        id = row(idx + 0)(using ScrapreasonId.column),
-        scrapreasonid = row(idx + 1)(using ScrapreasonId.column),
-        name = row(idx + 2)(using Name.column),
-        modifieddate = row(idx + 3)(using TypoLocalDateTime.column)
-      )
+      ),
     )
   }
-  given writes: OWrites[SrViewRow] = OWrites[SrViewRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "id" -> ScrapreasonId.writes.writes(o.id),
-      "scrapreasonid" -> ScrapreasonId.writes.writes(o.scrapreasonid),
-      "name" -> Name.writes.writes(o.name),
-      "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
-    ))
-  )
+
+  def rowParser(idx: Int): RowParser[SrViewRow] = {
+    RowParser[SrViewRow] { row =>
+      Success(
+        SrViewRow(
+          id = row(idx + 0)(using ScrapreasonId.column),
+          scrapreasonid = row(idx + 1)(using ScrapreasonId.column),
+          name = row(idx + 2)(using Name.column),
+          modifieddate = row(idx + 3)(using TypoLocalDateTime.column)
+        )
+      )
+    }
+  }
+
+  given writes: OWrites[SrViewRow] = {
+    OWrites[SrViewRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "id" -> ScrapreasonId.writes.writes(o.id),
+        "scrapreasonid" -> ScrapreasonId.writes.writes(o.scrapreasonid),
+        "name" -> Name.writes.writes(o.name),
+        "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
+      ))
+    )
+  }
 }

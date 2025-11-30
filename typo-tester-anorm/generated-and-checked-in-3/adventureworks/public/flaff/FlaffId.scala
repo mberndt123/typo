@@ -3,10 +3,9 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package flaff
+package adventureworks.public.flaff
 
+import adventureworks.public.ShortText
 import play.api.libs.json.JsObject
 import play.api.libs.json.JsResult
 import play.api.libs.json.JsValue
@@ -23,25 +22,30 @@ case class FlaffId(
   someNumber: Int,
   specifier: ShortText
 )
+
 object FlaffId {
-  given ordering: Ordering[FlaffId] = Ordering.by(x => (x.code, x.anotherCode, x.someNumber, x.specifier))
-  given reads: Reads[FlaffId] = Reads[FlaffId](json => JsResult.fromTry(
-      Try(
-        FlaffId(
-          code = json.\("code").as(summon[Reads[ShortText]]),
-          anotherCode = json.\("another_code").as(Reads.StringReads),
-          someNumber = json.\("some_number").as(Reads.IntReads),
-          specifier = json.\("specifier").as(summon[Reads[ShortText]])
+  given reads: Reads[FlaffId] = {
+    Reads[FlaffId](json => JsResult.fromTry(
+        Try(
+          FlaffId(
+            code = json.\("code").as(ShortText.reads),
+            anotherCode = json.\("another_code").as(Reads.StringReads),
+            someNumber = json.\("some_number").as(Reads.IntReads),
+            specifier = json.\("specifier").as(ShortText.reads)
+          )
         )
-      )
-    ),
-  )
-  given writes: OWrites[FlaffId] = OWrites[FlaffId](o =>
-    new JsObject(ListMap[String, JsValue](
-      "code" -> summon[Writes[ShortText]].writes(o.code),
-      "another_code" -> Writes.StringWrites.writes(o.anotherCode),
-      "some_number" -> Writes.IntWrites.writes(o.someNumber),
-      "specifier" -> summon[Writes[ShortText]].writes(o.specifier)
-    ))
-  )
+      ),
+    )
+  }
+
+  given writes: OWrites[FlaffId] = {
+    OWrites[FlaffId](o =>
+      new JsObject(ListMap[String, JsValue](
+        "code" -> ShortText.writes.writes(o.code),
+        "another_code" -> Writes.StringWrites.writes(o.anotherCode),
+        "some_number" -> Writes.IntWrites.writes(o.someNumber),
+        "specifier" -> ShortText.writes.writes(o.specifier)
+      ))
+    )
+  }
 }

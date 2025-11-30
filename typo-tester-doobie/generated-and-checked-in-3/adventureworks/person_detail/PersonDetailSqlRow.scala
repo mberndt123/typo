@@ -3,8 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package person_detail
+package adventureworks.person_detail
 
 import adventureworks.person.businessentity.BusinessentityId
 import adventureworks.public.Name
@@ -16,54 +15,58 @@ import io.circe.Encoder
 
 /** SQL file: person_detail.sql */
 case class PersonDetailSqlRow(
-  /** Points to [[sales.salesperson.SalespersonRow.businessentityid]] */
+  /** Points to [[adventureworks.sales.salesperson.SalespersonRow.businessentityid]] */
   businessentityid: BusinessentityId,
-  /** Points to [[person.person.PersonRow.title]] */
+  /** Points to [[adventureworks.person.person.PersonRow.title]] */
   title: Option[/* max 8 chars */ String],
-  /** Points to [[person.person.PersonRow.firstname]] */
+  /** Points to [[adventureworks.person.person.PersonRow.firstname]] */
   firstname: /* user-picked */ FirstName,
-  /** Points to [[person.person.PersonRow.middlename]] */
+  /** Points to [[adventureworks.person.person.PersonRow.middlename]] */
   middlename: Option[Name],
-  /** Points to [[person.person.PersonRow.lastname]] */
+  /** Points to [[adventureworks.person.person.PersonRow.lastname]] */
   lastname: Name,
-  /** Points to [[humanresources.employee.EmployeeRow.jobtitle]] */
+  /** Points to [[adventureworks.humanresources.employee.EmployeeRow.jobtitle]] */
   jobtitle: /* max 50 chars */ String,
-  /** Points to [[person.address.AddressRow.addressline1]] */
+  /** Points to [[adventureworks.person.address.AddressRow.addressline1]] */
   addressline1: Option[/* max 60 chars */ String],
-  /** Points to [[person.address.AddressRow.city]] */
+  /** Points to [[adventureworks.person.address.AddressRow.city]] */
   city: Option[/* max 30 chars */ String],
-  /** Points to [[person.address.AddressRow.postalcode]] */
+  /** Points to [[adventureworks.person.address.AddressRow.postalcode]] */
   postalcode: Option[/* max 15 chars */ String],
-  /** Points to [[person.address.AddressRow.rowguid]] */
+  /** Points to [[adventureworks.person.address.AddressRow.rowguid]] */
   rowguid: /* user-picked */ String
 )
 
 object PersonDetailSqlRow {
   given decoder: Decoder[PersonDetailSqlRow] = Decoder.forProduct10[PersonDetailSqlRow, BusinessentityId, Option[/* max 8 chars */ String], /* user-picked */ FirstName, Option[Name], Name, /* max 50 chars */ String, Option[/* max 60 chars */ String], Option[/* max 30 chars */ String], Option[/* max 15 chars */ String], /* user-picked */ String]("businessentityid", "title", "firstname", "middlename", "lastname", "jobtitle", "addressline1", "city", "postalcode", "rowguid")(PersonDetailSqlRow.apply)(using BusinessentityId.decoder, Decoder.decodeOption(using Decoder.decodeString), FirstName.decoder, Decoder.decodeOption(using Name.decoder), Name.decoder, Decoder.decodeString, Decoder.decodeOption(using Decoder.decodeString), Decoder.decodeOption(using Decoder.decodeString), Decoder.decodeOption(using Decoder.decodeString), Decoder.decodeString)
+
   given encoder: Encoder[PersonDetailSqlRow] = Encoder.forProduct10[PersonDetailSqlRow, BusinessentityId, Option[/* max 8 chars */ String], /* user-picked */ FirstName, Option[Name], Name, /* max 50 chars */ String, Option[/* max 60 chars */ String], Option[/* max 30 chars */ String], Option[/* max 15 chars */ String], /* user-picked */ String]("businessentityid", "title", "firstname", "middlename", "lastname", "jobtitle", "addressline1", "city", "postalcode", "rowguid")(x => (x.businessentityid, x.title, x.firstname, x.middlename, x.lastname, x.jobtitle, x.addressline1, x.city, x.postalcode, x.rowguid))(using BusinessentityId.encoder, Encoder.encodeOption(using Encoder.encodeString), FirstName.encoder, Encoder.encodeOption(using Name.encoder), Name.encoder, Encoder.encodeString, Encoder.encodeOption(using Encoder.encodeString), Encoder.encodeOption(using Encoder.encodeString), Encoder.encodeOption(using Encoder.encodeString), Encoder.encodeString)
-  given read: Read[PersonDetailSqlRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(BusinessentityId.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
-      new Read.Single(/* user-picked */ FirstName.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(Name.get).asInstanceOf[Read[Any]],
-      new Read.Single(Name.get).asInstanceOf[Read[Any]],
-      new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
-      new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]]
-  ))(using scala.reflect.ClassTag.Any).map { arr =>
-    PersonDetailSqlRow(
-      businessentityid = arr(0).asInstanceOf[BusinessentityId],
-          title = arr(1).asInstanceOf[Option[/* max 8 chars */ String]],
-          firstname = arr(2).asInstanceOf[/* user-picked */ FirstName],
-          middlename = arr(3).asInstanceOf[Option[Name]],
-          lastname = arr(4).asInstanceOf[Name],
-          jobtitle = arr(5).asInstanceOf[/* max 50 chars */ String],
-          addressline1 = arr(6).asInstanceOf[Option[/* max 60 chars */ String]],
-          city = arr(7).asInstanceOf[Option[/* max 30 chars */ String]],
-          postalcode = arr(8).asInstanceOf[Option[/* max 15 chars */ String]],
-          rowguid = arr(9).asInstanceOf[/* user-picked */ String]
-    )
+
+  given read: Read[PersonDetailSqlRow] = {
+    new Read.CompositeOfInstances(Array(
+      new Read.Single(BusinessentityId.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
+        new Read.Single(/* user-picked */ FirstName.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(Name.get).asInstanceOf[Read[Any]],
+        new Read.Single(Name.get).asInstanceOf[Read[Any]],
+        new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
+        new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]]
+    ))(using scala.reflect.ClassTag.Any).map { arr =>
+      PersonDetailSqlRow(
+        businessentityid = arr(0).asInstanceOf[BusinessentityId],
+            title = arr(1).asInstanceOf[Option[/* max 8 chars */ String]],
+            firstname = arr(2).asInstanceOf[/* user-picked */ FirstName],
+            middlename = arr(3).asInstanceOf[Option[Name]],
+            lastname = arr(4).asInstanceOf[Name],
+            jobtitle = arr(5).asInstanceOf[/* max 50 chars */ String],
+            addressline1 = arr(6).asInstanceOf[Option[/* max 60 chars */ String]],
+            city = arr(7).asInstanceOf[Option[/* max 30 chars */ String]],
+            postalcode = arr(8).asInstanceOf[Option[/* max 15 chars */ String]],
+            rowguid = arr(9).asInstanceOf[/* user-picked */ String]
+      )
+    }
   }
 }

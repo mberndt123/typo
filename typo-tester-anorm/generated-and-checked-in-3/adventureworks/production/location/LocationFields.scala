@@ -3,15 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package location
+package adventureworks.production.location
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.public.Name
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.IdField
 import typo.dsl.Structure.Relation
 
@@ -25,11 +23,11 @@ trait LocationFields {
 
 object LocationFields {
   lazy val structure: Relation[LocationFields, LocationRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[LocationFields, LocationRow] {
-  
+
     override lazy val fields: LocationFields = new LocationFields {
       override def locationid = IdField[LocationId, LocationRow](_path, "locationid", None, Some("int4"), x => x.locationid, (row, value) => row.copy(locationid = value))
       override def name = Field[Name, LocationRow](_path, "name", None, Some("varchar"), x => x.name, (row, value) => row.copy(name = value))
@@ -37,12 +35,11 @@ object LocationFields {
       override def availability = Field[BigDecimal, LocationRow](_path, "availability", None, Some("numeric"), x => x.availability, (row, value) => row.copy(availability = value))
       override def modifieddate = Field[TypoLocalDateTime, LocationRow](_path, "modifieddate", Some("text"), Some("timestamp"), x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, LocationRow]] =
-      List[FieldLikeNoHkt[?, LocationRow]](fields.locationid, fields.name, fields.costrate, fields.availability, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, LocationRow]] =
+      List[FieldLike[?, LocationRow]](fields.locationid, fields.name, fields.costrate, fields.availability, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

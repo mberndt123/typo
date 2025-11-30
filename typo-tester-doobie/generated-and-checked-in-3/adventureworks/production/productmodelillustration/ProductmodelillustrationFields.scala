@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package productmodelillustration
+package adventureworks.production.productmodelillustration
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.production.illustration.IllustrationFields
@@ -16,12 +14,12 @@ import adventureworks.production.productmodel.ProductmodelId
 import adventureworks.production.productmodel.ProductmodelRow
 import typo.dsl.ForeignKey
 import typo.dsl.Path
-import typo.dsl.Required
 import typo.dsl.SqlExpr
 import typo.dsl.SqlExpr.CompositeIn
 import typo.dsl.SqlExpr.CompositeIn.TuplePart
+import typo.dsl.SqlExpr.Const.As.as
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.IdField
 import typo.dsl.Structure.Relation
 
@@ -35,31 +33,30 @@ trait ProductmodelillustrationFields {
   def fkProductmodel: ForeignKey[ProductmodelFields, ProductmodelRow] =
     ForeignKey[ProductmodelFields, ProductmodelRow]("production.FK_ProductModelIllustration_ProductModel_ProductModelID", Nil)
       .withColumnPair(productmodelid, _.productmodelid)
-  def compositeIdIs(compositeId: ProductmodelillustrationId): SqlExpr[Boolean, Required] =
+  def compositeIdIs(compositeId: ProductmodelillustrationId): SqlExpr[Boolean] =
     productmodelid.isEqual(compositeId.productmodelid).and(illustrationid.isEqual(compositeId.illustrationid))
-  def compositeIdIn(compositeIds: Array[ProductmodelillustrationId]): SqlExpr[Boolean, Required] =
-    new CompositeIn(compositeIds)(TuplePart(productmodelid)(_.productmodelid), TuplePart(illustrationid)(_.illustrationid))
-  
+  def compositeIdIn(compositeIds: Array[ProductmodelillustrationId]): SqlExpr[Boolean] =
+    new CompositeIn(compositeIds)(TuplePart[ProductmodelillustrationId](productmodelid)(_.productmodelid)(using as[Array[ProductmodelId]](using ProductmodelId.arrayPut), implicitly), TuplePart[ProductmodelillustrationId](illustrationid)(_.illustrationid)(using as[Array[IllustrationId]](using IllustrationId.arrayPut), implicitly))
+
 }
 
 object ProductmodelillustrationFields {
   lazy val structure: Relation[ProductmodelillustrationFields, ProductmodelillustrationRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[ProductmodelillustrationFields, ProductmodelillustrationRow] {
-  
+
     override lazy val fields: ProductmodelillustrationFields = new ProductmodelillustrationFields {
       override def productmodelid = IdField[ProductmodelId, ProductmodelillustrationRow](_path, "productmodelid", None, Some("int4"), x => x.productmodelid, (row, value) => row.copy(productmodelid = value))
       override def illustrationid = IdField[IllustrationId, ProductmodelillustrationRow](_path, "illustrationid", None, Some("int4"), x => x.illustrationid, (row, value) => row.copy(illustrationid = value))
       override def modifieddate = Field[TypoLocalDateTime, ProductmodelillustrationRow](_path, "modifieddate", Some("text"), Some("timestamp"), x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, ProductmodelillustrationRow]] =
-      List[FieldLikeNoHkt[?, ProductmodelillustrationRow]](fields.productmodelid, fields.illustrationid, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, ProductmodelillustrationRow]] =
+      List[FieldLike[?, ProductmodelillustrationRow]](fields.productmodelid, fields.illustrationid, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

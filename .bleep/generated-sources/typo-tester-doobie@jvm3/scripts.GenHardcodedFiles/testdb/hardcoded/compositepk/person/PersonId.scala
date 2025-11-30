@@ -3,10 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN
  */
-package testdb
-package hardcoded
-package compositepk
-package person
+package testdb.hardcoded.compositepk.person
 
 import io.circe.Decoder
 import io.circe.Encoder
@@ -16,8 +13,9 @@ case class PersonId(
   one: Long,
   two: Option[String]
 )
+
 object PersonId {
   given decoder: Decoder[PersonId] = Decoder.forProduct2[PersonId, Long, Option[String]]("one", "two")(PersonId.apply)(using Decoder.decodeLong, Decoder.decodeOption(using Decoder.decodeString))
+
   given encoder: Encoder[PersonId] = Encoder.forProduct2[PersonId, Long, Option[String]]("one", "two")(x => (x.one, x.two))(using Encoder.encodeLong, Encoder.encodeOption(using Encoder.encodeString))
-  given ordering(using O0: Ordering[Option[String]]): Ordering[PersonId] = Ordering.by(x => (x.one, x.two))
 }

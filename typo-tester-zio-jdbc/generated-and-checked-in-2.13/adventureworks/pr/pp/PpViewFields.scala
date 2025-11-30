@@ -3,16 +3,14 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pp
+package adventureworks.pr.pp
 
 import adventureworks.customtypes.TypoBytea
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.production.productphoto.ProductphotoId
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.OptField
 import typo.dsl.Structure.Relation
 
@@ -28,11 +26,11 @@ trait PpViewFields {
 
 object PpViewFields {
   lazy val structure: Relation[PpViewFields, PpViewRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[PpViewFields, PpViewRow] {
-  
+
     override lazy val fields: PpViewFields = new PpViewFields {
       override def id = Field[ProductphotoId, PpViewRow](_path, "id", None, None, x => x.id, (row, value) => row.copy(id = value))
       override def productphotoid = Field[ProductphotoId, PpViewRow](_path, "productphotoid", None, None, x => x.productphotoid, (row, value) => row.copy(productphotoid = value))
@@ -42,12 +40,11 @@ object PpViewFields {
       override def largephotofilename = OptField[/* max 50 chars */ String, PpViewRow](_path, "largephotofilename", None, None, x => x.largephotofilename, (row, value) => row.copy(largephotofilename = value))
       override def modifieddate = Field[TypoLocalDateTime, PpViewRow](_path, "modifieddate", Some("text"), None, x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, PpViewRow]] =
-      List[FieldLikeNoHkt[?, PpViewRow]](fields.id, fields.productphotoid, fields.thumbnailphoto, fields.thumbnailphotofilename, fields.largephoto, fields.largephotofilename, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, PpViewRow]] =
+      List[FieldLike[?, PpViewRow]](fields.id, fields.productphotoid, fields.thumbnailphoto, fields.thumbnailphotofilename, fields.largephoto, fields.largephotofilename, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

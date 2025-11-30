@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package hr
-package eph
+package adventureworks.hr.eph
 
 import doobie.free.connection.ConnectionIO
 import fs2.Stream
@@ -13,5 +11,6 @@ import typo.dsl.SelectBuilder
 
 trait EphViewRepo {
   def select: SelectBuilder[EphViewFields, EphViewRow]
+
   def selectAll: Stream[ConnectionIO, EphViewRow]
 }

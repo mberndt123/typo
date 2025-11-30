@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pe
-package cr
+package adventureworks.pe.cr
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.person.countryregion.CountryregionId
@@ -16,26 +14,30 @@ import io.circe.Encoder
 
 /** View: pe.cr */
 case class CrViewRow(
-  /** Points to [[person.countryregion.CountryregionRow.countryregioncode]] */
+  /** Points to [[adventureworks.person.countryregion.CountryregionRow.countryregioncode]] */
   countryregioncode: CountryregionId,
-  /** Points to [[person.countryregion.CountryregionRow.name]] */
+  /** Points to [[adventureworks.person.countryregion.CountryregionRow.name]] */
   name: Name,
-  /** Points to [[person.countryregion.CountryregionRow.modifieddate]] */
+  /** Points to [[adventureworks.person.countryregion.CountryregionRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object CrViewRow {
   implicit lazy val decoder: Decoder[CrViewRow] = Decoder.forProduct3[CrViewRow, CountryregionId, Name, TypoLocalDateTime]("countryregioncode", "name", "modifieddate")(CrViewRow.apply)(CountryregionId.decoder, Name.decoder, TypoLocalDateTime.decoder)
+
   implicit lazy val encoder: Encoder[CrViewRow] = Encoder.forProduct3[CrViewRow, CountryregionId, Name, TypoLocalDateTime]("countryregioncode", "name", "modifieddate")(x => (x.countryregioncode, x.name, x.modifieddate))(CountryregionId.encoder, Name.encoder, TypoLocalDateTime.encoder)
-  implicit lazy val read: Read[CrViewRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(CountryregionId.get).asInstanceOf[Read[Any]],
-      new Read.Single(Name.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
-  ))(scala.reflect.ClassTag.Any).map { arr =>
-    CrViewRow(
-      countryregioncode = arr(0).asInstanceOf[CountryregionId],
-          name = arr(1).asInstanceOf[Name],
-          modifieddate = arr(2).asInstanceOf[TypoLocalDateTime]
-    )
+
+  implicit lazy val read: Read[CrViewRow] = {
+    new Read.CompositeOfInstances(Array(
+      new Read.Single(CountryregionId.get).asInstanceOf[Read[Any]],
+        new Read.Single(Name.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
+    ))(scala.reflect.ClassTag.Any).map { arr =>
+      CrViewRow(
+        countryregioncode = arr(0).asInstanceOf[CountryregionId],
+            name = arr(1).asInstanceOf[Name],
+            modifieddate = arr(2).asInstanceOf[TypoLocalDateTime]
+      )
+    }
   }
 }

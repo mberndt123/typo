@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sales
-package customer
+package adventureworks.sales.customer
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoUUID
@@ -20,7 +18,7 @@ import adventureworks.sales.store.StoreRow
 import typo.dsl.ForeignKey
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.IdField
 import typo.dsl.SqlExpr.OptField
 import typo.dsl.Structure.Relation
@@ -45,11 +43,11 @@ trait CustomerFields {
 
 object CustomerFields {
   lazy val structure: Relation[CustomerFields, CustomerRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[CustomerFields, CustomerRow] {
-  
+
     override lazy val fields: CustomerFields = new CustomerFields {
       override def customerid = IdField[CustomerId, CustomerRow](_path, "customerid", None, Some("int4"), x => x.customerid, (row, value) => row.copy(customerid = value))
       override def personid = OptField[BusinessentityId, CustomerRow](_path, "personid", None, Some("int4"), x => x.personid, (row, value) => row.copy(personid = value))
@@ -58,12 +56,11 @@ object CustomerFields {
       override def rowguid = Field[TypoUUID, CustomerRow](_path, "rowguid", None, Some("uuid"), x => x.rowguid, (row, value) => row.copy(rowguid = value))
       override def modifieddate = Field[TypoLocalDateTime, CustomerRow](_path, "modifieddate", Some("text"), Some("timestamp"), x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, CustomerRow]] =
-      List[FieldLikeNoHkt[?, CustomerRow]](fields.customerid, fields.personid, fields.storeid, fields.territoryid, fields.rowguid, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, CustomerRow]] =
+      List[FieldLike[?, CustomerRow]](fields.customerid, fields.personid, fields.storeid, fields.territoryid, fields.rowguid, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

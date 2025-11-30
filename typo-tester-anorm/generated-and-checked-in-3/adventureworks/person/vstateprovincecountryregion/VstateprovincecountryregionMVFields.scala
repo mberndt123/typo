@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package person
-package vstateprovincecountryregion
+package adventureworks.person.vstateprovincecountryregion
 
 import adventureworks.person.countryregion.CountryregionId
 import adventureworks.person.stateprovince.StateprovinceId
@@ -14,7 +12,7 @@ import adventureworks.public.Name
 import adventureworks.sales.salesterritory.SalesterritoryId
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.Structure.Relation
 
 trait VstateprovincecountryregionMVFields {
@@ -29,11 +27,11 @@ trait VstateprovincecountryregionMVFields {
 
 object VstateprovincecountryregionMVFields {
   lazy val structure: Relation[VstateprovincecountryregionMVFields, VstateprovincecountryregionMVRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[VstateprovincecountryregionMVFields, VstateprovincecountryregionMVRow] {
-  
+
     override lazy val fields: VstateprovincecountryregionMVFields = new VstateprovincecountryregionMVFields {
       override def stateprovinceid = Field[StateprovinceId, VstateprovincecountryregionMVRow](_path, "stateprovinceid", None, None, x => x.stateprovinceid, (row, value) => row.copy(stateprovinceid = value))
       override def stateprovincecode = Field[/* bpchar, max 3 chars */ String, VstateprovincecountryregionMVRow](_path, "stateprovincecode", None, None, x => x.stateprovincecode, (row, value) => row.copy(stateprovincecode = value))
@@ -43,12 +41,11 @@ object VstateprovincecountryregionMVFields {
       override def countryregioncode = Field[CountryregionId, VstateprovincecountryregionMVRow](_path, "countryregioncode", None, None, x => x.countryregioncode, (row, value) => row.copy(countryregioncode = value))
       override def countryregionname = Field[Name, VstateprovincecountryregionMVRow](_path, "countryregionname", None, None, x => x.countryregionname, (row, value) => row.copy(countryregionname = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, VstateprovincecountryregionMVRow]] =
-      List[FieldLikeNoHkt[?, VstateprovincecountryregionMVRow]](fields.stateprovinceid, fields.stateprovincecode, fields.isonlystateprovinceflag, fields.stateprovincename, fields.territoryid, fields.countryregioncode, fields.countryregionname)
-  
+
+    override lazy val columns: List[FieldLike[?, VstateprovincecountryregionMVRow]] =
+      List[FieldLike[?, VstateprovincecountryregionMVRow]](fields.stateprovinceid, fields.stateprovincecode, fields.isonlystateprovinceflag, fields.stateprovincename, fields.territoryid, fields.countryregioncode, fields.countryregionname)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

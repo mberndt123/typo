@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package titledperson
+package adventureworks.public.titledperson
 
 import doobie.free.connection.ConnectionIO
 import fs2.Stream
@@ -15,9 +13,17 @@ import typo.dsl.UpdateBuilder
 
 trait TitledpersonRepo {
   def delete: DeleteBuilder[TitledpersonFields, TitledpersonRow]
+
   def insert(unsaved: TitledpersonRow): ConnectionIO[TitledpersonRow]
-  def insertStreaming(unsaved: Stream[ConnectionIO, TitledpersonRow], batchSize: Int = 10000): ConnectionIO[Long]
+
+  def insertStreaming(
+    unsaved: Stream[ConnectionIO, TitledpersonRow],
+    batchSize: Int = 10000
+  ): ConnectionIO[Long]
+
   def select: SelectBuilder[TitledpersonFields, TitledpersonRow]
+
   def selectAll: Stream[ConnectionIO, TitledpersonRow]
+
   def update: UpdateBuilder[TitledpersonFields, TitledpersonRow]
 }

@@ -3,21 +3,15 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package c
+package adventureworks.sa.c
 
 import typo.dsl.SelectBuilder
-import typo.dsl.SelectBuilderSql
 import zio.jdbc.ZConnection
-import zio.jdbc.sqlInterpolator
 import zio.stream.ZStream
+import zio.jdbc.sqlInterpolator
 
 class CViewRepoImpl extends CViewRepo {
-  override def select: SelectBuilder[CViewFields, CViewRow] = {
-    SelectBuilderSql(""""sa"."c"""", CViewFields.structure, CViewRow.jdbcDecoder)
-  }
-  override def selectAll: ZStream[ZConnection, Throwable, CViewRow] = {
-    sql"""select "id", "customerid", "personid", "storeid", "territoryid", "rowguid", "modifieddate"::text from "sa"."c"""".query(CViewRow.jdbcDecoder).selectStream()
-  }
+  def select: SelectBuilder[CViewFields, CViewRow] = SelectBuilder.of(""""sa"."c"""", CViewFields.structure, CViewRow.jdbcDecoder)
+
+  def selectAll: ZStream[ZConnection, Throwable, CViewRow] = sql"""select "id", "customerid", "personid", "storeid", "territoryid", "rowguid", "modifieddate"::text from "sa"."c"""".query(CViewRow.jdbcDecoder).selectStream()
 }

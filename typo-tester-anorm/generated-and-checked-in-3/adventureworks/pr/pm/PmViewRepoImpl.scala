@@ -3,22 +3,18 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pm
+package adventureworks.pr.pm
 
-import anorm.SqlStringInterpolation
 import java.sql.Connection
 import typo.dsl.SelectBuilder
-import typo.dsl.SelectBuilderSql
+import anorm.SqlStringInterpolation
 
 class PmViewRepoImpl extends PmViewRepo {
-  override def select: SelectBuilder[PmViewFields, PmViewRow] = {
-    SelectBuilderSql(""""pr"."pm"""", PmViewFields.structure, PmViewRow.rowParser)
-  }
-  override def selectAll(using c: Connection): List[PmViewRow] = {
+  def select: SelectBuilder[PmViewFields, PmViewRow] = SelectBuilder.of(""""pr"."pm"""", PmViewFields.structure, PmViewRow.rowParser)
+
+  def selectAll(using c: Connection): List[PmViewRow] = {
     SQL"""select "id", "productmodelid", "name", "catalogdescription", "instructions", "rowguid", "modifieddate"::text
-          from "pr"."pm"
-       """.as(PmViewRow.rowParser(1).*)
+    from "pr"."pm"
+    """.as(PmViewRow.rowParser(1).*)
   }
 }

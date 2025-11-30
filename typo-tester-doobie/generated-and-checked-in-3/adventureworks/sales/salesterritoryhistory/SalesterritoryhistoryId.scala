@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sales
-package salesterritoryhistory
+package adventureworks.sales.salesterritoryhistory
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.person.businessentity.BusinessentityId
@@ -19,8 +17,9 @@ case class SalesterritoryhistoryId(
   startdate: TypoLocalDateTime,
   territoryid: SalesterritoryId
 )
+
 object SalesterritoryhistoryId {
   given decoder: Decoder[SalesterritoryhistoryId] = Decoder.forProduct3[SalesterritoryhistoryId, BusinessentityId, TypoLocalDateTime, SalesterritoryId]("businessentityid", "startdate", "territoryid")(SalesterritoryhistoryId.apply)(using BusinessentityId.decoder, TypoLocalDateTime.decoder, SalesterritoryId.decoder)
+
   given encoder: Encoder[SalesterritoryhistoryId] = Encoder.forProduct3[SalesterritoryhistoryId, BusinessentityId, TypoLocalDateTime, SalesterritoryId]("businessentityid", "startdate", "territoryid")(x => (x.businessentityid, x.startdate, x.territoryid))(using BusinessentityId.encoder, TypoLocalDateTime.encoder, SalesterritoryId.encoder)
-  given ordering(using O0: Ordering[TypoLocalDateTime]): Ordering[SalesterritoryhistoryId] = Ordering.by(x => (x.businessentityid, x.startdate, x.territoryid))
 }

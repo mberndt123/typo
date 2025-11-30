@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package purchasing
-package purchaseorderdetail
+package adventureworks.purchasing.purchaseorderdetail
 
 import doobie.free.connection.ConnectionIO
 import fs2.Stream
@@ -13,8 +11,12 @@ import typo.dsl.SelectBuilder
 
 trait PurchaseorderdetailRepo {
   def select: SelectBuilder[PurchaseorderdetailFields, PurchaseorderdetailRow]
+
   def selectAll: Stream[ConnectionIO, PurchaseorderdetailRow]
+
   def selectById(compositeId: PurchaseorderdetailId): ConnectionIO[Option[PurchaseorderdetailRow]]
+
   def selectByIds(compositeIds: Array[PurchaseorderdetailId]): Stream[ConnectionIO, PurchaseorderdetailRow]
+
   def selectByIdsTracked(compositeIds: Array[PurchaseorderdetailId]): ConnectionIO[Map[PurchaseorderdetailId, PurchaseorderdetailRow]]
 }

@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sales
-package vsalesperson
+package adventureworks.sales.vsalesperson
 
 import adventureworks.person.businessentity.BusinessentityId
 import adventureworks.public.Name
@@ -18,102 +16,106 @@ import io.circe.Encoder
 
 /** View: sales.vsalesperson */
 case class VsalespersonViewRow(
-  /** Points to [[salesperson.SalespersonRow.businessentityid]] */
+  /** Points to [[adventureworks.sales.salesperson.SalespersonRow.businessentityid]] */
   businessentityid: BusinessentityId,
-  /** Points to [[person.person.PersonRow.title]] */
+  /** Points to [[adventureworks.person.person.PersonRow.title]] */
   title: Option[/* max 8 chars */ String],
-  /** Points to [[person.person.PersonRow.firstname]] */
+  /** Points to [[adventureworks.person.person.PersonRow.firstname]] */
   firstname: /* user-picked */ FirstName,
-  /** Points to [[person.person.PersonRow.middlename]] */
+  /** Points to [[adventureworks.person.person.PersonRow.middlename]] */
   middlename: Option[Name],
-  /** Points to [[person.person.PersonRow.lastname]] */
+  /** Points to [[adventureworks.person.person.PersonRow.lastname]] */
   lastname: Name,
-  /** Points to [[person.person.PersonRow.suffix]] */
+  /** Points to [[adventureworks.person.person.PersonRow.suffix]] */
   suffix: Option[/* max 10 chars */ String],
-  /** Points to [[humanresources.employee.EmployeeRow.jobtitle]] */
+  /** Points to [[adventureworks.humanresources.employee.EmployeeRow.jobtitle]] */
   jobtitle: /* max 50 chars */ String,
-  /** Points to [[person.personphone.PersonphoneRow.phonenumber]] */
+  /** Points to [[adventureworks.person.personphone.PersonphoneRow.phonenumber]] */
   phonenumber: Option[Phone],
-  /** Points to [[person.phonenumbertype.PhonenumbertypeRow.name]] */
+  /** Points to [[adventureworks.person.phonenumbertype.PhonenumbertypeRow.name]] */
   phonenumbertype: Option[Name],
-  /** Points to [[person.emailaddress.EmailaddressRow.emailaddress]] */
+  /** Points to [[adventureworks.person.emailaddress.EmailaddressRow.emailaddress]] */
   emailaddress: Option[/* max 50 chars */ String],
-  /** Points to [[person.person.PersonRow.emailpromotion]] */
+  /** Points to [[adventureworks.person.person.PersonRow.emailpromotion]] */
   emailpromotion: Int,
-  /** Points to [[person.address.AddressRow.addressline1]] */
+  /** Points to [[adventureworks.person.address.AddressRow.addressline1]] */
   addressline1: /* max 60 chars */ String,
-  /** Points to [[person.address.AddressRow.addressline2]] */
+  /** Points to [[adventureworks.person.address.AddressRow.addressline2]] */
   addressline2: Option[/* max 60 chars */ String],
-  /** Points to [[person.address.AddressRow.city]] */
+  /** Points to [[adventureworks.person.address.AddressRow.city]] */
   city: /* max 30 chars */ String,
-  /** Points to [[person.stateprovince.StateprovinceRow.name]] */
+  /** Points to [[adventureworks.person.stateprovince.StateprovinceRow.name]] */
   stateprovincename: Name,
-  /** Points to [[person.address.AddressRow.postalcode]] */
+  /** Points to [[adventureworks.person.address.AddressRow.postalcode]] */
   postalcode: /* max 15 chars */ String,
-  /** Points to [[person.countryregion.CountryregionRow.name]] */
+  /** Points to [[adventureworks.person.countryregion.CountryregionRow.name]] */
   countryregionname: Name,
-  /** Points to [[salesterritory.SalesterritoryRow.name]] */
+  /** Points to [[adventureworks.sales.salesterritory.SalesterritoryRow.name]] */
   territoryname: Option[Name],
-  /** Points to [[salesterritory.SalesterritoryRow.group]] */
+  /** Points to [[adventureworks.sales.salesterritory.SalesterritoryRow.group]] */
   territorygroup: Option[/* max 50 chars */ String],
-  /** Points to [[salesperson.SalespersonRow.salesquota]] */
+  /** Points to [[adventureworks.sales.salesperson.SalespersonRow.salesquota]] */
   salesquota: Option[BigDecimal],
-  /** Points to [[salesperson.SalespersonRow.salesytd]] */
+  /** Points to [[adventureworks.sales.salesperson.SalespersonRow.salesytd]] */
   salesytd: BigDecimal,
-  /** Points to [[salesperson.SalespersonRow.saleslastyear]] */
+  /** Points to [[adventureworks.sales.salesperson.SalespersonRow.saleslastyear]] */
   saleslastyear: BigDecimal
 )
 
 object VsalespersonViewRow {
   given decoder: Decoder[VsalespersonViewRow] = Decoder.forProduct22[VsalespersonViewRow, BusinessentityId, Option[/* max 8 chars */ String], /* user-picked */ FirstName, Option[Name], Name, Option[/* max 10 chars */ String], /* max 50 chars */ String, Option[Phone], Option[Name], Option[/* max 50 chars */ String], Int, /* max 60 chars */ String, Option[/* max 60 chars */ String], /* max 30 chars */ String, Name, /* max 15 chars */ String, Name, Option[Name], Option[/* max 50 chars */ String], Option[BigDecimal], BigDecimal, BigDecimal]("businessentityid", "title", "firstname", "middlename", "lastname", "suffix", "jobtitle", "phonenumber", "phonenumbertype", "emailaddress", "emailpromotion", "addressline1", "addressline2", "city", "stateprovincename", "postalcode", "countryregionname", "territoryname", "territorygroup", "salesquota", "salesytd", "saleslastyear")(VsalespersonViewRow.apply)(using BusinessentityId.decoder, Decoder.decodeOption(using Decoder.decodeString), FirstName.decoder, Decoder.decodeOption(using Name.decoder), Name.decoder, Decoder.decodeOption(using Decoder.decodeString), Decoder.decodeString, Decoder.decodeOption(using Phone.decoder), Decoder.decodeOption(using Name.decoder), Decoder.decodeOption(using Decoder.decodeString), Decoder.decodeInt, Decoder.decodeString, Decoder.decodeOption(using Decoder.decodeString), Decoder.decodeString, Name.decoder, Decoder.decodeString, Name.decoder, Decoder.decodeOption(using Name.decoder), Decoder.decodeOption(using Decoder.decodeString), Decoder.decodeOption(using Decoder.decodeBigDecimal), Decoder.decodeBigDecimal, Decoder.decodeBigDecimal)
+
   given encoder: Encoder[VsalespersonViewRow] = Encoder.forProduct22[VsalespersonViewRow, BusinessentityId, Option[/* max 8 chars */ String], /* user-picked */ FirstName, Option[Name], Name, Option[/* max 10 chars */ String], /* max 50 chars */ String, Option[Phone], Option[Name], Option[/* max 50 chars */ String], Int, /* max 60 chars */ String, Option[/* max 60 chars */ String], /* max 30 chars */ String, Name, /* max 15 chars */ String, Name, Option[Name], Option[/* max 50 chars */ String], Option[BigDecimal], BigDecimal, BigDecimal]("businessentityid", "title", "firstname", "middlename", "lastname", "suffix", "jobtitle", "phonenumber", "phonenumbertype", "emailaddress", "emailpromotion", "addressline1", "addressline2", "city", "stateprovincename", "postalcode", "countryregionname", "territoryname", "territorygroup", "salesquota", "salesytd", "saleslastyear")(x => (x.businessentityid, x.title, x.firstname, x.middlename, x.lastname, x.suffix, x.jobtitle, x.phonenumber, x.phonenumbertype, x.emailaddress, x.emailpromotion, x.addressline1, x.addressline2, x.city, x.stateprovincename, x.postalcode, x.countryregionname, x.territoryname, x.territorygroup, x.salesquota, x.salesytd, x.saleslastyear))(using BusinessentityId.encoder, Encoder.encodeOption(using Encoder.encodeString), FirstName.encoder, Encoder.encodeOption(using Name.encoder), Name.encoder, Encoder.encodeOption(using Encoder.encodeString), Encoder.encodeString, Encoder.encodeOption(using Phone.encoder), Encoder.encodeOption(using Name.encoder), Encoder.encodeOption(using Encoder.encodeString), Encoder.encodeInt, Encoder.encodeString, Encoder.encodeOption(using Encoder.encodeString), Encoder.encodeString, Name.encoder, Encoder.encodeString, Name.encoder, Encoder.encodeOption(using Name.encoder), Encoder.encodeOption(using Encoder.encodeString), Encoder.encodeOption(using Encoder.encodeBigDecimal), Encoder.encodeBigDecimal, Encoder.encodeBigDecimal)
-  given read: Read[VsalespersonViewRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(BusinessentityId.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
-      new Read.Single(/* user-picked */ FirstName.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(Name.get).asInstanceOf[Read[Any]],
-      new Read.Single(Name.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
-      new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(Phone.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(Name.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
-      new Read.Single(Meta.IntMeta.get).asInstanceOf[Read[Any]],
-      new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
-      new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]],
-      new Read.Single(Name.get).asInstanceOf[Read[Any]],
-      new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]],
-      new Read.Single(Name.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(Name.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
-      new Read.SingleOpt(Meta.ScalaBigDecimalMeta.get).asInstanceOf[Read[Any]],
-      new Read.Single(Meta.ScalaBigDecimalMeta.get).asInstanceOf[Read[Any]],
-      new Read.Single(Meta.ScalaBigDecimalMeta.get).asInstanceOf[Read[Any]]
-  ))(using scala.reflect.ClassTag.Any).map { arr =>
-    VsalespersonViewRow(
-      businessentityid = arr(0).asInstanceOf[BusinessentityId],
-          title = arr(1).asInstanceOf[Option[/* max 8 chars */ String]],
-          firstname = arr(2).asInstanceOf[/* user-picked */ FirstName],
-          middlename = arr(3).asInstanceOf[Option[Name]],
-          lastname = arr(4).asInstanceOf[Name],
-          suffix = arr(5).asInstanceOf[Option[/* max 10 chars */ String]],
-          jobtitle = arr(6).asInstanceOf[/* max 50 chars */ String],
-          phonenumber = arr(7).asInstanceOf[Option[Phone]],
-          phonenumbertype = arr(8).asInstanceOf[Option[Name]],
-          emailaddress = arr(9).asInstanceOf[Option[/* max 50 chars */ String]],
-          emailpromotion = arr(10).asInstanceOf[Int],
-          addressline1 = arr(11).asInstanceOf[/* max 60 chars */ String],
-          addressline2 = arr(12).asInstanceOf[Option[/* max 60 chars */ String]],
-          city = arr(13).asInstanceOf[/* max 30 chars */ String],
-          stateprovincename = arr(14).asInstanceOf[Name],
-          postalcode = arr(15).asInstanceOf[/* max 15 chars */ String],
-          countryregionname = arr(16).asInstanceOf[Name],
-          territoryname = arr(17).asInstanceOf[Option[Name]],
-          territorygroup = arr(18).asInstanceOf[Option[/* max 50 chars */ String]],
-          salesquota = arr(19).asInstanceOf[Option[BigDecimal]],
-          salesytd = arr(20).asInstanceOf[BigDecimal],
-          saleslastyear = arr(21).asInstanceOf[BigDecimal]
-    )
+
+  given read: Read[VsalespersonViewRow] = {
+    new Read.CompositeOfInstances(Array(
+      new Read.Single(BusinessentityId.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
+        new Read.Single(/* user-picked */ FirstName.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(Name.get).asInstanceOf[Read[Any]],
+        new Read.Single(Name.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
+        new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(Phone.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(Name.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
+        new Read.Single(Meta.IntMeta.get).asInstanceOf[Read[Any]],
+        new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
+        new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]],
+        new Read.Single(Name.get).asInstanceOf[Read[Any]],
+        new Read.Single(Meta.StringMeta.get).asInstanceOf[Read[Any]],
+        new Read.Single(Name.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(Name.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(Meta.StringMeta.get).asInstanceOf[Read[Any]],
+        new Read.SingleOpt(Meta.ScalaBigDecimalMeta.get).asInstanceOf[Read[Any]],
+        new Read.Single(Meta.ScalaBigDecimalMeta.get).asInstanceOf[Read[Any]],
+        new Read.Single(Meta.ScalaBigDecimalMeta.get).asInstanceOf[Read[Any]]
+    ))(using scala.reflect.ClassTag.Any).map { arr =>
+      VsalespersonViewRow(
+        businessentityid = arr(0).asInstanceOf[BusinessentityId],
+            title = arr(1).asInstanceOf[Option[/* max 8 chars */ String]],
+            firstname = arr(2).asInstanceOf[/* user-picked */ FirstName],
+            middlename = arr(3).asInstanceOf[Option[Name]],
+            lastname = arr(4).asInstanceOf[Name],
+            suffix = arr(5).asInstanceOf[Option[/* max 10 chars */ String]],
+            jobtitle = arr(6).asInstanceOf[/* max 50 chars */ String],
+            phonenumber = arr(7).asInstanceOf[Option[Phone]],
+            phonenumbertype = arr(8).asInstanceOf[Option[Name]],
+            emailaddress = arr(9).asInstanceOf[Option[/* max 50 chars */ String]],
+            emailpromotion = arr(10).asInstanceOf[Int],
+            addressline1 = arr(11).asInstanceOf[/* max 60 chars */ String],
+            addressline2 = arr(12).asInstanceOf[Option[/* max 60 chars */ String]],
+            city = arr(13).asInstanceOf[/* max 30 chars */ String],
+            stateprovincename = arr(14).asInstanceOf[Name],
+            postalcode = arr(15).asInstanceOf[/* max 15 chars */ String],
+            countryregionname = arr(16).asInstanceOf[Name],
+            territoryname = arr(17).asInstanceOf[Option[Name]],
+            territorygroup = arr(18).asInstanceOf[Option[/* max 50 chars */ String]],
+            salesquota = arr(19).asInstanceOf[Option[BigDecimal]],
+            salesytd = arr(20).asInstanceOf[BigDecimal],
+            saleslastyear = arr(21).asInstanceOf[BigDecimal]
+      )
+    }
   }
 }

@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package title_domain
+package adventureworks.public.title_domain
 
 import doobie.postgres.Text
 import doobie.util.Read
@@ -14,28 +12,37 @@ import io.circe.Decoder
 import io.circe.Encoder
 
 /** Table: public.title_domain
-    Primary key: code */
-case class TitleDomainRow(
-  code: TitleDomainId
-){
-   val id = code
- }
+ * Primary key: code
+ */
+case class TitleDomainRow(code: TitleDomainId) {
+  def id: TitleDomainId = code
+}
 
 object TitleDomainRow {
   implicit lazy val decoder: Decoder[TitleDomainRow] = Decoder.forProduct1[TitleDomainRow, TitleDomainId]("code")(TitleDomainRow.apply)(TitleDomainId.decoder)
+
   implicit lazy val encoder: Encoder[TitleDomainRow] = Encoder.forProduct1[TitleDomainRow, TitleDomainId]("code")(x => (x.code))(TitleDomainId.encoder)
-  implicit lazy val read: Read[TitleDomainRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(TitleDomainId.get).asInstanceOf[Read[Any]]
-  ))(scala.reflect.ClassTag.Any).map { arr =>
-    TitleDomainRow(
-      code = arr(0).asInstanceOf[TitleDomainId]
+
+  implicit lazy val pgText: Text[TitleDomainRow] = {
+    Text.instance[TitleDomainRow]{ (row, sb) =>
+      TitleDomainId.pgText.unsafeEncode(row.code, sb)
+    }
+  }
+
+  implicit lazy val read: Read[TitleDomainRow] = {
+    new Read.CompositeOfInstances(Array(
+      new Read.Single(TitleDomainId.get).asInstanceOf[Read[Any]]
+    ))(scala.reflect.ClassTag.Any).map { arr =>
+      TitleDomainRow(
+        code = arr(0).asInstanceOf[TitleDomainId]
+      )
+    }
+  }
+
+  implicit lazy val write: Write[TitleDomainRow] = {
+    new Write.Composite[TitleDomainRow](
+      List(new Write.Single(TitleDomainId.put)),
+      a => List(a.code)
     )
   }
-  implicit lazy val text: Text[TitleDomainRow] = Text.instance[TitleDomainRow]{ (row, sb) =>
-    TitleDomainId.text.unsafeEncode(row.code, sb)
-  }
-  implicit lazy val write: Write[TitleDomainRow] = new Write.Composite[TitleDomainRow](
-    List(new Write.Single(TitleDomainId.put)),
-    a => List(a.code)
-  )
 }

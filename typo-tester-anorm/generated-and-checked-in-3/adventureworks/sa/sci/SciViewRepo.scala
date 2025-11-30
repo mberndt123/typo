@@ -3,14 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package sci
+package adventureworks.sa.sci
 
 import java.sql.Connection
 import typo.dsl.SelectBuilder
 
 trait SciViewRepo {
   def select: SelectBuilder[SciViewFields, SciViewRow]
+
   def selectAll(using c: Connection): List[SciViewRow]
 }

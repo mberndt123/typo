@@ -3,14 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pu
-package poh
+package adventureworks.pu.poh
 
 import java.sql.Connection
 import typo.dsl.SelectBuilder
 
 trait PohViewRepo {
   def select: SelectBuilder[PohViewFields, PohViewRow]
+
   def selectAll(implicit c: Connection): List[PohViewRow]
 }

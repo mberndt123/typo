@@ -3,17 +3,19 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package purchasing
-package purchaseorderdetail
+package adventureworks.purchasing.purchaseorderdetail
 
 import java.sql.Connection
 import typo.dsl.SelectBuilder
 
 trait PurchaseorderdetailRepo {
   def select: SelectBuilder[PurchaseorderdetailFields, PurchaseorderdetailRow]
+
   def selectAll(using c: Connection): List[PurchaseorderdetailRow]
+
   def selectById(compositeId: PurchaseorderdetailId)(using c: Connection): Option[PurchaseorderdetailRow]
+
   def selectByIds(compositeIds: Array[PurchaseorderdetailId])(using c: Connection): List[PurchaseorderdetailRow]
+
   def selectByIdsTracked(compositeIds: Array[PurchaseorderdetailId])(using c: Connection): Map[PurchaseorderdetailId, PurchaseorderdetailRow]
 }

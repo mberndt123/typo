@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package productreview
+package adventureworks.production.productreview
 
 import java.sql.Connection
 import typo.dsl.DeleteBuilder
@@ -14,22 +12,47 @@ import typo.dsl.UpdateBuilder
 
 trait ProductreviewRepo {
   def delete: DeleteBuilder[ProductreviewFields, ProductreviewRow]
+
   def deleteById(productreviewid: ProductreviewId)(using c: Connection): Boolean
+
   def deleteByIds(productreviewids: Array[ProductreviewId])(using c: Connection): Int
+
   def insert(unsaved: ProductreviewRow)(using c: Connection): ProductreviewRow
+
   def insert(unsaved: ProductreviewRowUnsaved)(using c: Connection): ProductreviewRow
-  def insertStreaming(unsaved: Iterator[ProductreviewRow], batchSize: Int = 10000)(using c: Connection): Long
-  /* NOTE: this functionality requires PostgreSQL 16 or later! */
-  def insertUnsavedStreaming(unsaved: Iterator[ProductreviewRowUnsaved], batchSize: Int = 10000)(using c: Connection): Long
+
+  def insertStreaming(
+    unsaved: Iterator[ProductreviewRow],
+    batchSize: Int = 10000
+  )(using c: Connection): Long
+
+  /** NOTE: this functionality requires PostgreSQL 16 or later! */
+  def insertUnsavedStreaming(
+    unsaved: Iterator[ProductreviewRowUnsaved],
+    batchSize: Int = 10000
+  )(using c: Connection): Long
+
   def select: SelectBuilder[ProductreviewFields, ProductreviewRow]
+
   def selectAll(using c: Connection): List[ProductreviewRow]
+
   def selectById(productreviewid: ProductreviewId)(using c: Connection): Option[ProductreviewRow]
+
   def selectByIds(productreviewids: Array[ProductreviewId])(using c: Connection): List[ProductreviewRow]
+
   def selectByIdsTracked(productreviewids: Array[ProductreviewId])(using c: Connection): Map[ProductreviewId, ProductreviewRow]
+
   def update: UpdateBuilder[ProductreviewFields, ProductreviewRow]
+
   def update(row: ProductreviewRow)(using c: Connection): Option[ProductreviewRow]
+
   def upsert(unsaved: ProductreviewRow)(using c: Connection): ProductreviewRow
+
   def upsertBatch(unsaved: Iterable[ProductreviewRow])(using c: Connection): List[ProductreviewRow]
-  /* NOTE: this functionality is not safe if you use auto-commit mode! it runs 3 SQL statements */
-  def upsertStreaming(unsaved: Iterator[ProductreviewRow], batchSize: Int = 10000)(using c: Connection): Int
+
+  /** NOTE: this functionality is not safe if you use auto-commit mode! it runs 3 SQL statements */
+  def upsertStreaming(
+    unsaved: Iterator[ProductreviewRow],
+    batchSize: Int = 10000
+  )(using c: Connection): Int
 }

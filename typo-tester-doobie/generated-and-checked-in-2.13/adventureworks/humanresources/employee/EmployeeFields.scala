@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package humanresources
-package employee
+package adventureworks.humanresources.employee
 
 import adventureworks.customtypes.TypoLocalDate
 import adventureworks.customtypes.TypoLocalDateTime
@@ -18,7 +16,7 @@ import adventureworks.public.Flag
 import typo.dsl.ForeignKey
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.IdField
 import typo.dsl.SqlExpr.OptField
 import typo.dsl.Structure.Relation
@@ -46,11 +44,11 @@ trait EmployeeFields {
 
 object EmployeeFields {
   lazy val structure: Relation[EmployeeFields, EmployeeRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[EmployeeFields, EmployeeRow] {
-  
+
     override lazy val fields: EmployeeFields = new EmployeeFields {
       override def businessentityid = IdField[BusinessentityId, EmployeeRow](_path, "businessentityid", None, Some("int4"), x => x.businessentityid, (row, value) => row.copy(businessentityid = value))
       override def nationalidnumber = Field[/* max 15 chars */ String, EmployeeRow](_path, "nationalidnumber", None, None, x => x.nationalidnumber, (row, value) => row.copy(nationalidnumber = value))
@@ -68,12 +66,11 @@ object EmployeeFields {
       override def modifieddate = Field[TypoLocalDateTime, EmployeeRow](_path, "modifieddate", Some("text"), Some("timestamp"), x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
       override def organizationnode = OptField[String, EmployeeRow](_path, "organizationnode", None, None, x => x.organizationnode, (row, value) => row.copy(organizationnode = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, EmployeeRow]] =
-      List[FieldLikeNoHkt[?, EmployeeRow]](fields.businessentityid, fields.nationalidnumber, fields.loginid, fields.jobtitle, fields.birthdate, fields.maritalstatus, fields.gender, fields.hiredate, fields.salariedflag, fields.vacationhours, fields.sickleavehours, fields.currentflag, fields.rowguid, fields.modifieddate, fields.organizationnode)
-  
+
+    override lazy val columns: List[FieldLike[?, EmployeeRow]] =
+      List[FieldLike[?, EmployeeRow]](fields.businessentityid, fields.nationalidnumber, fields.loginid, fields.jobtitle, fields.birthdate, fields.maritalstatus, fields.gender, fields.hiredate, fields.salariedflag, fields.vacationhours, fields.sickleavehours, fields.currentflag, fields.rowguid, fields.modifieddate, fields.organizationnode)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

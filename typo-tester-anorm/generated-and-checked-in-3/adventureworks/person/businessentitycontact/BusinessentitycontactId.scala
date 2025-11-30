@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package person
-package businessentitycontact
+package adventureworks.person.businessentitycontact
 
 import adventureworks.person.businessentity.BusinessentityId
 import adventureworks.person.contacttype.ContacttypeId
@@ -14,7 +12,6 @@ import play.api.libs.json.JsResult
 import play.api.libs.json.JsValue
 import play.api.libs.json.OWrites
 import play.api.libs.json.Reads
-import play.api.libs.json.Writes
 import scala.collection.immutable.ListMap
 import scala.util.Try
 
@@ -24,23 +21,28 @@ case class BusinessentitycontactId(
   personid: BusinessentityId,
   contacttypeid: ContacttypeId
 )
+
 object BusinessentitycontactId {
-  given ordering: Ordering[BusinessentitycontactId] = Ordering.by(x => (x.businessentityid, x.personid, x.contacttypeid))
-  given reads: Reads[BusinessentitycontactId] = Reads[BusinessentitycontactId](json => JsResult.fromTry(
-      Try(
-        BusinessentitycontactId(
-          businessentityid = json.\("businessentityid").as(summon[Reads[BusinessentityId]]),
-          personid = json.\("personid").as(summon[Reads[BusinessentityId]]),
-          contacttypeid = json.\("contacttypeid").as(summon[Reads[ContacttypeId]])
+  given reads: Reads[BusinessentitycontactId] = {
+    Reads[BusinessentitycontactId](json => JsResult.fromTry(
+        Try(
+          BusinessentitycontactId(
+            businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
+            personid = json.\("personid").as(BusinessentityId.reads),
+            contacttypeid = json.\("contacttypeid").as(ContacttypeId.reads)
+          )
         )
-      )
-    ),
-  )
-  given writes: OWrites[BusinessentitycontactId] = OWrites[BusinessentitycontactId](o =>
-    new JsObject(ListMap[String, JsValue](
-      "businessentityid" -> summon[Writes[BusinessentityId]].writes(o.businessentityid),
-      "personid" -> summon[Writes[BusinessentityId]].writes(o.personid),
-      "contacttypeid" -> summon[Writes[ContacttypeId]].writes(o.contacttypeid)
-    ))
-  )
+      ),
+    )
+  }
+
+  given writes: OWrites[BusinessentitycontactId] = {
+    OWrites[BusinessentitycontactId](o =>
+      new JsObject(ListMap[String, JsValue](
+        "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
+        "personid" -> BusinessentityId.writes.writes(o.personid),
+        "contacttypeid" -> ContacttypeId.writes.writes(o.contacttypeid)
+      ))
+    )
+  }
 }

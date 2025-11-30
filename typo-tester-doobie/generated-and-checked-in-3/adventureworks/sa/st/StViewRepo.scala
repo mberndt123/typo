@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package st
+package adventureworks.sa.st
 
 import doobie.free.connection.ConnectionIO
 import fs2.Stream
@@ -13,5 +11,6 @@ import typo.dsl.SelectBuilder
 
 trait StViewRepo {
   def select: SelectBuilder[StViewFields, StViewRow]
+
   def selectAll: Stream[ConnectionIO, StViewRow]
 }

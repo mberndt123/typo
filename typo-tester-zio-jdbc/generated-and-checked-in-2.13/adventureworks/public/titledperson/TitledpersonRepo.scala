@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package titledperson
+package adventureworks.public.titledperson
 
 import typo.dsl.DeleteBuilder
 import typo.dsl.SelectBuilder
@@ -16,9 +14,17 @@ import zio.stream.ZStream
 
 trait TitledpersonRepo {
   def delete: DeleteBuilder[TitledpersonFields, TitledpersonRow]
+
   def insert(unsaved: TitledpersonRow): ZIO[ZConnection, Throwable, TitledpersonRow]
-  def insertStreaming(unsaved: ZStream[ZConnection, Throwable, TitledpersonRow], batchSize: Int = 10000): ZIO[ZConnection, Throwable, Long]
+
+  def insertStreaming(
+    unsaved: ZStream[ZConnection, Throwable, TitledpersonRow],
+    batchSize: Int = 10000
+  ): ZIO[ZConnection, Throwable, Long]
+
   def select: SelectBuilder[TitledpersonFields, TitledpersonRow]
+
   def selectAll: ZStream[ZConnection, Throwable, TitledpersonRow]
+
   def update: UpdateBuilder[TitledpersonFields, TitledpersonRow]
 }

@@ -3,21 +3,15 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pe
-package at
+package adventureworks.pe.at
 
 import typo.dsl.SelectBuilder
-import typo.dsl.SelectBuilderSql
 import zio.jdbc.ZConnection
-import zio.jdbc.sqlInterpolator
 import zio.stream.ZStream
+import zio.jdbc.sqlInterpolator
 
 class AtViewRepoImpl extends AtViewRepo {
-  override def select: SelectBuilder[AtViewFields, AtViewRow] = {
-    SelectBuilderSql(""""pe"."at"""", AtViewFields.structure, AtViewRow.jdbcDecoder)
-  }
-  override def selectAll: ZStream[ZConnection, Throwable, AtViewRow] = {
-    sql"""select "id", "addresstypeid", "name", "rowguid", "modifieddate"::text from "pe"."at"""".query(AtViewRow.jdbcDecoder).selectStream()
-  }
+  def select: SelectBuilder[AtViewFields, AtViewRow] = SelectBuilder.of(""""pe"."at"""", AtViewFields.structure, AtViewRow.jdbcDecoder)
+
+  def selectAll: ZStream[ZConnection, Throwable, AtViewRow] = sql"""select "id", "addresstypeid", "name", "rowguid", "modifieddate"::text from "pe"."at"""".query(AtViewRow.jdbcDecoder).selectStream()
 }

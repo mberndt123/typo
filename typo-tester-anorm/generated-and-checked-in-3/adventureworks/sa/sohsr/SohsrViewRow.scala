@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package sohsr
+package adventureworks.sa.sohsr
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.sales.salesorderheader.SalesorderheaderId
@@ -22,39 +20,47 @@ import scala.util.Try
 
 /** View: sa.sohsr */
 case class SohsrViewRow(
-  /** Points to [[sales.salesorderheadersalesreason.SalesorderheadersalesreasonRow.salesorderid]] */
+  /** Points to [[adventureworks.sales.salesorderheadersalesreason.SalesorderheadersalesreasonRow.salesorderid]] */
   salesorderid: SalesorderheaderId,
-  /** Points to [[sales.salesorderheadersalesreason.SalesorderheadersalesreasonRow.salesreasonid]] */
+  /** Points to [[adventureworks.sales.salesorderheadersalesreason.SalesorderheadersalesreasonRow.salesreasonid]] */
   salesreasonid: SalesreasonId,
-  /** Points to [[sales.salesorderheadersalesreason.SalesorderheadersalesreasonRow.modifieddate]] */
+  /** Points to [[adventureworks.sales.salesorderheadersalesreason.SalesorderheadersalesreasonRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object SohsrViewRow {
-  given reads: Reads[SohsrViewRow] = Reads[SohsrViewRow](json => JsResult.fromTry(
-      Try(
-        SohsrViewRow(
-          salesorderid = json.\("salesorderid").as(SalesorderheaderId.reads),
-          salesreasonid = json.\("salesreasonid").as(SalesreasonId.reads),
-          modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+  given reads: Reads[SohsrViewRow] = {
+    Reads[SohsrViewRow](json => JsResult.fromTry(
+        Try(
+          SohsrViewRow(
+            salesorderid = json.\("salesorderid").as(SalesorderheaderId.reads),
+            salesreasonid = json.\("salesreasonid").as(SalesreasonId.reads),
+            modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[SohsrViewRow] = RowParser[SohsrViewRow] { row =>
-    Success(
-      SohsrViewRow(
-        salesorderid = row(idx + 0)(using SalesorderheaderId.column),
-        salesreasonid = row(idx + 1)(using SalesreasonId.column),
-        modifieddate = row(idx + 2)(using TypoLocalDateTime.column)
-      )
+      ),
     )
   }
-  given writes: OWrites[SohsrViewRow] = OWrites[SohsrViewRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "salesorderid" -> SalesorderheaderId.writes.writes(o.salesorderid),
-      "salesreasonid" -> SalesreasonId.writes.writes(o.salesreasonid),
-      "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
-    ))
-  )
+
+  def rowParser(idx: Int): RowParser[SohsrViewRow] = {
+    RowParser[SohsrViewRow] { row =>
+      Success(
+        SohsrViewRow(
+          salesorderid = row(idx + 0)(using SalesorderheaderId.column),
+          salesreasonid = row(idx + 1)(using SalesreasonId.column),
+          modifieddate = row(idx + 2)(using TypoLocalDateTime.column)
+        )
+      )
+    }
+  }
+
+  given writes: OWrites[SohsrViewRow] = {
+    OWrites[SohsrViewRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "salesorderid" -> SalesorderheaderId.writes.writes(o.salesorderid),
+        "salesreasonid" -> SalesreasonId.writes.writes(o.salesreasonid),
+        "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
+      ))
+    )
+  }
 }

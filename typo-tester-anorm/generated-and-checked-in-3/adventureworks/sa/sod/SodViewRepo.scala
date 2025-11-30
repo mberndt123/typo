@@ -3,14 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package sod
+package adventureworks.sa.sod
 
 import java.sql.Connection
 import typo.dsl.SelectBuilder
 
 trait SodViewRepo {
   def select: SelectBuilder[SodViewFields, SodViewRow]
+
   def selectAll(using c: Connection): List[SodViewRow]
 }

@@ -3,8 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package customtypes
+package adventureworks.customtypes
 
 import cats.data.NonEmptyList
 import doobie.postgres.Text
@@ -24,23 +23,41 @@ import typo.dsl.Bijection
 case class TypoInstant(value: Instant)
 
 object TypoInstant {
-  val parser: DateTimeFormatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss").appendFraction(ChronoField.MICRO_OF_SECOND, 0, 6, true).appendPattern("X").toFormatter
   def apply(value: Instant): TypoInstant = new TypoInstant(value.truncatedTo(ChronoUnit.MICROS))
-  def apply(str: String): TypoInstant = apply(OffsetDateTime.parse(str, parser).toInstant)
-  def now = TypoInstant(Instant.now)
-  given arrayGet: Get[Array[TypoInstant]] = Get.Advanced.array[AnyRef](NonEmptyList.one("timestamptz[]"))
-    .map(_.map(v => TypoInstant(v.asInstanceOf[String])))
-  given arrayPut: Put[Array[TypoInstant]] = Put.Advanced.array[AnyRef](NonEmptyList.one("timestamptz[]"), "timestamptz")
-    .contramap(_.map(v => v.value.toString))
-  given bijection: Bijection[TypoInstant, Instant] = Bijection[TypoInstant, Instant](_.value)(TypoInstant.apply)
-  given decoder: Decoder[TypoInstant] = Decoder.decodeInstant.map(TypoInstant.apply)
-  given encoder: Encoder[TypoInstant] = Encoder.encodeInstant.contramap(_.value)
-  given get: Get[TypoInstant] = Get.Advanced.other[String](NonEmptyList.one("timestamptz"))
-    .map(v => TypoInstant(v))
-  given ordering: Ordering[TypoInstant] = Ordering.by(_.value)
-  given put: Put[TypoInstant] = Put.Advanced.other[String](NonEmptyList.one("timestamptz")).contramap(v => v.value.toString)
-  given text: Text[TypoInstant] = new Text[TypoInstant] {
-    override def unsafeEncode(v: TypoInstant, sb: StringBuilder): Unit = Text.stringInstance.unsafeEncode(v.value.toString, sb)
-    override def unsafeArrayEncode(v: TypoInstant, sb: StringBuilder): Unit = Text.stringInstance.unsafeArrayEncode(v.value.toString, sb)
+
+  def apply(str: String): TypoInstant = TypoInstant.apply(OffsetDateTime.parse(str, parser).toInstant())
+
+  given arrayGet: Get[Array[TypoInstant]] = {
+    Get.Advanced.array[AnyRef](NonEmptyList.one("timestamptz[]"))
+      .map(_.map(v => apply(v.asInstanceOf[String])))
   }
+
+  given arrayPut: Put[Array[TypoInstant]] = {
+    Put.Advanced.array[AnyRef](NonEmptyList.one("timestamptz[]"), "timestamptz")
+      .contramap(_.map(v => v.value.toString))
+  }
+
+  given bijection: Bijection[TypoInstant, Instant] = Bijection.apply[TypoInstant, Instant](_.value)(TypoInstant.apply)
+
+  given decoder: Decoder[TypoInstant] = Decoder.decodeInstant.map(TypoInstant.apply)
+
+  given encoder: Encoder[TypoInstant] = Encoder.encodeInstant.contramap(_.value)
+
+  given get: Get[TypoInstant] = {
+    Get.Advanced.other[String](NonEmptyList.one("timestamptz"))
+      .map(v => apply(v))
+  }
+
+  def now: TypoInstant = TypoInstant.apply(Instant.now())
+
+  val parser: DateTimeFormatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss").appendFraction(ChronoField.MICRO_OF_SECOND, 0, 6, true).appendPattern("X").toFormatter()
+
+  given pgText: Text[TypoInstant] = {
+    new Text[TypoInstant] {
+      override def unsafeEncode(v: TypoInstant, sb: StringBuilder): Unit = Text.stringInstance.unsafeEncode(v.value.toString, sb)
+      override def unsafeArrayEncode(v: TypoInstant, sb: StringBuilder): Unit = Text.stringInstance.unsafeArrayEncode(v.value.toString, sb)
+    }
+  }
+
+  given put: Put[TypoInstant] = Put.Advanced.other[String](NonEmptyList.one("timestamptz")).contramap(v => v.value.toString)
 }

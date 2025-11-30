@@ -3,14 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pe
-package bea
+package adventureworks.pe.bea
 
 import java.sql.Connection
 import typo.dsl.SelectBuilder
 
 trait BeaViewRepo {
   def select: SelectBuilder[BeaViewFields, BeaViewRow]
+
   def selectAll(implicit c: Connection): List[BeaViewRow]
 }

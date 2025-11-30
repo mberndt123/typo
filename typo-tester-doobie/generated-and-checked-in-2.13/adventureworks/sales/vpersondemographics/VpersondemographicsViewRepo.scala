@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sales
-package vpersondemographics
+package adventureworks.sales.vpersondemographics
 
 import doobie.free.connection.ConnectionIO
 import fs2.Stream
@@ -13,5 +11,6 @@ import typo.dsl.SelectBuilder
 
 trait VpersondemographicsViewRepo {
   def select: SelectBuilder[VpersondemographicsViewFields, VpersondemographicsViewRow]
+
   def selectAll: Stream[ConnectionIO, VpersondemographicsViewRow]
 }

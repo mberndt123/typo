@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package productproductphoto
+package adventureworks.production.productproductphoto
 
 import adventureworks.production.product.ProductId
 import adventureworks.production.productphoto.ProductphotoId
@@ -22,21 +20,26 @@ case class ProductproductphotoId(
   productid: ProductId,
   productphotoid: ProductphotoId
 )
+
 object ProductproductphotoId {
-  implicit lazy val ordering: Ordering[ProductproductphotoId] = Ordering.by(x => (x.productid, x.productphotoid))
-  implicit lazy val reads: Reads[ProductproductphotoId] = Reads[ProductproductphotoId](json => JsResult.fromTry(
-      Try(
-        ProductproductphotoId(
-          productid = json.\("productid").as(ProductId.reads),
-          productphotoid = json.\("productphotoid").as(ProductphotoId.reads)
+  implicit lazy val reads: Reads[ProductproductphotoId] = {
+    Reads[ProductproductphotoId](json => JsResult.fromTry(
+        Try(
+          ProductproductphotoId(
+            productid = json.\("productid").as(ProductId.reads),
+            productphotoid = json.\("productphotoid").as(ProductphotoId.reads)
+          )
         )
-      )
-    ),
-  )
-  implicit lazy val writes: OWrites[ProductproductphotoId] = OWrites[ProductproductphotoId](o =>
-    new JsObject(ListMap[String, JsValue](
-      "productid" -> ProductId.writes.writes(o.productid),
-      "productphotoid" -> ProductphotoId.writes.writes(o.productphotoid)
-    ))
-  )
+      ),
+    )
+  }
+
+  implicit lazy val writes: OWrites[ProductproductphotoId] = {
+    OWrites[ProductproductphotoId](o =>
+      new JsObject(ListMap[String, JsValue](
+        "productid" -> ProductId.writes.writes(o.productid),
+        "productphotoid" -> ProductphotoId.writes.writes(o.productphotoid)
+      ))
+    )
+  }
 }

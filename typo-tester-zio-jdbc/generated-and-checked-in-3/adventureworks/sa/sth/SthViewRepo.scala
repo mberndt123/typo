@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package sth
+package adventureworks.sa.sth
 
 import typo.dsl.SelectBuilder
 import zio.jdbc.ZConnection
@@ -13,5 +11,6 @@ import zio.stream.ZStream
 
 trait SthViewRepo {
   def select: SelectBuilder[SthViewFields, SthViewRow]
+
   def selectAll: ZStream[ZConnection, Throwable, SthViewRow]
 }

@@ -3,16 +3,14 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package humanresources
-package shift
+package adventureworks.humanresources.shift
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoLocalTime
 import adventureworks.public.Name
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.IdField
 import typo.dsl.Structure.Relation
 
@@ -26,11 +24,11 @@ trait ShiftFields {
 
 object ShiftFields {
   lazy val structure: Relation[ShiftFields, ShiftRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[ShiftFields, ShiftRow] {
-  
+
     override lazy val fields: ShiftFields = new ShiftFields {
       override def shiftid = IdField[ShiftId, ShiftRow](_path, "shiftid", None, Some("int4"), x => x.shiftid, (row, value) => row.copy(shiftid = value))
       override def name = Field[Name, ShiftRow](_path, "name", None, Some("varchar"), x => x.name, (row, value) => row.copy(name = value))
@@ -38,12 +36,11 @@ object ShiftFields {
       override def endtime = Field[TypoLocalTime, ShiftRow](_path, "endtime", Some("text"), Some("time"), x => x.endtime, (row, value) => row.copy(endtime = value))
       override def modifieddate = Field[TypoLocalDateTime, ShiftRow](_path, "modifieddate", Some("text"), Some("timestamp"), x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, ShiftRow]] =
-      List[FieldLikeNoHkt[?, ShiftRow]](fields.shiftid, fields.name, fields.starttime, fields.endtime, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, ShiftRow]] =
+      List[FieldLike[?, ShiftRow]](fields.shiftid, fields.name, fields.starttime, fields.endtime, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

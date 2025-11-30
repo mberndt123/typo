@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sales
-package salesorderheadersalesreason
+package adventureworks.sales.salesorderheadersalesreason
 
 import adventureworks.sales.salesorderheader.SalesorderheaderId
 import adventureworks.sales.salesreason.SalesreasonId
@@ -19,24 +17,29 @@ case class SalesorderheadersalesreasonId(
   salesorderid: SalesorderheaderId,
   salesreasonid: SalesreasonId
 )
+
 object SalesorderheadersalesreasonId {
-  given jsonDecoder: JsonDecoder[SalesorderheadersalesreasonId] = JsonDecoder[Json.Obj].mapOrFail { jsonObj =>
-    val salesorderid = jsonObj.get("salesorderid").toRight("Missing field 'salesorderid'").flatMap(_.as(using SalesorderheaderId.jsonDecoder))
-    val salesreasonid = jsonObj.get("salesreasonid").toRight("Missing field 'salesreasonid'").flatMap(_.as(using SalesreasonId.jsonDecoder))
-    if (salesorderid.isRight && salesreasonid.isRight)
-      Right(SalesorderheadersalesreasonId(salesorderid = salesorderid.toOption.get, salesreasonid = salesreasonid.toOption.get))
-    else Left(List[Either[String, Any]](salesorderid, salesreasonid).flatMap(_.left.toOption).mkString(", "))
-  }
-  given jsonEncoder: JsonEncoder[SalesorderheadersalesreasonId] = new JsonEncoder[SalesorderheadersalesreasonId] {
-    override def unsafeEncode(a: SalesorderheadersalesreasonId, indent: Option[Int], out: Write): Unit = {
-      out.write("{")
-      out.write(""""salesorderid":""")
-      SalesorderheaderId.jsonEncoder.unsafeEncode(a.salesorderid, indent, out)
-      out.write(",")
-      out.write(""""salesreasonid":""")
-      SalesreasonId.jsonEncoder.unsafeEncode(a.salesreasonid, indent, out)
-      out.write("}")
+  given jsonDecoder: JsonDecoder[SalesorderheadersalesreasonId] = {
+    JsonDecoder[Json.Obj].mapOrFail { jsonObj =>
+      val salesorderid = jsonObj.get("salesorderid").toRight("Missing field 'salesorderid'").flatMap(_.as(using SalesorderheaderId.jsonDecoder))
+      val salesreasonid = jsonObj.get("salesreasonid").toRight("Missing field 'salesreasonid'").flatMap(_.as(using SalesreasonId.jsonDecoder))
+      if (salesorderid.isRight && salesreasonid.isRight)
+        Right(SalesorderheadersalesreasonId(salesorderid = salesorderid.toOption.get, salesreasonid = salesreasonid.toOption.get))
+      else Left(List[Either[String, Any]](salesorderid, salesreasonid).flatMap(_.left.toOption).mkString(", "))
     }
   }
-  given ordering: Ordering[SalesorderheadersalesreasonId] = Ordering.by(x => (x.salesorderid, x.salesreasonid))
+
+  given jsonEncoder: JsonEncoder[SalesorderheadersalesreasonId] = {
+    new JsonEncoder[SalesorderheadersalesreasonId] {
+      override def unsafeEncode(a: SalesorderheadersalesreasonId, indent: Option[Int], out: Write): Unit = {
+        out.write("{")
+        out.write(""""salesorderid":""")
+        SalesorderheaderId.jsonEncoder.unsafeEncode(a.salesorderid, indent, out)
+        out.write(",")
+        out.write(""""salesreasonid":""")
+        SalesreasonId.jsonEncoder.unsafeEncode(a.salesreasonid, indent, out)
+        out.write("}")
+      }
+    }
+  }
 }

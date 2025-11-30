@@ -3,10 +3,9 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package users
+package adventureworks.public.users
 
+import adventureworks.Text
 import adventureworks.customtypes.TypoUUID
 import anorm.Column
 import anorm.ParameterMetaData
@@ -16,22 +15,34 @@ import play.api.libs.json.Writes
 import typo.dsl.Bijection
 
 /** Type for the primary key of table `public.users` */
-case class UsersId(value: TypoUUID) extends AnyVal
+case class UsersId(value: TypoUUID) extends scala.AnyVal
+
 object UsersId {
   implicit lazy val arrayColumn: Column[Array[UsersId]] = Column.columnToArray(column, implicitly)
+
   implicit lazy val arrayToStatement: ToStatement[Array[UsersId]] = TypoUUID.arrayToStatement.contramap(_.map(_.value))
-  implicit lazy val bijection: Bijection[UsersId, TypoUUID] = Bijection[UsersId, TypoUUID](_.value)(UsersId.apply)
+
+  implicit lazy val bijection: Bijection[UsersId, TypoUUID] = Bijection.apply[UsersId, TypoUUID](_.value)(UsersId.apply)
+
   implicit lazy val column: Column[UsersId] = TypoUUID.column.map(UsersId.apply)
-  implicit def ordering(implicit O0: Ordering[TypoUUID]): Ordering[UsersId] = Ordering.by(_.value)
-  implicit lazy val parameterMetadata: ParameterMetaData[UsersId] = new ParameterMetaData[UsersId] {
-    override def sqlType: String = TypoUUID.parameterMetadata.sqlType
-    override def jdbcType: Int = TypoUUID.parameterMetadata.jdbcType
+
+  implicit lazy val parameterMetadata: ParameterMetaData[UsersId] = {
+    new ParameterMetaData[UsersId] {
+      override def sqlType: String = TypoUUID.parameterMetadata.sqlType
+      override def jdbcType: Int = TypoUUID.parameterMetadata.jdbcType
+    }
   }
+
+  implicit lazy val pgText: Text[UsersId] = {
+    new Text[UsersId] {
+      override def unsafeEncode(v: UsersId, sb: StringBuilder): Unit = TypoUUID.pgText.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: UsersId, sb: StringBuilder): Unit = TypoUUID.pgText.unsafeArrayEncode(v.value, sb)
+    }
+  }
+
   implicit lazy val reads: Reads[UsersId] = TypoUUID.reads.map(UsersId.apply)
-  implicit lazy val text: Text[UsersId] = new Text[UsersId] {
-    override def unsafeEncode(v: UsersId, sb: StringBuilder): Unit = TypoUUID.text.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: UsersId, sb: StringBuilder): Unit = TypoUUID.text.unsafeArrayEncode(v.value, sb)
-  }
+
   implicit lazy val toStatement: ToStatement[UsersId] = TypoUUID.toStatement.contramap(_.value)
+
   implicit lazy val writes: Writes[UsersId] = TypoUUID.writes.contramap(_.value)
 }

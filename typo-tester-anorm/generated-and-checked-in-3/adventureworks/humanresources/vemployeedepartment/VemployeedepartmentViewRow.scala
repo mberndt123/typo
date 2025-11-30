@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package humanresources
-package vemployeedepartment
+package adventureworks.humanresources.vemployeedepartment
 
 import adventureworks.customtypes.TypoLocalDate
 import adventureworks.person.businessentity.BusinessentityId
@@ -25,74 +23,82 @@ import scala.util.Try
 
 /** View: humanresources.vemployeedepartment */
 case class VemployeedepartmentViewRow(
-  /** Points to [[employee.EmployeeRow.businessentityid]] */
+  /** Points to [[adventureworks.humanresources.employee.EmployeeRow.businessentityid]] */
   businessentityid: BusinessentityId,
-  /** Points to [[person.person.PersonRow.title]] */
+  /** Points to [[adventureworks.person.person.PersonRow.title]] */
   title: Option[/* max 8 chars */ String],
-  /** Points to [[person.person.PersonRow.firstname]] */
+  /** Points to [[adventureworks.person.person.PersonRow.firstname]] */
   firstname: /* user-picked */ FirstName,
-  /** Points to [[person.person.PersonRow.middlename]] */
+  /** Points to [[adventureworks.person.person.PersonRow.middlename]] */
   middlename: Option[Name],
-  /** Points to [[person.person.PersonRow.lastname]] */
+  /** Points to [[adventureworks.person.person.PersonRow.lastname]] */
   lastname: Name,
-  /** Points to [[person.person.PersonRow.suffix]] */
+  /** Points to [[adventureworks.person.person.PersonRow.suffix]] */
   suffix: Option[/* max 10 chars */ String],
-  /** Points to [[employee.EmployeeRow.jobtitle]] */
+  /** Points to [[adventureworks.humanresources.employee.EmployeeRow.jobtitle]] */
   jobtitle: /* max 50 chars */ String,
-  /** Points to [[department.DepartmentRow.name]] */
+  /** Points to [[adventureworks.humanresources.department.DepartmentRow.name]] */
   department: Name,
-  /** Points to [[department.DepartmentRow.groupname]] */
+  /** Points to [[adventureworks.humanresources.department.DepartmentRow.groupname]] */
   groupname: Name,
-  /** Points to [[employeedepartmenthistory.EmployeedepartmenthistoryRow.startdate]] */
+  /** Points to [[adventureworks.humanresources.employeedepartmenthistory.EmployeedepartmenthistoryRow.startdate]] */
   startdate: TypoLocalDate
 )
 
 object VemployeedepartmentViewRow {
-  given reads: Reads[VemployeedepartmentViewRow] = Reads[VemployeedepartmentViewRow](json => JsResult.fromTry(
-      Try(
-        VemployeedepartmentViewRow(
-          businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
-          title = json.\("title").toOption.map(_.as(Reads.StringReads)),
-          firstname = json.\("firstname").as(FirstName.reads),
-          middlename = json.\("middlename").toOption.map(_.as(Name.reads)),
-          lastname = json.\("lastname").as(Name.reads),
-          suffix = json.\("suffix").toOption.map(_.as(Reads.StringReads)),
-          jobtitle = json.\("jobtitle").as(Reads.StringReads),
-          department = json.\("department").as(Name.reads),
-          groupname = json.\("groupname").as(Name.reads),
-          startdate = json.\("startdate").as(TypoLocalDate.reads)
+  given reads: Reads[VemployeedepartmentViewRow] = {
+    Reads[VemployeedepartmentViewRow](json => JsResult.fromTry(
+        Try(
+          VemployeedepartmentViewRow(
+            businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
+            title = json.\("title").toOption.map(_.as(Reads.StringReads)),
+            firstname = json.\("firstname").as(FirstName.reads),
+            middlename = json.\("middlename").toOption.map(_.as(Name.reads)),
+            lastname = json.\("lastname").as(Name.reads),
+            suffix = json.\("suffix").toOption.map(_.as(Reads.StringReads)),
+            jobtitle = json.\("jobtitle").as(Reads.StringReads),
+            department = json.\("department").as(Name.reads),
+            groupname = json.\("groupname").as(Name.reads),
+            startdate = json.\("startdate").as(TypoLocalDate.reads)
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[VemployeedepartmentViewRow] = RowParser[VemployeedepartmentViewRow] { row =>
-    Success(
-      VemployeedepartmentViewRow(
-        businessentityid = row(idx + 0)(using BusinessentityId.column),
-        title = row(idx + 1)(using Column.columnToOption(using Column.columnToString)),
-        firstname = row(idx + 2)(using /* user-picked */ FirstName.column),
-        middlename = row(idx + 3)(using Column.columnToOption(using Name.column)),
-        lastname = row(idx + 4)(using Name.column),
-        suffix = row(idx + 5)(using Column.columnToOption(using Column.columnToString)),
-        jobtitle = row(idx + 6)(using Column.columnToString),
-        department = row(idx + 7)(using Name.column),
-        groupname = row(idx + 8)(using Name.column),
-        startdate = row(idx + 9)(using TypoLocalDate.column)
-      )
+      ),
     )
   }
-  given writes: OWrites[VemployeedepartmentViewRow] = OWrites[VemployeedepartmentViewRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
-      "title" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.title),
-      "firstname" -> FirstName.writes.writes(o.firstname),
-      "middlename" -> Writes.OptionWrites(using Name.writes).writes(o.middlename),
-      "lastname" -> Name.writes.writes(o.lastname),
-      "suffix" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.suffix),
-      "jobtitle" -> Writes.StringWrites.writes(o.jobtitle),
-      "department" -> Name.writes.writes(o.department),
-      "groupname" -> Name.writes.writes(o.groupname),
-      "startdate" -> TypoLocalDate.writes.writes(o.startdate)
-    ))
-  )
+
+  def rowParser(idx: Int): RowParser[VemployeedepartmentViewRow] = {
+    RowParser[VemployeedepartmentViewRow] { row =>
+      Success(
+        VemployeedepartmentViewRow(
+          businessentityid = row(idx + 0)(using BusinessentityId.column),
+          title = row(idx + 1)(using Column.columnToOption(using Column.columnToString)),
+          firstname = row(idx + 2)(using /* user-picked */ FirstName.column),
+          middlename = row(idx + 3)(using Column.columnToOption(using Name.column)),
+          lastname = row(idx + 4)(using Name.column),
+          suffix = row(idx + 5)(using Column.columnToOption(using Column.columnToString)),
+          jobtitle = row(idx + 6)(using Column.columnToString),
+          department = row(idx + 7)(using Name.column),
+          groupname = row(idx + 8)(using Name.column),
+          startdate = row(idx + 9)(using TypoLocalDate.column)
+        )
+      )
+    }
+  }
+
+  given writes: OWrites[VemployeedepartmentViewRow] = {
+    OWrites[VemployeedepartmentViewRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
+        "title" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.title),
+        "firstname" -> FirstName.writes.writes(o.firstname),
+        "middlename" -> Writes.OptionWrites(using Name.writes).writes(o.middlename),
+        "lastname" -> Name.writes.writes(o.lastname),
+        "suffix" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.suffix),
+        "jobtitle" -> Writes.StringWrites.writes(o.jobtitle),
+        "department" -> Name.writes.writes(o.department),
+        "groupname" -> Name.writes.writes(o.groupname),
+        "startdate" -> TypoLocalDate.writes.writes(o.startdate)
+      ))
+    )
+  }
 }

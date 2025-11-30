@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pm
+package adventureworks.pr.pm
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoUUID
@@ -26,59 +24,67 @@ import scala.util.Try
 
 /** View: pr.pm */
 case class PmViewRow(
-  /** Points to [[production.productmodel.ProductmodelRow.productmodelid]] */
+  /** Points to [[adventureworks.production.productmodel.ProductmodelRow.productmodelid]] */
   id: ProductmodelId,
-  /** Points to [[production.productmodel.ProductmodelRow.productmodelid]] */
+  /** Points to [[adventureworks.production.productmodel.ProductmodelRow.productmodelid]] */
   productmodelid: ProductmodelId,
-  /** Points to [[production.productmodel.ProductmodelRow.name]] */
+  /** Points to [[adventureworks.production.productmodel.ProductmodelRow.name]] */
   name: Name,
-  /** Points to [[production.productmodel.ProductmodelRow.catalogdescription]] */
+  /** Points to [[adventureworks.production.productmodel.ProductmodelRow.catalogdescription]] */
   catalogdescription: Option[TypoXml],
-  /** Points to [[production.productmodel.ProductmodelRow.instructions]] */
+  /** Points to [[adventureworks.production.productmodel.ProductmodelRow.instructions]] */
   instructions: Option[TypoXml],
-  /** Points to [[production.productmodel.ProductmodelRow.rowguid]] */
+  /** Points to [[adventureworks.production.productmodel.ProductmodelRow.rowguid]] */
   rowguid: TypoUUID,
-  /** Points to [[production.productmodel.ProductmodelRow.modifieddate]] */
+  /** Points to [[adventureworks.production.productmodel.ProductmodelRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object PmViewRow {
-  given reads: Reads[PmViewRow] = Reads[PmViewRow](json => JsResult.fromTry(
-      Try(
-        PmViewRow(
-          id = json.\("id").as(ProductmodelId.reads),
-          productmodelid = json.\("productmodelid").as(ProductmodelId.reads),
-          name = json.\("name").as(Name.reads),
-          catalogdescription = json.\("catalogdescription").toOption.map(_.as(TypoXml.reads)),
-          instructions = json.\("instructions").toOption.map(_.as(TypoXml.reads)),
-          rowguid = json.\("rowguid").as(TypoUUID.reads),
-          modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+  given reads: Reads[PmViewRow] = {
+    Reads[PmViewRow](json => JsResult.fromTry(
+        Try(
+          PmViewRow(
+            id = json.\("id").as(ProductmodelId.reads),
+            productmodelid = json.\("productmodelid").as(ProductmodelId.reads),
+            name = json.\("name").as(Name.reads),
+            catalogdescription = json.\("catalogdescription").toOption.map(_.as(TypoXml.reads)),
+            instructions = json.\("instructions").toOption.map(_.as(TypoXml.reads)),
+            rowguid = json.\("rowguid").as(TypoUUID.reads),
+            modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[PmViewRow] = RowParser[PmViewRow] { row =>
-    Success(
-      PmViewRow(
-        id = row(idx + 0)(using ProductmodelId.column),
-        productmodelid = row(idx + 1)(using ProductmodelId.column),
-        name = row(idx + 2)(using Name.column),
-        catalogdescription = row(idx + 3)(using Column.columnToOption(using TypoXml.column)),
-        instructions = row(idx + 4)(using Column.columnToOption(using TypoXml.column)),
-        rowguid = row(idx + 5)(using TypoUUID.column),
-        modifieddate = row(idx + 6)(using TypoLocalDateTime.column)
-      )
+      ),
     )
   }
-  given writes: OWrites[PmViewRow] = OWrites[PmViewRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "id" -> ProductmodelId.writes.writes(o.id),
-      "productmodelid" -> ProductmodelId.writes.writes(o.productmodelid),
-      "name" -> Name.writes.writes(o.name),
-      "catalogdescription" -> Writes.OptionWrites(using TypoXml.writes).writes(o.catalogdescription),
-      "instructions" -> Writes.OptionWrites(using TypoXml.writes).writes(o.instructions),
-      "rowguid" -> TypoUUID.writes.writes(o.rowguid),
-      "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
-    ))
-  )
+
+  def rowParser(idx: Int): RowParser[PmViewRow] = {
+    RowParser[PmViewRow] { row =>
+      Success(
+        PmViewRow(
+          id = row(idx + 0)(using ProductmodelId.column),
+          productmodelid = row(idx + 1)(using ProductmodelId.column),
+          name = row(idx + 2)(using Name.column),
+          catalogdescription = row(idx + 3)(using Column.columnToOption(using TypoXml.column)),
+          instructions = row(idx + 4)(using Column.columnToOption(using TypoXml.column)),
+          rowguid = row(idx + 5)(using TypoUUID.column),
+          modifieddate = row(idx + 6)(using TypoLocalDateTime.column)
+        )
+      )
+    }
+  }
+
+  given writes: OWrites[PmViewRow] = {
+    OWrites[PmViewRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "id" -> ProductmodelId.writes.writes(o.id),
+        "productmodelid" -> ProductmodelId.writes.writes(o.productmodelid),
+        "name" -> Name.writes.writes(o.name),
+        "catalogdescription" -> Writes.OptionWrites(using TypoXml.writes).writes(o.catalogdescription),
+        "instructions" -> Writes.OptionWrites(using TypoXml.writes).writes(o.instructions),
+        "rowguid" -> TypoUUID.writes.writes(o.rowguid),
+        "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
+      ))
+    )
+  }
 }

@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sales
-package salespersonquotahistory
+package adventureworks.sales.salespersonquotahistory
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoUUID
@@ -14,12 +12,12 @@ import adventureworks.sales.salesperson.SalespersonFields
 import adventureworks.sales.salesperson.SalespersonRow
 import typo.dsl.ForeignKey
 import typo.dsl.Path
-import typo.dsl.Required
 import typo.dsl.SqlExpr
 import typo.dsl.SqlExpr.CompositeIn
 import typo.dsl.SqlExpr.CompositeIn.TuplePart
+import typo.dsl.SqlExpr.Const.As.as
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.IdField
 import typo.dsl.Structure.Relation
 
@@ -32,20 +30,20 @@ trait SalespersonquotahistoryFields {
   def fkSalesperson: ForeignKey[SalespersonFields, SalespersonRow] =
     ForeignKey[SalespersonFields, SalespersonRow]("sales.FK_SalesPersonQuotaHistory_SalesPerson_BusinessEntityID", Nil)
       .withColumnPair(businessentityid, _.businessentityid)
-  def compositeIdIs(compositeId: SalespersonquotahistoryId): SqlExpr[Boolean, Required] =
+  def compositeIdIs(compositeId: SalespersonquotahistoryId): SqlExpr[Boolean] =
     businessentityid.isEqual(compositeId.businessentityid).and(quotadate.isEqual(compositeId.quotadate))
-  def compositeIdIn(compositeIds: Array[SalespersonquotahistoryId]): SqlExpr[Boolean, Required] =
-    new CompositeIn(compositeIds)(TuplePart(businessentityid)(_.businessentityid), TuplePart(quotadate)(_.quotadate))
-  
+  def compositeIdIn(compositeIds: Array[SalespersonquotahistoryId]): SqlExpr[Boolean] =
+    new CompositeIn(compositeIds)(TuplePart[SalespersonquotahistoryId](businessentityid)(_.businessentityid)(using as[Array[BusinessentityId]](BusinessentityId.arrayPut), implicitly), TuplePart[SalespersonquotahistoryId](quotadate)(_.quotadate)(using as[Array[TypoLocalDateTime]](TypoLocalDateTime.arrayPut), implicitly))
+
 }
 
 object SalespersonquotahistoryFields {
   lazy val structure: Relation[SalespersonquotahistoryFields, SalespersonquotahistoryRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[SalespersonquotahistoryFields, SalespersonquotahistoryRow] {
-  
+
     override lazy val fields: SalespersonquotahistoryFields = new SalespersonquotahistoryFields {
       override def businessentityid = IdField[BusinessentityId, SalespersonquotahistoryRow](_path, "businessentityid", None, Some("int4"), x => x.businessentityid, (row, value) => row.copy(businessentityid = value))
       override def quotadate = IdField[TypoLocalDateTime, SalespersonquotahistoryRow](_path, "quotadate", Some("text"), Some("timestamp"), x => x.quotadate, (row, value) => row.copy(quotadate = value))
@@ -53,12 +51,11 @@ object SalespersonquotahistoryFields {
       override def rowguid = Field[TypoUUID, SalespersonquotahistoryRow](_path, "rowguid", None, Some("uuid"), x => x.rowguid, (row, value) => row.copy(rowguid = value))
       override def modifieddate = Field[TypoLocalDateTime, SalespersonquotahistoryRow](_path, "modifieddate", Some("text"), Some("timestamp"), x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, SalespersonquotahistoryRow]] =
-      List[FieldLikeNoHkt[?, SalespersonquotahistoryRow]](fields.businessentityid, fields.quotadate, fields.salesquota, fields.rowguid, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, SalespersonquotahistoryRow]] =
+      List[FieldLike[?, SalespersonquotahistoryRow]](fields.businessentityid, fields.quotadate, fields.salesquota, fields.rowguid, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package workorderrouting
+package adventureworks.production.workorderrouting
 
 import adventureworks.customtypes.TypoShort
 import adventureworks.production.workorder.WorkorderId
@@ -24,23 +22,28 @@ case class WorkorderroutingId(
   productid: Int,
   operationsequence: TypoShort
 )
+
 object WorkorderroutingId {
-  implicit def ordering(implicit O0: Ordering[TypoShort]): Ordering[WorkorderroutingId] = Ordering.by(x => (x.workorderid, x.productid, x.operationsequence))
-  implicit lazy val reads: Reads[WorkorderroutingId] = Reads[WorkorderroutingId](json => JsResult.fromTry(
-      Try(
-        WorkorderroutingId(
-          workorderid = json.\("workorderid").as(WorkorderId.reads),
-          productid = json.\("productid").as(Reads.IntReads),
-          operationsequence = json.\("operationsequence").as(TypoShort.reads)
+  implicit lazy val reads: Reads[WorkorderroutingId] = {
+    Reads[WorkorderroutingId](json => JsResult.fromTry(
+        Try(
+          WorkorderroutingId(
+            workorderid = json.\("workorderid").as(WorkorderId.reads),
+            productid = json.\("productid").as(Reads.IntReads),
+            operationsequence = json.\("operationsequence").as(TypoShort.reads)
+          )
         )
-      )
-    ),
-  )
-  implicit lazy val writes: OWrites[WorkorderroutingId] = OWrites[WorkorderroutingId](o =>
-    new JsObject(ListMap[String, JsValue](
-      "workorderid" -> WorkorderId.writes.writes(o.workorderid),
-      "productid" -> Writes.IntWrites.writes(o.productid),
-      "operationsequence" -> TypoShort.writes.writes(o.operationsequence)
-    ))
-  )
+      ),
+    )
+  }
+
+  implicit lazy val writes: OWrites[WorkorderroutingId] = {
+    OWrites[WorkorderroutingId](o =>
+      new JsObject(ListMap[String, JsValue](
+        "workorderid" -> WorkorderId.writes.writes(o.workorderid),
+        "productid" -> Writes.IntWrites.writes(o.productid),
+        "operationsequence" -> TypoShort.writes.writes(o.operationsequence)
+      ))
+    )
+  }
 }

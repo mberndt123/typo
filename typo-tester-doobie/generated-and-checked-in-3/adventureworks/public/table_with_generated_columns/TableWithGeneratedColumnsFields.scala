@@ -3,13 +3,11 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package table_with_generated_columns
+package adventureworks.public.table_with_generated_columns
 
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.IdField
 import typo.dsl.Structure.Relation
 
@@ -20,21 +18,20 @@ trait TableWithGeneratedColumnsFields {
 
 object TableWithGeneratedColumnsFields {
   lazy val structure: Relation[TableWithGeneratedColumnsFields, TableWithGeneratedColumnsRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[TableWithGeneratedColumnsFields, TableWithGeneratedColumnsRow] {
-  
+
     override lazy val fields: TableWithGeneratedColumnsFields = new TableWithGeneratedColumnsFields {
       override def name = IdField[TableWithGeneratedColumnsId, TableWithGeneratedColumnsRow](_path, "name", None, None, x => x.name, (row, value) => row.copy(name = value))
       override def nameTypeAlways = Field[String, TableWithGeneratedColumnsRow](_path, "name-type-always", None, None, x => x.nameTypeAlways, (row, value) => row.copy(nameTypeAlways = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, TableWithGeneratedColumnsRow]] =
-      List[FieldLikeNoHkt[?, TableWithGeneratedColumnsRow]](fields.name, fields.nameTypeAlways)
-  
+
+    override lazy val columns: List[FieldLike[?, TableWithGeneratedColumnsRow]] =
+      List[FieldLike[?, TableWithGeneratedColumnsRow]](fields.name, fields.nameTypeAlways)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

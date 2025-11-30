@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package sr
+package adventureworks.sa.sr
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.public.Name
@@ -16,34 +14,38 @@ import io.circe.Encoder
 
 /** View: sa.sr */
 case class SrViewRow(
-  /** Points to [[sales.salesreason.SalesreasonRow.salesreasonid]] */
+  /** Points to [[adventureworks.sales.salesreason.SalesreasonRow.salesreasonid]] */
   id: SalesreasonId,
-  /** Points to [[sales.salesreason.SalesreasonRow.salesreasonid]] */
+  /** Points to [[adventureworks.sales.salesreason.SalesreasonRow.salesreasonid]] */
   salesreasonid: SalesreasonId,
-  /** Points to [[sales.salesreason.SalesreasonRow.name]] */
+  /** Points to [[adventureworks.sales.salesreason.SalesreasonRow.name]] */
   name: Name,
-  /** Points to [[sales.salesreason.SalesreasonRow.reasontype]] */
+  /** Points to [[adventureworks.sales.salesreason.SalesreasonRow.reasontype]] */
   reasontype: Name,
-  /** Points to [[sales.salesreason.SalesreasonRow.modifieddate]] */
+  /** Points to [[adventureworks.sales.salesreason.SalesreasonRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object SrViewRow {
   given decoder: Decoder[SrViewRow] = Decoder.forProduct5[SrViewRow, SalesreasonId, SalesreasonId, Name, Name, TypoLocalDateTime]("id", "salesreasonid", "name", "reasontype", "modifieddate")(SrViewRow.apply)(using SalesreasonId.decoder, SalesreasonId.decoder, Name.decoder, Name.decoder, TypoLocalDateTime.decoder)
+
   given encoder: Encoder[SrViewRow] = Encoder.forProduct5[SrViewRow, SalesreasonId, SalesreasonId, Name, Name, TypoLocalDateTime]("id", "salesreasonid", "name", "reasontype", "modifieddate")(x => (x.id, x.salesreasonid, x.name, x.reasontype, x.modifieddate))(using SalesreasonId.encoder, SalesreasonId.encoder, Name.encoder, Name.encoder, TypoLocalDateTime.encoder)
-  given read: Read[SrViewRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(SalesreasonId.get).asInstanceOf[Read[Any]],
+
+  given read: Read[SrViewRow] = {
+    new Read.CompositeOfInstances(Array(
       new Read.Single(SalesreasonId.get).asInstanceOf[Read[Any]],
-      new Read.Single(Name.get).asInstanceOf[Read[Any]],
-      new Read.Single(Name.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
-  ))(using scala.reflect.ClassTag.Any).map { arr =>
-    SrViewRow(
-      id = arr(0).asInstanceOf[SalesreasonId],
-          salesreasonid = arr(1).asInstanceOf[SalesreasonId],
-          name = arr(2).asInstanceOf[Name],
-          reasontype = arr(3).asInstanceOf[Name],
-          modifieddate = arr(4).asInstanceOf[TypoLocalDateTime]
-    )
+        new Read.Single(SalesreasonId.get).asInstanceOf[Read[Any]],
+        new Read.Single(Name.get).asInstanceOf[Read[Any]],
+        new Read.Single(Name.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
+    ))(using scala.reflect.ClassTag.Any).map { arr =>
+      SrViewRow(
+        id = arr(0).asInstanceOf[SalesreasonId],
+            salesreasonid = arr(1).asInstanceOf[SalesreasonId],
+            name = arr(2).asInstanceOf[Name],
+            reasontype = arr(3).asInstanceOf[Name],
+            modifieddate = arr(4).asInstanceOf[TypoLocalDateTime]
+      )
+    }
   }
 }

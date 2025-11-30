@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package purchasing
-package purchaseorderdetail
+package adventureworks.purchasing.purchaseorderdetail
 
 import adventureworks.purchasing.purchaseorderheader.PurchaseorderheaderId
 import play.api.libs.json.JsObject
@@ -22,21 +20,26 @@ case class PurchaseorderdetailId(
   purchaseorderid: PurchaseorderheaderId,
   purchaseorderdetailid: Int
 )
+
 object PurchaseorderdetailId {
-  given ordering: Ordering[PurchaseorderdetailId] = Ordering.by(x => (x.purchaseorderid, x.purchaseorderdetailid))
-  given reads: Reads[PurchaseorderdetailId] = Reads[PurchaseorderdetailId](json => JsResult.fromTry(
-      Try(
-        PurchaseorderdetailId(
-          purchaseorderid = json.\("purchaseorderid").as(summon[Reads[PurchaseorderheaderId]]),
-          purchaseorderdetailid = json.\("purchaseorderdetailid").as(Reads.IntReads)
+  given reads: Reads[PurchaseorderdetailId] = {
+    Reads[PurchaseorderdetailId](json => JsResult.fromTry(
+        Try(
+          PurchaseorderdetailId(
+            purchaseorderid = json.\("purchaseorderid").as(PurchaseorderheaderId.reads),
+            purchaseorderdetailid = json.\("purchaseorderdetailid").as(Reads.IntReads)
+          )
         )
-      )
-    ),
-  )
-  given writes: OWrites[PurchaseorderdetailId] = OWrites[PurchaseorderdetailId](o =>
-    new JsObject(ListMap[String, JsValue](
-      "purchaseorderid" -> summon[Writes[PurchaseorderheaderId]].writes(o.purchaseorderid),
-      "purchaseorderdetailid" -> Writes.IntWrites.writes(o.purchaseorderdetailid)
-    ))
-  )
+      ),
+    )
+  }
+
+  given writes: OWrites[PurchaseorderdetailId] = {
+    OWrites[PurchaseorderdetailId](o =>
+      new JsObject(ListMap[String, JsValue](
+        "purchaseorderid" -> PurchaseorderheaderId.writes.writes(o.purchaseorderid),
+        "purchaseorderdetailid" -> Writes.IntWrites.writes(o.purchaseorderdetailid)
+      ))
+    )
+  }
 }

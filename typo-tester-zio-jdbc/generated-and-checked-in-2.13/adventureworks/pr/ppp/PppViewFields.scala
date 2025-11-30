@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package ppp
+package adventureworks.pr.ppp
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.production.product.ProductId
@@ -13,7 +11,7 @@ import adventureworks.production.productphoto.ProductphotoId
 import adventureworks.public.Flag
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.Structure.Relation
 
 trait PppViewFields {
@@ -25,23 +23,22 @@ trait PppViewFields {
 
 object PppViewFields {
   lazy val structure: Relation[PppViewFields, PppViewRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[PppViewFields, PppViewRow] {
-  
+
     override lazy val fields: PppViewFields = new PppViewFields {
       override def productid = Field[ProductId, PppViewRow](_path, "productid", None, None, x => x.productid, (row, value) => row.copy(productid = value))
       override def productphotoid = Field[ProductphotoId, PppViewRow](_path, "productphotoid", None, None, x => x.productphotoid, (row, value) => row.copy(productphotoid = value))
       override def primary = Field[Flag, PppViewRow](_path, "primary", None, None, x => x.primary, (row, value) => row.copy(primary = value))
       override def modifieddate = Field[TypoLocalDateTime, PppViewRow](_path, "modifieddate", Some("text"), None, x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, PppViewRow]] =
-      List[FieldLikeNoHkt[?, PppViewRow]](fields.productid, fields.productphotoid, fields.primary, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, PppViewRow]] =
+      List[FieldLike[?, PppViewRow]](fields.productid, fields.productphotoid, fields.primary, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

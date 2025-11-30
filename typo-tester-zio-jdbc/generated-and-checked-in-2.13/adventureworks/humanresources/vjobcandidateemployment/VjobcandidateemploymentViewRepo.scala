@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package humanresources
-package vjobcandidateemployment
+package adventureworks.humanresources.vjobcandidateemployment
 
 import typo.dsl.SelectBuilder
 import zio.jdbc.ZConnection
@@ -13,5 +11,6 @@ import zio.stream.ZStream
 
 trait VjobcandidateemploymentViewRepo {
   def select: SelectBuilder[VjobcandidateemploymentViewFields, VjobcandidateemploymentViewRow]
+
   def selectAll: ZStream[ZConnection, Throwable, VjobcandidateemploymentViewRow]
 }

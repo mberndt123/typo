@@ -3,8 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package customtypes
+package adventureworks.customtypes
 
 import cats.data.NonEmptyList
 import doobie.postgres.Text
@@ -18,15 +17,23 @@ import typo.dsl.Bijection
 case class TypoBytea(value: Array[Byte])
 
 object TypoBytea {
-  implicit lazy val bijection: Bijection[TypoBytea, Array[Byte]] = Bijection[TypoBytea, Array[Byte]](_.value)(TypoBytea.apply)
+  implicit lazy val bijection: Bijection[TypoBytea, Array[Byte]] = Bijection.apply[TypoBytea, Array[Byte]](_.value)(TypoBytea.apply)
+
   implicit lazy val decoder: Decoder[TypoBytea] = Decoder.decodeArray[Byte](Decoder.decodeByte, implicitly).map(TypoBytea.apply)
+
   implicit lazy val encoder: Encoder[TypoBytea] = Encoder.encodeIterable[Byte, Array](Encoder.encodeByte, implicitly).contramap(_.value)
-  implicit lazy val get: Get[TypoBytea] = Get.Advanced.other[Array[Byte]](NonEmptyList.one("bytea"))
-    .map(v => TypoBytea(v))
-  implicit def ordering(implicit O0: Ordering[Array[Byte]]): Ordering[TypoBytea] = Ordering.by(_.value)
-  implicit lazy val put: Put[TypoBytea] = Put.Advanced.other[Array[Byte]](NonEmptyList.one("bytea")).contramap(v => v.value)
-  implicit lazy val text: Text[TypoBytea] = new Text[TypoBytea] {
-    override def unsafeEncode(v: TypoBytea, sb: StringBuilder): Unit = Text.byteArrayInstance.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: TypoBytea, sb: StringBuilder): Unit = Text.byteArrayInstance.unsafeArrayEncode(v.value, sb)
+
+  implicit lazy val get: Get[TypoBytea] = {
+    Get.Advanced.other[Array[Byte]](NonEmptyList.one("bytea"))
+      .map(v => new TypoBytea(v))
   }
+
+  implicit lazy val pgText: Text[TypoBytea] = {
+    new Text[TypoBytea] {
+      override def unsafeEncode(v: TypoBytea, sb: StringBuilder): Unit = Text.byteArrayInstance.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: TypoBytea, sb: StringBuilder): Unit = Text.byteArrayInstance.unsafeArrayEncode(v.value, sb)
+    }
+  }
+
+  implicit lazy val put: Put[TypoBytea] = Put.Advanced.other[Array[Byte]](NonEmptyList.one("bytea")).contramap(v => v.value)
 }

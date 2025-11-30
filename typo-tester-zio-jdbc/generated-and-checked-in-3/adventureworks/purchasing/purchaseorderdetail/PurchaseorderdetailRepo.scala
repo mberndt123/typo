@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package purchasing
-package purchaseorderdetail
+package adventureworks.purchasing.purchaseorderdetail
 
 import typo.dsl.SelectBuilder
 import zio.ZIO
@@ -14,8 +12,12 @@ import zio.stream.ZStream
 
 trait PurchaseorderdetailRepo {
   def select: SelectBuilder[PurchaseorderdetailFields, PurchaseorderdetailRow]
+
   def selectAll: ZStream[ZConnection, Throwable, PurchaseorderdetailRow]
+
   def selectById(compositeId: PurchaseorderdetailId): ZIO[ZConnection, Throwable, Option[PurchaseorderdetailRow]]
+
   def selectByIds(compositeIds: Array[PurchaseorderdetailId]): ZStream[ZConnection, Throwable, PurchaseorderdetailRow]
+
   def selectByIdsTracked(compositeIds: Array[PurchaseorderdetailId]): ZIO[ZConnection, Throwable, Map[PurchaseorderdetailId, PurchaseorderdetailRow]]
 }

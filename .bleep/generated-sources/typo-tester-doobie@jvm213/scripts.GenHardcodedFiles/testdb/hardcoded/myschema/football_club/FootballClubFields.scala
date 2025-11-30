@@ -3,14 +3,11 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN
  */
-package testdb
-package hardcoded
-package myschema
-package football_club
+package testdb.hardcoded.myschema.football_club
 
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.IdField
 import typo.dsl.Structure.Relation
 
@@ -21,21 +18,20 @@ trait FootballClubFields {
 
 object FootballClubFields {
   lazy val structure: Relation[FootballClubFields, FootballClubRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[FootballClubFields, FootballClubRow] {
-  
+
     override lazy val fields: FootballClubFields = new FootballClubFields {
       override def id = IdField[FootballClubId, FootballClubRow](_path, "id", None, Some("int8"), x => x.id, (row, value) => row.copy(id = value))
       override def name = Field[/* max 100 chars */ String, FootballClubRow](_path, "name", None, None, x => x.name, (row, value) => row.copy(name = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, FootballClubRow]] =
-      List[FieldLikeNoHkt[?, FootballClubRow]](fields.id, fields.name)
-  
+
+    override lazy val columns: List[FieldLike[?, FootballClubRow]] =
+      List[FieldLike[?, FootballClubRow]](fields.id, fields.name)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

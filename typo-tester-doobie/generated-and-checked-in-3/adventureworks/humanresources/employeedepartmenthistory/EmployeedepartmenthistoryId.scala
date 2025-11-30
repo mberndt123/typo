@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package humanresources
-package employeedepartmenthistory
+package adventureworks.humanresources.employeedepartmenthistory
 
 import adventureworks.customtypes.TypoLocalDate
 import adventureworks.humanresources.department.DepartmentId
@@ -21,8 +19,9 @@ case class EmployeedepartmenthistoryId(
   departmentid: DepartmentId,
   shiftid: ShiftId
 )
+
 object EmployeedepartmenthistoryId {
   given decoder: Decoder[EmployeedepartmenthistoryId] = Decoder.forProduct4[EmployeedepartmenthistoryId, BusinessentityId, TypoLocalDate, DepartmentId, ShiftId]("businessentityid", "startdate", "departmentid", "shiftid")(EmployeedepartmenthistoryId.apply)(using BusinessentityId.decoder, TypoLocalDate.decoder, DepartmentId.decoder, ShiftId.decoder)
+
   given encoder: Encoder[EmployeedepartmenthistoryId] = Encoder.forProduct4[EmployeedepartmenthistoryId, BusinessentityId, TypoLocalDate, DepartmentId, ShiftId]("businessentityid", "startdate", "departmentid", "shiftid")(x => (x.businessentityid, x.startdate, x.departmentid, x.shiftid))(using BusinessentityId.encoder, TypoLocalDate.encoder, DepartmentId.encoder, ShiftId.encoder)
-  given ordering(using O0: Ordering[TypoLocalDate]): Ordering[EmployeedepartmenthistoryId] = Ordering.by(x => (x.businessentityid, x.startdate, x.departmentid, x.shiftid))
 }

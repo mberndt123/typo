@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package purchasing
-package purchaseorderdetail
+package adventureworks.purchasing.purchaseorderdetail
 
 import adventureworks.purchasing.purchaseorderheader.PurchaseorderheaderId
 import io.circe.Decoder
@@ -16,8 +14,9 @@ case class PurchaseorderdetailId(
   purchaseorderid: PurchaseorderheaderId,
   purchaseorderdetailid: Int
 )
+
 object PurchaseorderdetailId {
   implicit lazy val decoder: Decoder[PurchaseorderdetailId] = Decoder.forProduct2[PurchaseorderdetailId, PurchaseorderheaderId, Int]("purchaseorderid", "purchaseorderdetailid")(PurchaseorderdetailId.apply)(PurchaseorderheaderId.decoder, Decoder.decodeInt)
+
   implicit lazy val encoder: Encoder[PurchaseorderdetailId] = Encoder.forProduct2[PurchaseorderdetailId, PurchaseorderheaderId, Int]("purchaseorderid", "purchaseorderdetailid")(x => (x.purchaseorderid, x.purchaseorderdetailid))(PurchaseorderheaderId.encoder, Encoder.encodeInt)
-  implicit lazy val ordering: Ordering[PurchaseorderdetailId] = Ordering.by(x => (x.purchaseorderid, x.purchaseorderdetailid))
 }

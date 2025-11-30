@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package workorderrouting
+package adventureworks.production.workorderrouting
 
 import adventureworks.customtypes.TypoShort
 import adventureworks.production.workorder.WorkorderId
@@ -18,8 +16,9 @@ case class WorkorderroutingId(
   productid: Int,
   operationsequence: TypoShort
 )
+
 object WorkorderroutingId {
   given decoder: Decoder[WorkorderroutingId] = Decoder.forProduct3[WorkorderroutingId, WorkorderId, Int, TypoShort]("workorderid", "productid", "operationsequence")(WorkorderroutingId.apply)(using WorkorderId.decoder, Decoder.decodeInt, TypoShort.decoder)
+
   given encoder: Encoder[WorkorderroutingId] = Encoder.forProduct3[WorkorderroutingId, WorkorderId, Int, TypoShort]("workorderid", "productid", "operationsequence")(x => (x.workorderid, x.productid, x.operationsequence))(using WorkorderId.encoder, Encoder.encodeInt, TypoShort.encoder)
-  given ordering(using O0: Ordering[TypoShort]): Ordering[WorkorderroutingId] = Ordering.by(x => (x.workorderid, x.productid, x.operationsequence))
 }

@@ -3,14 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pi
+package adventureworks.pr.pi
 
 import java.sql.Connection
 import typo.dsl.SelectBuilder
 
 trait PiViewRepo {
   def select: SelectBuilder[PiViewFields, PiViewRow]
+
   def selectAll(using c: Connection): List[PiViewRow]
 }

@@ -3,10 +3,9 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sales
-package specialoffer
+package adventureworks.sales.specialoffer
 
+import adventureworks.Text
 import anorm.Column
 import anorm.ParameterMetaData
 import anorm.ToStatement
@@ -15,22 +14,34 @@ import play.api.libs.json.Writes
 import typo.dsl.Bijection
 
 /** Type for the primary key of table `sales.specialoffer` */
-case class SpecialofferId(value: Int) extends AnyVal
+case class SpecialofferId(value: Int) extends scala.AnyVal
+
 object SpecialofferId {
   implicit lazy val arrayColumn: Column[Array[SpecialofferId]] = Column.columnToArray(column, implicitly)
+
   implicit lazy val arrayToStatement: ToStatement[Array[SpecialofferId]] = adventureworks.IntArrayToStatement.contramap(_.map(_.value))
-  implicit lazy val bijection: Bijection[SpecialofferId, Int] = Bijection[SpecialofferId, Int](_.value)(SpecialofferId.apply)
+
+  implicit lazy val bijection: Bijection[SpecialofferId, Int] = Bijection.apply[SpecialofferId, Int](_.value)(SpecialofferId.apply)
+
   implicit lazy val column: Column[SpecialofferId] = Column.columnToInt.map(SpecialofferId.apply)
-  implicit lazy val ordering: Ordering[SpecialofferId] = Ordering.by(_.value)
-  implicit lazy val parameterMetadata: ParameterMetaData[SpecialofferId] = new ParameterMetaData[SpecialofferId] {
-    override def sqlType: String = ParameterMetaData.IntParameterMetaData.sqlType
-    override def jdbcType: Int = ParameterMetaData.IntParameterMetaData.jdbcType
+
+  implicit lazy val parameterMetadata: ParameterMetaData[SpecialofferId] = {
+    new ParameterMetaData[SpecialofferId] {
+      override def sqlType: String = ParameterMetaData.IntParameterMetaData.sqlType
+      override def jdbcType: Int = ParameterMetaData.IntParameterMetaData.jdbcType
+    }
   }
+
+  implicit lazy val pgText: Text[SpecialofferId] = {
+    new Text[SpecialofferId] {
+      override def unsafeEncode(v: SpecialofferId, sb: StringBuilder): Unit = Text.intInstance.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: SpecialofferId, sb: StringBuilder): Unit = Text.intInstance.unsafeArrayEncode(v.value, sb)
+    }
+  }
+
   implicit lazy val reads: Reads[SpecialofferId] = Reads.IntReads.map(SpecialofferId.apply)
-  implicit lazy val text: Text[SpecialofferId] = new Text[SpecialofferId] {
-    override def unsafeEncode(v: SpecialofferId, sb: StringBuilder): Unit = Text.intInstance.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: SpecialofferId, sb: StringBuilder): Unit = Text.intInstance.unsafeArrayEncode(v.value, sb)
-  }
+
   implicit lazy val toStatement: ToStatement[SpecialofferId] = ToStatement.intToStatement.contramap(_.value)
+
   implicit lazy val writes: Writes[SpecialofferId] = Writes.IntWrites.contramap(_.value)
 }

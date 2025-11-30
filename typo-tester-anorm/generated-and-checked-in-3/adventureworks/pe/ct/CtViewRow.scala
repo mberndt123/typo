@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pe
-package ct
+package adventureworks.pe.ct
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.person.contacttype.ContacttypeId
@@ -22,44 +20,52 @@ import scala.util.Try
 
 /** View: pe.ct */
 case class CtViewRow(
-  /** Points to [[person.contacttype.ContacttypeRow.contacttypeid]] */
+  /** Points to [[adventureworks.person.contacttype.ContacttypeRow.contacttypeid]] */
   id: ContacttypeId,
-  /** Points to [[person.contacttype.ContacttypeRow.contacttypeid]] */
+  /** Points to [[adventureworks.person.contacttype.ContacttypeRow.contacttypeid]] */
   contacttypeid: ContacttypeId,
-  /** Points to [[person.contacttype.ContacttypeRow.name]] */
+  /** Points to [[adventureworks.person.contacttype.ContacttypeRow.name]] */
   name: Name,
-  /** Points to [[person.contacttype.ContacttypeRow.modifieddate]] */
+  /** Points to [[adventureworks.person.contacttype.ContacttypeRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object CtViewRow {
-  given reads: Reads[CtViewRow] = Reads[CtViewRow](json => JsResult.fromTry(
-      Try(
-        CtViewRow(
-          id = json.\("id").as(ContacttypeId.reads),
-          contacttypeid = json.\("contacttypeid").as(ContacttypeId.reads),
-          name = json.\("name").as(Name.reads),
-          modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+  given reads: Reads[CtViewRow] = {
+    Reads[CtViewRow](json => JsResult.fromTry(
+        Try(
+          CtViewRow(
+            id = json.\("id").as(ContacttypeId.reads),
+            contacttypeid = json.\("contacttypeid").as(ContacttypeId.reads),
+            name = json.\("name").as(Name.reads),
+            modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[CtViewRow] = RowParser[CtViewRow] { row =>
-    Success(
-      CtViewRow(
-        id = row(idx + 0)(using ContacttypeId.column),
-        contacttypeid = row(idx + 1)(using ContacttypeId.column),
-        name = row(idx + 2)(using Name.column),
-        modifieddate = row(idx + 3)(using TypoLocalDateTime.column)
-      )
+      ),
     )
   }
-  given writes: OWrites[CtViewRow] = OWrites[CtViewRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "id" -> ContacttypeId.writes.writes(o.id),
-      "contacttypeid" -> ContacttypeId.writes.writes(o.contacttypeid),
-      "name" -> Name.writes.writes(o.name),
-      "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
-    ))
-  )
+
+  def rowParser(idx: Int): RowParser[CtViewRow] = {
+    RowParser[CtViewRow] { row =>
+      Success(
+        CtViewRow(
+          id = row(idx + 0)(using ContacttypeId.column),
+          contacttypeid = row(idx + 1)(using ContacttypeId.column),
+          name = row(idx + 2)(using Name.column),
+          modifieddate = row(idx + 3)(using TypoLocalDateTime.column)
+        )
+      )
+    }
+  }
+
+  given writes: OWrites[CtViewRow] = {
+    OWrites[CtViewRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "id" -> ContacttypeId.writes.writes(o.id),
+        "contacttypeid" -> ContacttypeId.writes.writes(o.contacttypeid),
+        "name" -> Name.writes.writes(o.name),
+        "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
+      ))
+    )
+  }
 }

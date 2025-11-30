@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package crc
+package adventureworks.sa.crc
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.person.countryregion.CountryregionId
@@ -16,26 +14,30 @@ import io.circe.Encoder
 
 /** View: sa.crc */
 case class CrcViewRow(
-  /** Points to [[sales.countryregioncurrency.CountryregioncurrencyRow.countryregioncode]] */
+  /** Points to [[adventureworks.sales.countryregioncurrency.CountryregioncurrencyRow.countryregioncode]] */
   countryregioncode: CountryregionId,
-  /** Points to [[sales.countryregioncurrency.CountryregioncurrencyRow.currencycode]] */
+  /** Points to [[adventureworks.sales.countryregioncurrency.CountryregioncurrencyRow.currencycode]] */
   currencycode: CurrencyId,
-  /** Points to [[sales.countryregioncurrency.CountryregioncurrencyRow.modifieddate]] */
+  /** Points to [[adventureworks.sales.countryregioncurrency.CountryregioncurrencyRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object CrcViewRow {
   given decoder: Decoder[CrcViewRow] = Decoder.forProduct3[CrcViewRow, CountryregionId, CurrencyId, TypoLocalDateTime]("countryregioncode", "currencycode", "modifieddate")(CrcViewRow.apply)(using CountryregionId.decoder, CurrencyId.decoder, TypoLocalDateTime.decoder)
+
   given encoder: Encoder[CrcViewRow] = Encoder.forProduct3[CrcViewRow, CountryregionId, CurrencyId, TypoLocalDateTime]("countryregioncode", "currencycode", "modifieddate")(x => (x.countryregioncode, x.currencycode, x.modifieddate))(using CountryregionId.encoder, CurrencyId.encoder, TypoLocalDateTime.encoder)
-  given read: Read[CrcViewRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(CountryregionId.get).asInstanceOf[Read[Any]],
-      new Read.Single(CurrencyId.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
-  ))(using scala.reflect.ClassTag.Any).map { arr =>
-    CrcViewRow(
-      countryregioncode = arr(0).asInstanceOf[CountryregionId],
-          currencycode = arr(1).asInstanceOf[CurrencyId],
-          modifieddate = arr(2).asInstanceOf[TypoLocalDateTime]
-    )
+
+  given read: Read[CrcViewRow] = {
+    new Read.CompositeOfInstances(Array(
+      new Read.Single(CountryregionId.get).asInstanceOf[Read[Any]],
+        new Read.Single(CurrencyId.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
+    ))(using scala.reflect.ClassTag.Any).map { arr =>
+      CrcViewRow(
+        countryregioncode = arr(0).asInstanceOf[CountryregionId],
+            currencycode = arr(1).asInstanceOf[CurrencyId],
+            modifieddate = arr(2).asInstanceOf[TypoLocalDateTime]
+      )
+    }
   }
 }

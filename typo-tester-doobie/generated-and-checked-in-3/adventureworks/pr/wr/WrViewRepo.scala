@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package wr
+package adventureworks.pr.wr
 
 import doobie.free.connection.ConnectionIO
 import fs2.Stream
@@ -13,5 +11,6 @@ import typo.dsl.SelectBuilder
 
 trait WrViewRepo {
   def select: SelectBuilder[WrViewFields, WrViewRow]
+
   def selectAll: Stream[ConnectionIO, WrViewRow]
 }

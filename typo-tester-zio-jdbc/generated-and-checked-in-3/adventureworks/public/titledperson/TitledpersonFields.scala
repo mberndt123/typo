@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package titledperson
+package adventureworks.public.titledperson
 
 import adventureworks.public.title.TitleFields
 import adventureworks.public.title.TitleId
@@ -16,7 +14,7 @@ import adventureworks.public.title_domain.TitleDomainRow
 import typo.dsl.ForeignKey
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.Structure.Relation
 
 trait TitledpersonFields {
@@ -33,22 +31,21 @@ trait TitledpersonFields {
 
 object TitledpersonFields {
   lazy val structure: Relation[TitledpersonFields, TitledpersonRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[TitledpersonFields, TitledpersonRow] {
-  
+
     override lazy val fields: TitledpersonFields = new TitledpersonFields {
       override def titleShort = Field[TitleDomainId, TitledpersonRow](_path, "title_short", None, Some("text"), x => x.titleShort, (row, value) => row.copy(titleShort = value))
       override def title = Field[TitleId, TitledpersonRow](_path, "title", None, None, x => x.title, (row, value) => row.copy(title = value))
       override def name = Field[String, TitledpersonRow](_path, "name", None, None, x => x.name, (row, value) => row.copy(name = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, TitledpersonRow]] =
-      List[FieldLikeNoHkt[?, TitledpersonRow]](fields.titleShort, fields.title, fields.name)
-  
+
+    override lazy val columns: List[FieldLike[?, TitledpersonRow]] =
+      List[FieldLike[?, TitledpersonRow]](fields.titleShort, fields.title, fields.name)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

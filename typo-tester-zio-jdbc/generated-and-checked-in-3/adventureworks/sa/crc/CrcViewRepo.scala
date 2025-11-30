@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package crc
+package adventureworks.sa.crc
 
 import typo.dsl.SelectBuilder
 import zio.jdbc.ZConnection
@@ -13,5 +11,6 @@ import zio.stream.ZStream
 
 trait CrcViewRepo {
   def select: SelectBuilder[CrcViewFields, CrcViewRow]
+
   def selectAll: ZStream[ZConnection, Throwable, CrcViewRow]
 }

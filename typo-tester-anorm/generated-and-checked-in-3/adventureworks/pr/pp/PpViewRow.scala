@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pp
+package adventureworks.pr.pp
 
 import adventureworks.customtypes.TypoBytea
 import adventureworks.customtypes.TypoLocalDateTime
@@ -24,59 +22,67 @@ import scala.util.Try
 
 /** View: pr.pp */
 case class PpViewRow(
-  /** Points to [[production.productphoto.ProductphotoRow.productphotoid]] */
+  /** Points to [[adventureworks.production.productphoto.ProductphotoRow.productphotoid]] */
   id: ProductphotoId,
-  /** Points to [[production.productphoto.ProductphotoRow.productphotoid]] */
+  /** Points to [[adventureworks.production.productphoto.ProductphotoRow.productphotoid]] */
   productphotoid: ProductphotoId,
-  /** Points to [[production.productphoto.ProductphotoRow.thumbnailphoto]] */
+  /** Points to [[adventureworks.production.productphoto.ProductphotoRow.thumbnailphoto]] */
   thumbnailphoto: Option[TypoBytea],
-  /** Points to [[production.productphoto.ProductphotoRow.thumbnailphotofilename]] */
+  /** Points to [[adventureworks.production.productphoto.ProductphotoRow.thumbnailphotofilename]] */
   thumbnailphotofilename: Option[/* max 50 chars */ String],
-  /** Points to [[production.productphoto.ProductphotoRow.largephoto]] */
+  /** Points to [[adventureworks.production.productphoto.ProductphotoRow.largephoto]] */
   largephoto: Option[TypoBytea],
-  /** Points to [[production.productphoto.ProductphotoRow.largephotofilename]] */
+  /** Points to [[adventureworks.production.productphoto.ProductphotoRow.largephotofilename]] */
   largephotofilename: Option[/* max 50 chars */ String],
-  /** Points to [[production.productphoto.ProductphotoRow.modifieddate]] */
+  /** Points to [[adventureworks.production.productphoto.ProductphotoRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object PpViewRow {
-  given reads: Reads[PpViewRow] = Reads[PpViewRow](json => JsResult.fromTry(
-      Try(
-        PpViewRow(
-          id = json.\("id").as(ProductphotoId.reads),
-          productphotoid = json.\("productphotoid").as(ProductphotoId.reads),
-          thumbnailphoto = json.\("thumbnailphoto").toOption.map(_.as(TypoBytea.reads)),
-          thumbnailphotofilename = json.\("thumbnailphotofilename").toOption.map(_.as(Reads.StringReads)),
-          largephoto = json.\("largephoto").toOption.map(_.as(TypoBytea.reads)),
-          largephotofilename = json.\("largephotofilename").toOption.map(_.as(Reads.StringReads)),
-          modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+  given reads: Reads[PpViewRow] = {
+    Reads[PpViewRow](json => JsResult.fromTry(
+        Try(
+          PpViewRow(
+            id = json.\("id").as(ProductphotoId.reads),
+            productphotoid = json.\("productphotoid").as(ProductphotoId.reads),
+            thumbnailphoto = json.\("thumbnailphoto").toOption.map(_.as(TypoBytea.reads)),
+            thumbnailphotofilename = json.\("thumbnailphotofilename").toOption.map(_.as(Reads.StringReads)),
+            largephoto = json.\("largephoto").toOption.map(_.as(TypoBytea.reads)),
+            largephotofilename = json.\("largephotofilename").toOption.map(_.as(Reads.StringReads)),
+            modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[PpViewRow] = RowParser[PpViewRow] { row =>
-    Success(
-      PpViewRow(
-        id = row(idx + 0)(using ProductphotoId.column),
-        productphotoid = row(idx + 1)(using ProductphotoId.column),
-        thumbnailphoto = row(idx + 2)(using Column.columnToOption(using TypoBytea.column)),
-        thumbnailphotofilename = row(idx + 3)(using Column.columnToOption(using Column.columnToString)),
-        largephoto = row(idx + 4)(using Column.columnToOption(using TypoBytea.column)),
-        largephotofilename = row(idx + 5)(using Column.columnToOption(using Column.columnToString)),
-        modifieddate = row(idx + 6)(using TypoLocalDateTime.column)
-      )
+      ),
     )
   }
-  given writes: OWrites[PpViewRow] = OWrites[PpViewRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "id" -> ProductphotoId.writes.writes(o.id),
-      "productphotoid" -> ProductphotoId.writes.writes(o.productphotoid),
-      "thumbnailphoto" -> Writes.OptionWrites(using TypoBytea.writes).writes(o.thumbnailphoto),
-      "thumbnailphotofilename" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.thumbnailphotofilename),
-      "largephoto" -> Writes.OptionWrites(using TypoBytea.writes).writes(o.largephoto),
-      "largephotofilename" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.largephotofilename),
-      "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
-    ))
-  )
+
+  def rowParser(idx: Int): RowParser[PpViewRow] = {
+    RowParser[PpViewRow] { row =>
+      Success(
+        PpViewRow(
+          id = row(idx + 0)(using ProductphotoId.column),
+          productphotoid = row(idx + 1)(using ProductphotoId.column),
+          thumbnailphoto = row(idx + 2)(using Column.columnToOption(using TypoBytea.column)),
+          thumbnailphotofilename = row(idx + 3)(using Column.columnToOption(using Column.columnToString)),
+          largephoto = row(idx + 4)(using Column.columnToOption(using TypoBytea.column)),
+          largephotofilename = row(idx + 5)(using Column.columnToOption(using Column.columnToString)),
+          modifieddate = row(idx + 6)(using TypoLocalDateTime.column)
+        )
+      )
+    }
+  }
+
+  given writes: OWrites[PpViewRow] = {
+    OWrites[PpViewRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "id" -> ProductphotoId.writes.writes(o.id),
+        "productphotoid" -> ProductphotoId.writes.writes(o.productphotoid),
+        "thumbnailphoto" -> Writes.OptionWrites(using TypoBytea.writes).writes(o.thumbnailphoto),
+        "thumbnailphotofilename" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.thumbnailphotofilename),
+        "largephoto" -> Writes.OptionWrites(using TypoBytea.writes).writes(o.largephoto),
+        "largephotofilename" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.largephotofilename),
+        "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
+      ))
+    )
+  }
 }

@@ -3,16 +3,14 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pe
-package cr
+package adventureworks.pe.cr
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.person.countryregion.CountryregionId
 import adventureworks.public.Name
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.Structure.Relation
 
 trait CrViewFields {
@@ -23,22 +21,21 @@ trait CrViewFields {
 
 object CrViewFields {
   lazy val structure: Relation[CrViewFields, CrViewRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[CrViewFields, CrViewRow] {
-  
+
     override lazy val fields: CrViewFields = new CrViewFields {
       override def countryregioncode = Field[CountryregionId, CrViewRow](_path, "countryregioncode", None, None, x => x.countryregioncode, (row, value) => row.copy(countryregioncode = value))
       override def name = Field[Name, CrViewRow](_path, "name", None, None, x => x.name, (row, value) => row.copy(name = value))
       override def modifieddate = Field[TypoLocalDateTime, CrViewRow](_path, "modifieddate", Some("text"), None, x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, CrViewRow]] =
-      List[FieldLikeNoHkt[?, CrViewRow]](fields.countryregioncode, fields.name, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, CrViewRow]] =
+      List[FieldLike[?, CrViewRow]](fields.countryregioncode, fields.name, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sales
-package personcreditcard
+package adventureworks.sales.personcreditcard
 
 import adventureworks.person.businessentity.BusinessentityId
 import adventureworks.userdefined.CustomCreditcardId
@@ -17,8 +15,9 @@ case class PersoncreditcardId(
   businessentityid: BusinessentityId,
   creditcardid: /* user-picked */ CustomCreditcardId
 )
+
 object PersoncreditcardId {
   given decoder: Decoder[PersoncreditcardId] = Decoder.forProduct2[PersoncreditcardId, BusinessentityId, /* user-picked */ CustomCreditcardId]("businessentityid", "creditcardid")(PersoncreditcardId.apply)(using BusinessentityId.decoder, CustomCreditcardId.decoder)
+
   given encoder: Encoder[PersoncreditcardId] = Encoder.forProduct2[PersoncreditcardId, BusinessentityId, /* user-picked */ CustomCreditcardId]("businessentityid", "creditcardid")(x => (x.businessentityid, x.creditcardid))(using BusinessentityId.encoder, CustomCreditcardId.encoder)
-  given ordering: Ordering[PersoncreditcardId] = Ordering.by(x => (x.businessentityid, x.creditcardid))
 }

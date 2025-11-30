@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package test_sak_soknadsalternativ
+package adventureworks.public.test_sak_soknadsalternativ
 
 import adventureworks.public.test_utdanningstilbud.TestUtdanningstilbudId
 import play.api.libs.json.JsObject
@@ -22,25 +20,31 @@ case class TestSakSoknadsalternativId(
   organisasjonskodeSaksbehandler: String,
   utdanningsmulighetKode: String
 )
+
 object TestSakSoknadsalternativId {
-  def from(TestUtdanningstilbudId: TestUtdanningstilbudId, organisasjonskodeSaksbehandler: String): TestSakSoknadsalternativId = TestSakSoknadsalternativId(
-    organisasjonskodeSaksbehandler = organisasjonskodeSaksbehandler,
-    utdanningsmulighetKode = TestUtdanningstilbudId.utdanningsmulighetKode
-  )
-  implicit lazy val ordering: Ordering[TestSakSoknadsalternativId] = Ordering.by(x => (x.organisasjonskodeSaksbehandler, x.utdanningsmulighetKode))
-  implicit lazy val reads: Reads[TestSakSoknadsalternativId] = Reads[TestSakSoknadsalternativId](json => JsResult.fromTry(
-      Try(
-        TestSakSoknadsalternativId(
-          organisasjonskodeSaksbehandler = json.\("organisasjonskode_saksbehandler").as(Reads.StringReads),
-          utdanningsmulighetKode = json.\("utdanningsmulighet_kode").as(Reads.StringReads)
+  def from(
+    TestUtdanningstilbudId: TestUtdanningstilbudId,
+    organisasjonskodeSaksbehandler: String
+  ): TestSakSoknadsalternativId = new TestSakSoknadsalternativId(organisasjonskodeSaksbehandler = organisasjonskodeSaksbehandler, utdanningsmulighetKode = TestUtdanningstilbudId.utdanningsmulighetKode)
+
+  implicit lazy val reads: Reads[TestSakSoknadsalternativId] = {
+    Reads[TestSakSoknadsalternativId](json => JsResult.fromTry(
+        Try(
+          TestSakSoknadsalternativId(
+            organisasjonskodeSaksbehandler = json.\("organisasjonskode_saksbehandler").as(Reads.StringReads),
+            utdanningsmulighetKode = json.\("utdanningsmulighet_kode").as(Reads.StringReads)
+          )
         )
-      )
-    ),
-  )
-  implicit lazy val writes: OWrites[TestSakSoknadsalternativId] = OWrites[TestSakSoknadsalternativId](o =>
-    new JsObject(ListMap[String, JsValue](
-      "organisasjonskode_saksbehandler" -> Writes.StringWrites.writes(o.organisasjonskodeSaksbehandler),
-      "utdanningsmulighet_kode" -> Writes.StringWrites.writes(o.utdanningsmulighetKode)
-    ))
-  )
+      ),
+    )
+  }
+
+  implicit lazy val writes: OWrites[TestSakSoknadsalternativId] = {
+    OWrites[TestSakSoknadsalternativId](o =>
+      new JsObject(ListMap[String, JsValue](
+        "organisasjonskode_saksbehandler" -> Writes.StringWrites.writes(o.organisasjonskodeSaksbehandler),
+        "utdanningsmulighet_kode" -> Writes.StringWrites.writes(o.utdanningsmulighetKode)
+      ))
+    )
+  }
 }

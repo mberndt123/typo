@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package productmodelillustration
+package adventureworks.production.productmodelillustration
 
 import adventureworks.production.illustration.IllustrationId
 import adventureworks.production.productmodel.ProductmodelId
@@ -17,8 +15,9 @@ case class ProductmodelillustrationId(
   productmodelid: ProductmodelId,
   illustrationid: IllustrationId
 )
+
 object ProductmodelillustrationId {
   given decoder: Decoder[ProductmodelillustrationId] = Decoder.forProduct2[ProductmodelillustrationId, ProductmodelId, IllustrationId]("productmodelid", "illustrationid")(ProductmodelillustrationId.apply)(using ProductmodelId.decoder, IllustrationId.decoder)
+
   given encoder: Encoder[ProductmodelillustrationId] = Encoder.forProduct2[ProductmodelillustrationId, ProductmodelId, IllustrationId]("productmodelid", "illustrationid")(x => (x.productmodelid, x.illustrationid))(using ProductmodelId.encoder, IllustrationId.encoder)
-  given ordering: Ordering[ProductmodelillustrationId] = Ordering.by(x => (x.productmodelid, x.illustrationid))
 }

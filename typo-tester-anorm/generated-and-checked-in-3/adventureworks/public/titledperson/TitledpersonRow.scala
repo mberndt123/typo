@@ -3,10 +3,9 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package titledperson
+package adventureworks.public.titledperson
 
+import adventureworks.Text
 import adventureworks.public.title.TitleId
 import adventureworks.public.title_domain.TitleDomainId
 import anorm.Column
@@ -23,45 +22,56 @@ import scala.util.Try
 
 /** Table: public.titledperson */
 case class TitledpersonRow(
-  /** Points to [[title_domain.TitleDomainRow.code]] */
+  /** Points to [[adventureworks.public.title_domain.TitleDomainRow.code]] */
   titleShort: TitleDomainId,
-  /** Points to [[title.TitleRow.code]] */
+  /** Points to [[adventureworks.public.title.TitleRow.code]] */
   title: TitleId,
   name: String
 )
 
 object TitledpersonRow {
-  given reads: Reads[TitledpersonRow] = Reads[TitledpersonRow](json => JsResult.fromTry(
-      Try(
-        TitledpersonRow(
-          titleShort = json.\("title_short").as(TitleDomainId.reads),
-          title = json.\("title").as(TitleId.reads),
-          name = json.\("name").as(Reads.StringReads)
+  given pgText: Text[TitledpersonRow] = {
+    Text.instance[TitledpersonRow]{ (row, sb) =>
+      TitleDomainId.pgText.unsafeEncode(row.titleShort, sb)
+      sb.append(Text.DELIMETER)
+      TitleId.pgText.unsafeEncode(row.title, sb)
+      sb.append(Text.DELIMETER)
+      Text.stringInstance.unsafeEncode(row.name, sb)
+    }
+  }
+
+  given reads: Reads[TitledpersonRow] = {
+    Reads[TitledpersonRow](json => JsResult.fromTry(
+        Try(
+          TitledpersonRow(
+            titleShort = json.\("title_short").as(TitleDomainId.reads),
+            title = json.\("title").as(TitleId.reads),
+            name = json.\("name").as(Reads.StringReads)
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[TitledpersonRow] = RowParser[TitledpersonRow] { row =>
-    Success(
-      TitledpersonRow(
-        titleShort = row(idx + 0)(using TitleDomainId.column),
-        title = row(idx + 1)(using TitleId.column),
-        name = row(idx + 2)(using Column.columnToString)
-      )
+      ),
     )
   }
-  given text: Text[TitledpersonRow] = Text.instance[TitledpersonRow]{ (row, sb) =>
-    TitleDomainId.text.unsafeEncode(row.titleShort, sb)
-    sb.append(Text.DELIMETER)
-    TitleId.text.unsafeEncode(row.title, sb)
-    sb.append(Text.DELIMETER)
-    Text.stringInstance.unsafeEncode(row.name, sb)
+
+  def rowParser(idx: Int): RowParser[TitledpersonRow] = {
+    RowParser[TitledpersonRow] { row =>
+      Success(
+        TitledpersonRow(
+          titleShort = row(idx + 0)(using TitleDomainId.column),
+          title = row(idx + 1)(using TitleId.column),
+          name = row(idx + 2)(using Column.columnToString)
+        )
+      )
+    }
   }
-  given writes: OWrites[TitledpersonRow] = OWrites[TitledpersonRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "title_short" -> TitleDomainId.writes.writes(o.titleShort),
-      "title" -> TitleId.writes.writes(o.title),
-      "name" -> Writes.StringWrites.writes(o.name)
-    ))
-  )
+
+  given writes: OWrites[TitledpersonRow] = {
+    OWrites[TitledpersonRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "title_short" -> TitleDomainId.writes.writes(o.titleShort),
+        "title" -> TitleId.writes.writes(o.title),
+        "name" -> Writes.StringWrites.writes(o.name)
+      ))
+    )
+  }
 }

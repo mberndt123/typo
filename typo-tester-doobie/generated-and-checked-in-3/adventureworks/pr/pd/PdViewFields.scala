@@ -3,16 +3,14 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pd
+package adventureworks.pr.pd
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoUUID
 import adventureworks.production.productdescription.ProductdescriptionId
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.Structure.Relation
 
 trait PdViewFields {
@@ -25,11 +23,11 @@ trait PdViewFields {
 
 object PdViewFields {
   lazy val structure: Relation[PdViewFields, PdViewRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[PdViewFields, PdViewRow] {
-  
+
     override lazy val fields: PdViewFields = new PdViewFields {
       override def id = Field[ProductdescriptionId, PdViewRow](_path, "id", None, None, x => x.id, (row, value) => row.copy(id = value))
       override def productdescriptionid = Field[ProductdescriptionId, PdViewRow](_path, "productdescriptionid", None, None, x => x.productdescriptionid, (row, value) => row.copy(productdescriptionid = value))
@@ -37,12 +35,11 @@ object PdViewFields {
       override def rowguid = Field[TypoUUID, PdViewRow](_path, "rowguid", None, None, x => x.rowguid, (row, value) => row.copy(rowguid = value))
       override def modifieddate = Field[TypoLocalDateTime, PdViewRow](_path, "modifieddate", Some("text"), None, x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, PdViewRow]] =
-      List[FieldLikeNoHkt[?, PdViewRow]](fields.id, fields.productdescriptionid, fields.description, fields.rowguid, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, PdViewRow]] =
+      List[FieldLike[?, PdViewRow]](fields.id, fields.productdescriptionid, fields.description, fields.rowguid, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

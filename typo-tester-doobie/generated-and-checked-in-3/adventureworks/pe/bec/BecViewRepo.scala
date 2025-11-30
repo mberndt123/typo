@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pe
-package bec
+package adventureworks.pe.bec
 
 import doobie.free.connection.ConnectionIO
 import fs2.Stream
@@ -13,5 +11,6 @@ import typo.dsl.SelectBuilder
 
 trait BecViewRepo {
   def select: SelectBuilder[BecViewFields, BecViewRow]
+
   def selectAll: Stream[ConnectionIO, BecViewRow]
 }

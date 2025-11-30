@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package productcosthistory
+package adventureworks.production.productcosthistory
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.production.product.ProductId
@@ -17,8 +15,9 @@ case class ProductcosthistoryId(
   productid: ProductId,
   startdate: TypoLocalDateTime
 )
+
 object ProductcosthistoryId {
   given decoder: Decoder[ProductcosthistoryId] = Decoder.forProduct2[ProductcosthistoryId, ProductId, TypoLocalDateTime]("productid", "startdate")(ProductcosthistoryId.apply)(using ProductId.decoder, TypoLocalDateTime.decoder)
+
   given encoder: Encoder[ProductcosthistoryId] = Encoder.forProduct2[ProductcosthistoryId, ProductId, TypoLocalDateTime]("productid", "startdate")(x => (x.productid, x.startdate))(using ProductId.encoder, TypoLocalDateTime.encoder)
-  given ordering(using O0: Ordering[TypoLocalDateTime]): Ordering[ProductcosthistoryId] = Ordering.by(x => (x.productid, x.startdate))
 }

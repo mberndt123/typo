@@ -3,14 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package hr
-package e
+package adventureworks.hr.e
 
 import java.sql.Connection
 import typo.dsl.SelectBuilder
 
 trait EViewRepo {
   def select: SelectBuilder[EViewFields, EViewRow]
+
   def selectAll(using c: Connection): List[EViewRow]
 }

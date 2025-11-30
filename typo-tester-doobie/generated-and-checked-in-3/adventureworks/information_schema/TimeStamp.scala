@@ -3,8 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package information_schema
+package adventureworks.information_schema
 
 import adventureworks.customtypes.TypoInstant
 import doobie.postgres.Text
@@ -15,20 +14,29 @@ import io.circe.Encoder
 import typo.dsl.Bijection
 
 /** Domain `information_schema.time_stamp`
-  * No constraint
-  */
+ * No constraint
+ */
 case class TimeStamp(value: TypoInstant)
+
 object TimeStamp {
   given arrayGet: Get[Array[TimeStamp]] = TypoInstant.arrayGet.map(_.map(TimeStamp.apply))
+
   given arrayPut: Put[Array[TimeStamp]] = TypoInstant.arrayPut.contramap(_.map(_.value))
-  given bijection: Bijection[TimeStamp, TypoInstant] = Bijection[TimeStamp, TypoInstant](_.value)(TimeStamp.apply)
-  given decoder: Decoder[TimeStamp] = summon[Decoder[TypoInstant]].map(TimeStamp.apply)
-  given encoder: Encoder[TimeStamp] = summon[Encoder[TypoInstant]].contramap(_.value)
+
+  given bijection: Bijection[TimeStamp, TypoInstant] = Bijection.apply[TimeStamp, TypoInstant](_.value)(TimeStamp.apply)
+
+  given decoder: Decoder[TimeStamp] = TypoInstant.decoder.map(TimeStamp.apply)
+
+  given encoder: Encoder[TimeStamp] = TypoInstant.encoder.contramap(_.value)
+
   given get: Get[TimeStamp] = TypoInstant.get.map(TimeStamp.apply)
-  given ordering(using O0: Ordering[TypoInstant]): Ordering[TimeStamp] = Ordering.by(_.value)
-  given put: Put[TimeStamp] = TypoInstant.put.contramap(_.value)
-  given text: Text[TimeStamp] = new Text[TimeStamp] {
-    override def unsafeEncode(v: TimeStamp, sb: StringBuilder): Unit = TypoInstant.text.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: TimeStamp, sb: StringBuilder): Unit = TypoInstant.text.unsafeArrayEncode(v.value, sb)
+
+  given pgText: Text[TimeStamp] = {
+    new Text[TimeStamp] {
+      override def unsafeEncode(v: TimeStamp, sb: StringBuilder): Unit = TypoInstant.pgText.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: TimeStamp, sb: StringBuilder): Unit = TypoInstant.pgText.unsafeArrayEncode(v.value, sb)
+    }
   }
+
+  given put: Put[TimeStamp] = TypoInstant.put.contramap(_.value)
 }

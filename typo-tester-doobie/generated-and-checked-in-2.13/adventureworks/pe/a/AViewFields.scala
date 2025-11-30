@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pe
-package a
+package adventureworks.pe.a
 
 import adventureworks.customtypes.TypoBytea
 import adventureworks.customtypes.TypoLocalDateTime
@@ -14,7 +12,7 @@ import adventureworks.person.address.AddressId
 import adventureworks.person.stateprovince.StateprovinceId
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.OptField
 import typo.dsl.Structure.Relation
 
@@ -33,11 +31,11 @@ trait AViewFields {
 
 object AViewFields {
   lazy val structure: Relation[AViewFields, AViewRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[AViewFields, AViewRow] {
-  
+
     override lazy val fields: AViewFields = new AViewFields {
       override def id = Field[AddressId, AViewRow](_path, "id", None, None, x => x.id, (row, value) => row.copy(id = value))
       override def addressid = Field[AddressId, AViewRow](_path, "addressid", None, None, x => x.addressid, (row, value) => row.copy(addressid = value))
@@ -50,12 +48,11 @@ object AViewFields {
       override def rowguid = Field[TypoUUID, AViewRow](_path, "rowguid", None, None, x => x.rowguid, (row, value) => row.copy(rowguid = value))
       override def modifieddate = Field[TypoLocalDateTime, AViewRow](_path, "modifieddate", Some("text"), None, x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, AViewRow]] =
-      List[FieldLikeNoHkt[?, AViewRow]](fields.id, fields.addressid, fields.addressline1, fields.addressline2, fields.city, fields.stateprovinceid, fields.postalcode, fields.spatiallocation, fields.rowguid, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, AViewRow]] =
+      List[FieldLike[?, AViewRow]](fields.id, fields.addressid, fields.addressline1, fields.addressline2, fields.city, fields.stateprovinceid, fields.postalcode, fields.spatiallocation, fields.rowguid, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

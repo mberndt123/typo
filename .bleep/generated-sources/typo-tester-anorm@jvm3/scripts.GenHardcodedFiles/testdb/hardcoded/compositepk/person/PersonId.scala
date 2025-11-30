@@ -3,10 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN
  */
-package testdb
-package hardcoded
-package compositepk
-package person
+package testdb.hardcoded.compositepk.person
 
 import play.api.libs.json.JsObject
 import play.api.libs.json.JsResult
@@ -22,21 +19,26 @@ case class PersonId(
   one: Long,
   two: Option[String]
 )
+
 object PersonId {
-  given ordering(using O0: Ordering[Option[String]]): Ordering[PersonId] = Ordering.by(x => (x.one, x.two))
-  given reads: Reads[PersonId] = Reads[PersonId](json => JsResult.fromTry(
-      Try(
-        PersonId(
-          one = json.\("one").as(Reads.LongReads),
-          two = json.\("two").toOption.map(_.as(Reads.StringReads))
+  given reads: Reads[PersonId] = {
+    Reads[PersonId](json => JsResult.fromTry(
+        Try(
+          PersonId(
+            one = json.\("one").as(Reads.LongReads),
+            two = json.\("two").toOption.map(_.as(Reads.StringReads))
+          )
         )
-      )
-    ),
-  )
-  given writes: OWrites[PersonId] = OWrites[PersonId](o =>
-    new JsObject(ListMap[String, JsValue](
-      "one" -> Writes.LongWrites.writes(o.one),
-      "two" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.two)
-    ))
-  )
+      ),
+    )
+  }
+
+  given writes: OWrites[PersonId] = {
+    OWrites[PersonId](o =>
+      new JsObject(ListMap[String, JsValue](
+        "one" -> Writes.LongWrites.writes(o.one),
+        "two" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.two)
+      ))
+    )
+  }
 }

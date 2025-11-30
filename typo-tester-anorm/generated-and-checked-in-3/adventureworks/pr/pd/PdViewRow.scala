@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pd
+package adventureworks.pr.pd
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoUUID
@@ -24,49 +22,57 @@ import scala.util.Try
 
 /** View: pr.pd */
 case class PdViewRow(
-  /** Points to [[production.productdescription.ProductdescriptionRow.productdescriptionid]] */
+  /** Points to [[adventureworks.production.productdescription.ProductdescriptionRow.productdescriptionid]] */
   id: ProductdescriptionId,
-  /** Points to [[production.productdescription.ProductdescriptionRow.productdescriptionid]] */
+  /** Points to [[adventureworks.production.productdescription.ProductdescriptionRow.productdescriptionid]] */
   productdescriptionid: ProductdescriptionId,
-  /** Points to [[production.productdescription.ProductdescriptionRow.description]] */
+  /** Points to [[adventureworks.production.productdescription.ProductdescriptionRow.description]] */
   description: /* max 400 chars */ String,
-  /** Points to [[production.productdescription.ProductdescriptionRow.rowguid]] */
+  /** Points to [[adventureworks.production.productdescription.ProductdescriptionRow.rowguid]] */
   rowguid: TypoUUID,
-  /** Points to [[production.productdescription.ProductdescriptionRow.modifieddate]] */
+  /** Points to [[adventureworks.production.productdescription.ProductdescriptionRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object PdViewRow {
-  given reads: Reads[PdViewRow] = Reads[PdViewRow](json => JsResult.fromTry(
-      Try(
-        PdViewRow(
-          id = json.\("id").as(ProductdescriptionId.reads),
-          productdescriptionid = json.\("productdescriptionid").as(ProductdescriptionId.reads),
-          description = json.\("description").as(Reads.StringReads),
-          rowguid = json.\("rowguid").as(TypoUUID.reads),
-          modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+  given reads: Reads[PdViewRow] = {
+    Reads[PdViewRow](json => JsResult.fromTry(
+        Try(
+          PdViewRow(
+            id = json.\("id").as(ProductdescriptionId.reads),
+            productdescriptionid = json.\("productdescriptionid").as(ProductdescriptionId.reads),
+            description = json.\("description").as(Reads.StringReads),
+            rowguid = json.\("rowguid").as(TypoUUID.reads),
+            modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[PdViewRow] = RowParser[PdViewRow] { row =>
-    Success(
-      PdViewRow(
-        id = row(idx + 0)(using ProductdescriptionId.column),
-        productdescriptionid = row(idx + 1)(using ProductdescriptionId.column),
-        description = row(idx + 2)(using Column.columnToString),
-        rowguid = row(idx + 3)(using TypoUUID.column),
-        modifieddate = row(idx + 4)(using TypoLocalDateTime.column)
-      )
+      ),
     )
   }
-  given writes: OWrites[PdViewRow] = OWrites[PdViewRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "id" -> ProductdescriptionId.writes.writes(o.id),
-      "productdescriptionid" -> ProductdescriptionId.writes.writes(o.productdescriptionid),
-      "description" -> Writes.StringWrites.writes(o.description),
-      "rowguid" -> TypoUUID.writes.writes(o.rowguid),
-      "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
-    ))
-  )
+
+  def rowParser(idx: Int): RowParser[PdViewRow] = {
+    RowParser[PdViewRow] { row =>
+      Success(
+        PdViewRow(
+          id = row(idx + 0)(using ProductdescriptionId.column),
+          productdescriptionid = row(idx + 1)(using ProductdescriptionId.column),
+          description = row(idx + 2)(using Column.columnToString),
+          rowguid = row(idx + 3)(using TypoUUID.column),
+          modifieddate = row(idx + 4)(using TypoLocalDateTime.column)
+        )
+      )
+    }
+  }
+
+  given writes: OWrites[PdViewRow] = {
+    OWrites[PdViewRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "id" -> ProductdescriptionId.writes.writes(o.id),
+        "productdescriptionid" -> ProductdescriptionId.writes.writes(o.productdescriptionid),
+        "description" -> Writes.StringWrites.writes(o.description),
+        "rowguid" -> TypoUUID.writes.writes(o.rowguid),
+        "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
+      ))
+    )
+  }
 }

@@ -3,21 +3,20 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package person_dynamic
+package adventureworks.person_dynamic
 
 import anorm.ParameterMetaData
 import anorm.ParameterValue
-import anorm.SqlStringInterpolation
 import anorm.ToStatement
 import java.sql.Connection
+import anorm.SqlStringInterpolation
 
 class PersonDynamicSqlRepoImpl extends PersonDynamicSqlRepo {
-  override def apply(firstName: Option[String])(using c: Connection): List[PersonDynamicSqlRow] = {
+  def apply(firstName: Option[String])(using c: Connection): List[PersonDynamicSqlRow] = {
     val sql =
       SQL"""SELECT p.title, p.firstname, p.middlename, p.lastname
-            FROM person.person p
-            WHERE ${ParameterValue(firstName, null, ToStatement.optionToStatement(using ToStatement.stringToStatement, ParameterMetaData.StringParameterMetaData))}::text IS NULL OR p.firstname = ${ParameterValue(firstName, null, ToStatement.optionToStatement(using ToStatement.stringToStatement, ParameterMetaData.StringParameterMetaData))}
+      FROM person.person p
+      WHERE ${ParameterValue(firstName, null, ToStatement.optionToStatement(using ToStatement.stringToStatement, ParameterMetaData.StringParameterMetaData))}::text IS NULL OR p.firstname = ${ParameterValue(firstName, null, ToStatement.optionToStatement(using ToStatement.stringToStatement, ParameterMetaData.StringParameterMetaData))}
       """
     sql.as(PersonDynamicSqlRow.rowParser(1).*)
   }

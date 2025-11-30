@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pe
-package bec
+package adventureworks.pe.bec
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoUUID
@@ -23,54 +21,62 @@ import scala.util.Try
 
 /** View: pe.bec */
 case class BecViewRow(
-  /** Points to [[person.businessentitycontact.BusinessentitycontactRow.businessentityid]] */
+  /** Points to [[adventureworks.person.businessentitycontact.BusinessentitycontactRow.businessentityid]] */
   id: BusinessentityId,
-  /** Points to [[person.businessentitycontact.BusinessentitycontactRow.businessentityid]] */
+  /** Points to [[adventureworks.person.businessentitycontact.BusinessentitycontactRow.businessentityid]] */
   businessentityid: BusinessentityId,
-  /** Points to [[person.businessentitycontact.BusinessentitycontactRow.personid]] */
+  /** Points to [[adventureworks.person.businessentitycontact.BusinessentitycontactRow.personid]] */
   personid: BusinessentityId,
-  /** Points to [[person.businessentitycontact.BusinessentitycontactRow.contacttypeid]] */
+  /** Points to [[adventureworks.person.businessentitycontact.BusinessentitycontactRow.contacttypeid]] */
   contacttypeid: ContacttypeId,
-  /** Points to [[person.businessentitycontact.BusinessentitycontactRow.rowguid]] */
+  /** Points to [[adventureworks.person.businessentitycontact.BusinessentitycontactRow.rowguid]] */
   rowguid: TypoUUID,
-  /** Points to [[person.businessentitycontact.BusinessentitycontactRow.modifieddate]] */
+  /** Points to [[adventureworks.person.businessentitycontact.BusinessentitycontactRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object BecViewRow {
-  given reads: Reads[BecViewRow] = Reads[BecViewRow](json => JsResult.fromTry(
-      Try(
-        BecViewRow(
-          id = json.\("id").as(BusinessentityId.reads),
-          businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
-          personid = json.\("personid").as(BusinessentityId.reads),
-          contacttypeid = json.\("contacttypeid").as(ContacttypeId.reads),
-          rowguid = json.\("rowguid").as(TypoUUID.reads),
-          modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+  given reads: Reads[BecViewRow] = {
+    Reads[BecViewRow](json => JsResult.fromTry(
+        Try(
+          BecViewRow(
+            id = json.\("id").as(BusinessentityId.reads),
+            businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
+            personid = json.\("personid").as(BusinessentityId.reads),
+            contacttypeid = json.\("contacttypeid").as(ContacttypeId.reads),
+            rowguid = json.\("rowguid").as(TypoUUID.reads),
+            modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[BecViewRow] = RowParser[BecViewRow] { row =>
-    Success(
-      BecViewRow(
-        id = row(idx + 0)(using BusinessentityId.column),
-        businessentityid = row(idx + 1)(using BusinessentityId.column),
-        personid = row(idx + 2)(using BusinessentityId.column),
-        contacttypeid = row(idx + 3)(using ContacttypeId.column),
-        rowguid = row(idx + 4)(using TypoUUID.column),
-        modifieddate = row(idx + 5)(using TypoLocalDateTime.column)
-      )
+      ),
     )
   }
-  given writes: OWrites[BecViewRow] = OWrites[BecViewRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "id" -> BusinessentityId.writes.writes(o.id),
-      "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
-      "personid" -> BusinessentityId.writes.writes(o.personid),
-      "contacttypeid" -> ContacttypeId.writes.writes(o.contacttypeid),
-      "rowguid" -> TypoUUID.writes.writes(o.rowguid),
-      "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
-    ))
-  )
+
+  def rowParser(idx: Int): RowParser[BecViewRow] = {
+    RowParser[BecViewRow] { row =>
+      Success(
+        BecViewRow(
+          id = row(idx + 0)(using BusinessentityId.column),
+          businessentityid = row(idx + 1)(using BusinessentityId.column),
+          personid = row(idx + 2)(using BusinessentityId.column),
+          contacttypeid = row(idx + 3)(using ContacttypeId.column),
+          rowguid = row(idx + 4)(using TypoUUID.column),
+          modifieddate = row(idx + 5)(using TypoLocalDateTime.column)
+        )
+      )
+    }
+  }
+
+  given writes: OWrites[BecViewRow] = {
+    OWrites[BecViewRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "id" -> BusinessentityId.writes.writes(o.id),
+        "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
+        "personid" -> BusinessentityId.writes.writes(o.personid),
+        "contacttypeid" -> ContacttypeId.writes.writes(o.contacttypeid),
+        "rowguid" -> TypoUUID.writes.writes(o.rowguid),
+        "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
+      ))
+    )
+  }
 }

@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package title
+package adventureworks.public.title
 
 import doobie.postgres.Text
 import doobie.util.Read
@@ -14,28 +12,37 @@ import io.circe.Decoder
 import io.circe.Encoder
 
 /** Table: public.title
-    Primary key: code */
-case class TitleRow(
-  code: TitleId
-){
-   val id = code
- }
+ * Primary key: code
+ */
+case class TitleRow(code: TitleId) {
+  def id: TitleId = code
+}
 
 object TitleRow {
   given decoder: Decoder[TitleRow] = Decoder.forProduct1[TitleRow, TitleId]("code")(TitleRow.apply)(using TitleId.decoder)
+
   given encoder: Encoder[TitleRow] = Encoder.forProduct1[TitleRow, TitleId]("code")(x => (x.code))(using TitleId.encoder)
-  given read: Read[TitleRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(TitleId.get).asInstanceOf[Read[Any]]
-  ))(using scala.reflect.ClassTag.Any).map { arr =>
-    TitleRow(
-      code = arr(0).asInstanceOf[TitleId]
+
+  given pgText: Text[TitleRow] = {
+    Text.instance[TitleRow]{ (row, sb) =>
+      TitleId.pgText.unsafeEncode(row.code, sb)
+    }
+  }
+
+  given read: Read[TitleRow] = {
+    new Read.CompositeOfInstances(Array(
+      new Read.Single(TitleId.get).asInstanceOf[Read[Any]]
+    ))(using scala.reflect.ClassTag.Any).map { arr =>
+      TitleRow(
+        code = arr(0).asInstanceOf[TitleId]
+      )
+    }
+  }
+
+  given write: Write[TitleRow] = {
+    new Write.Composite[TitleRow](
+      List(new Write.Single(TitleId.put)),
+      a => List(a.code)
     )
   }
-  given text: Text[TitleRow] = Text.instance[TitleRow]{ (row, sb) =>
-    TitleId.text.unsafeEncode(row.code, sb)
-  }
-  given write: Write[TitleRow] = new Write.Composite[TitleRow](
-    List(new Write.Single(TitleId.put)),
-    a => List(a.code)
-  )
 }

@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pc
+package adventureworks.pr.pc
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoUUID
@@ -13,7 +11,7 @@ import adventureworks.production.productcategory.ProductcategoryId
 import adventureworks.public.Name
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.Structure.Relation
 
 trait PcViewFields {
@@ -26,11 +24,11 @@ trait PcViewFields {
 
 object PcViewFields {
   lazy val structure: Relation[PcViewFields, PcViewRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[PcViewFields, PcViewRow] {
-  
+
     override lazy val fields: PcViewFields = new PcViewFields {
       override def id = Field[ProductcategoryId, PcViewRow](_path, "id", None, None, x => x.id, (row, value) => row.copy(id = value))
       override def productcategoryid = Field[ProductcategoryId, PcViewRow](_path, "productcategoryid", None, None, x => x.productcategoryid, (row, value) => row.copy(productcategoryid = value))
@@ -38,12 +36,11 @@ object PcViewFields {
       override def rowguid = Field[TypoUUID, PcViewRow](_path, "rowguid", None, None, x => x.rowguid, (row, value) => row.copy(rowguid = value))
       override def modifieddate = Field[TypoLocalDateTime, PcViewRow](_path, "modifieddate", Some("text"), None, x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, PcViewRow]] =
-      List[FieldLikeNoHkt[?, PcViewRow]](fields.id, fields.productcategoryid, fields.name, fields.rowguid, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, PcViewRow]] =
+      List[FieldLike[?, PcViewRow]](fields.id, fields.productcategoryid, fields.name, fields.rowguid, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

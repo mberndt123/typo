@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pe
-package pp
+package adventureworks.pe.pp
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.person.businessentity.BusinessentityId
@@ -23,49 +21,57 @@ import scala.util.Try
 
 /** View: pe.pp */
 case class PpViewRow(
-  /** Points to [[person.personphone.PersonphoneRow.businessentityid]] */
+  /** Points to [[adventureworks.person.personphone.PersonphoneRow.businessentityid]] */
   id: BusinessentityId,
-  /** Points to [[person.personphone.PersonphoneRow.businessentityid]] */
+  /** Points to [[adventureworks.person.personphone.PersonphoneRow.businessentityid]] */
   businessentityid: BusinessentityId,
-  /** Points to [[person.personphone.PersonphoneRow.phonenumber]] */
+  /** Points to [[adventureworks.person.personphone.PersonphoneRow.phonenumber]] */
   phonenumber: Phone,
-  /** Points to [[person.personphone.PersonphoneRow.phonenumbertypeid]] */
+  /** Points to [[adventureworks.person.personphone.PersonphoneRow.phonenumbertypeid]] */
   phonenumbertypeid: PhonenumbertypeId,
-  /** Points to [[person.personphone.PersonphoneRow.modifieddate]] */
+  /** Points to [[adventureworks.person.personphone.PersonphoneRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object PpViewRow {
-  given reads: Reads[PpViewRow] = Reads[PpViewRow](json => JsResult.fromTry(
-      Try(
-        PpViewRow(
-          id = json.\("id").as(BusinessentityId.reads),
-          businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
-          phonenumber = json.\("phonenumber").as(Phone.reads),
-          phonenumbertypeid = json.\("phonenumbertypeid").as(PhonenumbertypeId.reads),
-          modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+  given reads: Reads[PpViewRow] = {
+    Reads[PpViewRow](json => JsResult.fromTry(
+        Try(
+          PpViewRow(
+            id = json.\("id").as(BusinessentityId.reads),
+            businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
+            phonenumber = json.\("phonenumber").as(Phone.reads),
+            phonenumbertypeid = json.\("phonenumbertypeid").as(PhonenumbertypeId.reads),
+            modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[PpViewRow] = RowParser[PpViewRow] { row =>
-    Success(
-      PpViewRow(
-        id = row(idx + 0)(using BusinessentityId.column),
-        businessentityid = row(idx + 1)(using BusinessentityId.column),
-        phonenumber = row(idx + 2)(using Phone.column),
-        phonenumbertypeid = row(idx + 3)(using PhonenumbertypeId.column),
-        modifieddate = row(idx + 4)(using TypoLocalDateTime.column)
-      )
+      ),
     )
   }
-  given writes: OWrites[PpViewRow] = OWrites[PpViewRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "id" -> BusinessentityId.writes.writes(o.id),
-      "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
-      "phonenumber" -> Phone.writes.writes(o.phonenumber),
-      "phonenumbertypeid" -> PhonenumbertypeId.writes.writes(o.phonenumbertypeid),
-      "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
-    ))
-  )
+
+  def rowParser(idx: Int): RowParser[PpViewRow] = {
+    RowParser[PpViewRow] { row =>
+      Success(
+        PpViewRow(
+          id = row(idx + 0)(using BusinessentityId.column),
+          businessentityid = row(idx + 1)(using BusinessentityId.column),
+          phonenumber = row(idx + 2)(using Phone.column),
+          phonenumbertypeid = row(idx + 3)(using PhonenumbertypeId.column),
+          modifieddate = row(idx + 4)(using TypoLocalDateTime.column)
+        )
+      )
+    }
+  }
+
+  given writes: OWrites[PpViewRow] = {
+    OWrites[PpViewRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "id" -> BusinessentityId.writes.writes(o.id),
+        "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
+        "phonenumber" -> Phone.writes.writes(o.phonenumber),
+        "phonenumbertypeid" -> PhonenumbertypeId.writes.writes(o.phonenumbertypeid),
+        "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
+      ))
+    )
+  }
 }

@@ -3,14 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pe
-package at
+package adventureworks.pe.at
 
 import java.sql.Connection
 import typo.dsl.SelectBuilder
 
 trait AtViewRepo {
   def select: SelectBuilder[AtViewFields, AtViewRow]
+
   def selectAll(implicit c: Connection): List[AtViewRow]
 }

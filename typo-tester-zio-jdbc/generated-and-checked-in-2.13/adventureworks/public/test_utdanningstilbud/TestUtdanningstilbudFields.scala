@@ -3,20 +3,19 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package test_utdanningstilbud
+package adventureworks.public.test_utdanningstilbud
 
 import adventureworks.public.test_organisasjon.TestOrganisasjonFields
 import adventureworks.public.test_organisasjon.TestOrganisasjonId
 import adventureworks.public.test_organisasjon.TestOrganisasjonRow
 import typo.dsl.ForeignKey
+import typo.dsl.PGType
 import typo.dsl.Path
-import typo.dsl.Required
 import typo.dsl.SqlExpr
 import typo.dsl.SqlExpr.CompositeIn
 import typo.dsl.SqlExpr.CompositeIn.TuplePart
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.Const.As.as
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.IdField
 import typo.dsl.Structure.Relation
 
@@ -26,30 +25,29 @@ trait TestUtdanningstilbudFields {
   def fkTestOrganisasjon: ForeignKey[TestOrganisasjonFields, TestOrganisasjonRow] =
     ForeignKey[TestOrganisasjonFields, TestOrganisasjonRow]("public.test_utdanningstilbud_organisasjonskode_fkey", Nil)
       .withColumnPair(organisasjonskode, _.organisasjonskode)
-  def compositeIdIs(compositeId: TestUtdanningstilbudId): SqlExpr[Boolean, Required] =
+  def compositeIdIs(compositeId: TestUtdanningstilbudId): SqlExpr[Boolean] =
     organisasjonskode.isEqual(compositeId.organisasjonskode).and(utdanningsmulighetKode.isEqual(compositeId.utdanningsmulighetKode))
-  def compositeIdIn(compositeIds: Array[TestUtdanningstilbudId]): SqlExpr[Boolean, Required] =
-    new CompositeIn(compositeIds)(TuplePart(organisasjonskode)(_.organisasjonskode), TuplePart(utdanningsmulighetKode)(_.utdanningsmulighetKode))
-  
+  def compositeIdIn(compositeIds: Array[TestUtdanningstilbudId]): SqlExpr[Boolean] =
+    new CompositeIn(compositeIds)(TuplePart[TestUtdanningstilbudId](organisasjonskode)(_.organisasjonskode)(using as[Array[TestOrganisasjonId]](TestOrganisasjonId.arrayJdbcEncoder, PGType.forArray(TestOrganisasjonId.pgType)), implicitly), TuplePart[TestUtdanningstilbudId](utdanningsmulighetKode)(_.utdanningsmulighetKode)(using as[Array[String]](adventureworks.StringArrayEncoder, PGType.forArray(PGType.PGTypeString)), implicitly))
+
 }
 
 object TestUtdanningstilbudFields {
   lazy val structure: Relation[TestUtdanningstilbudFields, TestUtdanningstilbudRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[TestUtdanningstilbudFields, TestUtdanningstilbudRow] {
-  
+
     override lazy val fields: TestUtdanningstilbudFields = new TestUtdanningstilbudFields {
       override def organisasjonskode = IdField[TestOrganisasjonId, TestUtdanningstilbudRow](_path, "organisasjonskode", None, None, x => x.organisasjonskode, (row, value) => row.copy(organisasjonskode = value))
       override def utdanningsmulighetKode = IdField[String, TestUtdanningstilbudRow](_path, "utdanningsmulighet_kode", None, None, x => x.utdanningsmulighetKode, (row, value) => row.copy(utdanningsmulighetKode = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, TestUtdanningstilbudRow]] =
-      List[FieldLikeNoHkt[?, TestUtdanningstilbudRow]](fields.organisasjonskode, fields.utdanningsmulighetKode)
-  
+
+    override lazy val columns: List[FieldLike[?, TestUtdanningstilbudRow]] =
+      List[FieldLike[?, TestUtdanningstilbudRow]](fields.organisasjonskode, fields.utdanningsmulighetKode)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

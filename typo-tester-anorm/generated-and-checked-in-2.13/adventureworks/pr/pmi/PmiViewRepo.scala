@@ -3,14 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pmi
+package adventureworks.pr.pmi
 
 import java.sql.Connection
 import typo.dsl.SelectBuilder
 
 trait PmiViewRepo {
   def select: SelectBuilder[PmiViewFields, PmiViewRow]
+
   def selectAll(implicit c: Connection): List[PmiViewRow]
 }

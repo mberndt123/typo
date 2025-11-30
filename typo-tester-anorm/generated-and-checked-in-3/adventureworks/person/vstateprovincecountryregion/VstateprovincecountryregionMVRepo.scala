@@ -3,14 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package person
-package vstateprovincecountryregion
+package adventureworks.person.vstateprovincecountryregion
 
 import java.sql.Connection
 import typo.dsl.SelectBuilder
 
 trait VstateprovincecountryregionMVRepo {
   def select: SelectBuilder[VstateprovincecountryregionMVFields, VstateprovincecountryregionMVRow]
+
   def selectAll(using c: Connection): List[VstateprovincecountryregionMVRow]
 }

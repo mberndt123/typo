@@ -3,10 +3,9 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package production
-package unitmeasure
+package adventureworks.production.unitmeasure
 
+import adventureworks.Text
 import anorm.Column
 import anorm.ParameterMetaData
 import anorm.ToStatement
@@ -15,22 +14,34 @@ import play.api.libs.json.Writes
 import typo.dsl.Bijection
 
 /** Type for the primary key of table `production.unitmeasure` */
-case class UnitmeasureId(value: /* bpchar, max 3 chars */ String) extends AnyVal
+case class UnitmeasureId(value: /* bpchar, max 3 chars */ String) extends scala.AnyVal
+
 object UnitmeasureId {
   given arrayColumn: Column[Array[UnitmeasureId]] = Column.columnToArray(using column, implicitly)
+
   given arrayToStatement: ToStatement[Array[UnitmeasureId]] = ToStatement.arrayToParameter(using ParameterMetaData.StringParameterMetaData).contramap(_.map(_.value))
-  given bijection: Bijection[UnitmeasureId, /* bpchar, max 3 chars */ String] = Bijection[UnitmeasureId, /* bpchar, max 3 chars */ String](_.value)(UnitmeasureId.apply)
+
+  given bijection: Bijection[UnitmeasureId, /* bpchar, max 3 chars */ String] = Bijection.apply[UnitmeasureId, /* bpchar, max 3 chars */ String](_.value)(UnitmeasureId.apply)
+
   given column: Column[UnitmeasureId] = Column.columnToString.map(UnitmeasureId.apply)
-  given ordering: Ordering[UnitmeasureId] = Ordering.by(_.value)
-  given parameterMetadata: ParameterMetaData[UnitmeasureId] = new ParameterMetaData[UnitmeasureId] {
-    override def sqlType: String = ParameterMetaData.StringParameterMetaData.sqlType
-    override def jdbcType: Int = ParameterMetaData.StringParameterMetaData.jdbcType
+
+  given parameterMetadata: ParameterMetaData[UnitmeasureId] = {
+    new ParameterMetaData[UnitmeasureId] {
+      override def sqlType: String = ParameterMetaData.StringParameterMetaData.sqlType
+      override def jdbcType: Int = ParameterMetaData.StringParameterMetaData.jdbcType
+    }
   }
+
+  given pgText: Text[UnitmeasureId] = {
+    new Text[UnitmeasureId] {
+      override def unsafeEncode(v: UnitmeasureId, sb: StringBuilder): Unit = Text.stringInstance.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: UnitmeasureId, sb: StringBuilder): Unit = Text.stringInstance.unsafeArrayEncode(v.value, sb)
+    }
+  }
+
   given reads: Reads[UnitmeasureId] = Reads.StringReads.map(UnitmeasureId.apply)
-  given text: Text[UnitmeasureId] = new Text[UnitmeasureId] {
-    override def unsafeEncode(v: UnitmeasureId, sb: StringBuilder): Unit = Text.stringInstance.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: UnitmeasureId, sb: StringBuilder): Unit = Text.stringInstance.unsafeArrayEncode(v.value, sb)
-  }
+
   given toStatement: ToStatement[UnitmeasureId] = ToStatement.stringToStatement.contramap(_.value)
+
   given writes: Writes[UnitmeasureId] = Writes.StringWrites.contramap(_.value)
 }

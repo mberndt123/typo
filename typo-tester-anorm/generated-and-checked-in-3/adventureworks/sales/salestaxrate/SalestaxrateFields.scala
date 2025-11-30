@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sales
-package salestaxrate
+package adventureworks.sales.salestaxrate
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoShort
@@ -17,7 +15,7 @@ import adventureworks.public.Name
 import typo.dsl.ForeignKey
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.IdField
 import typo.dsl.Structure.Relation
 
@@ -36,11 +34,11 @@ trait SalestaxrateFields {
 
 object SalestaxrateFields {
   lazy val structure: Relation[SalestaxrateFields, SalestaxrateRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[SalestaxrateFields, SalestaxrateRow] {
-  
+
     override lazy val fields: SalestaxrateFields = new SalestaxrateFields {
       override def salestaxrateid = IdField[SalestaxrateId, SalestaxrateRow](_path, "salestaxrateid", None, Some("int4"), x => x.salestaxrateid, (row, value) => row.copy(salestaxrateid = value))
       override def stateprovinceid = Field[StateprovinceId, SalestaxrateRow](_path, "stateprovinceid", None, Some("int4"), x => x.stateprovinceid, (row, value) => row.copy(stateprovinceid = value))
@@ -50,12 +48,11 @@ object SalestaxrateFields {
       override def rowguid = Field[TypoUUID, SalestaxrateRow](_path, "rowguid", None, Some("uuid"), x => x.rowguid, (row, value) => row.copy(rowguid = value))
       override def modifieddate = Field[TypoLocalDateTime, SalestaxrateRow](_path, "modifieddate", Some("text"), Some("timestamp"), x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, SalestaxrateRow]] =
-      List[FieldLikeNoHkt[?, SalestaxrateRow]](fields.salestaxrateid, fields.stateprovinceid, fields.taxtype, fields.taxrate, fields.name, fields.rowguid, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, SalestaxrateRow]] =
+      List[FieldLike[?, SalestaxrateRow]](fields.salestaxrateid, fields.stateprovinceid, fields.taxtype, fields.taxrate, fields.name, fields.rowguid, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

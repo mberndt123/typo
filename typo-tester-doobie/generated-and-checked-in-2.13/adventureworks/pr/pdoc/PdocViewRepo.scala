@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pdoc
+package adventureworks.pr.pdoc
 
 import doobie.free.connection.ConnectionIO
 import fs2.Stream
@@ -13,5 +11,6 @@ import typo.dsl.SelectBuilder
 
 trait PdocViewRepo {
   def select: SelectBuilder[PdocViewFields, PdocViewRow]
+
   def selectAll: Stream[ConnectionIO, PdocViewRow]
 }

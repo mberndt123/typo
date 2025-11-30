@@ -3,22 +3,18 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pe
-package pnt
+package adventureworks.pe.pnt
 
-import anorm.SqlStringInterpolation
 import java.sql.Connection
 import typo.dsl.SelectBuilder
-import typo.dsl.SelectBuilderSql
+import anorm.SqlStringInterpolation
 
 class PntViewRepoImpl extends PntViewRepo {
-  override def select: SelectBuilder[PntViewFields, PntViewRow] = {
-    SelectBuilderSql(""""pe"."pnt"""", PntViewFields.structure, PntViewRow.rowParser)
-  }
-  override def selectAll(implicit c: Connection): List[PntViewRow] = {
+  def select: SelectBuilder[PntViewFields, PntViewRow] = SelectBuilder.of(""""pe"."pnt"""", PntViewFields.structure, PntViewRow.rowParser)
+
+  def selectAll(implicit c: Connection): List[PntViewRow] = {
     SQL"""select "id", "phonenumbertypeid", "name", "modifieddate"::text
-          from "pe"."pnt"
-       """.as(PntViewRow.rowParser(1).*)
+    from "pe"."pnt"
+    """.as(PntViewRow.rowParser(1).*)
   }
 }

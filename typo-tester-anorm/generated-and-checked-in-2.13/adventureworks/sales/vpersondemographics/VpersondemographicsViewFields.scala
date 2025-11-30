@@ -3,16 +3,14 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sales
-package vpersondemographics
+package adventureworks.sales.vpersondemographics
 
 import adventureworks.customtypes.TypoLocalDate
 import adventureworks.customtypes.TypoMoney
 import adventureworks.person.businessentity.BusinessentityId
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.OptField
 import typo.dsl.Structure.Relation
 
@@ -34,11 +32,11 @@ trait VpersondemographicsViewFields {
 
 object VpersondemographicsViewFields {
   lazy val structure: Relation[VpersondemographicsViewFields, VpersondemographicsViewRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[VpersondemographicsViewFields, VpersondemographicsViewRow] {
-  
+
     override lazy val fields: VpersondemographicsViewFields = new VpersondemographicsViewFields {
       override def businessentityid = Field[BusinessentityId, VpersondemographicsViewRow](_path, "businessentityid", None, None, x => x.businessentityid, (row, value) => row.copy(businessentityid = value))
       override def totalpurchaseytd = OptField[TypoMoney, VpersondemographicsViewRow](_path, "totalpurchaseytd", Some("numeric"), None, x => x.totalpurchaseytd, (row, value) => row.copy(totalpurchaseytd = value))
@@ -54,12 +52,11 @@ object VpersondemographicsViewFields {
       override def homeownerflag = OptField[Boolean, VpersondemographicsViewRow](_path, "homeownerflag", None, None, x => x.homeownerflag, (row, value) => row.copy(homeownerflag = value))
       override def numbercarsowned = OptField[Int, VpersondemographicsViewRow](_path, "numbercarsowned", None, None, x => x.numbercarsowned, (row, value) => row.copy(numbercarsowned = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, VpersondemographicsViewRow]] =
-      List[FieldLikeNoHkt[?, VpersondemographicsViewRow]](fields.businessentityid, fields.totalpurchaseytd, fields.datefirstpurchase, fields.birthdate, fields.maritalstatus, fields.yearlyincome, fields.gender, fields.totalchildren, fields.numberchildrenathome, fields.education, fields.occupation, fields.homeownerflag, fields.numbercarsowned)
-  
+
+    override lazy val columns: List[FieldLike[?, VpersondemographicsViewRow]] =
+      List[FieldLike[?, VpersondemographicsViewRow]](fields.businessentityid, fields.totalpurchaseytd, fields.datefirstpurchase, fields.birthdate, fields.maritalstatus, fields.yearlyincome, fields.gender, fields.totalchildren, fields.numberchildrenathome, fields.education, fields.occupation, fields.homeownerflag, fields.numbercarsowned)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

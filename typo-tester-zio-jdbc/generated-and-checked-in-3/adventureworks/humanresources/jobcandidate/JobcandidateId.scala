@@ -3,10 +3,9 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package humanresources
-package jobcandidate
+package adventureworks.humanresources.jobcandidate
 
+import adventureworks.Text
 import typo.dsl.Bijection
 import typo.dsl.PGType
 import zio.jdbc.JdbcDecoder
@@ -16,21 +15,33 @@ import zio.json.JsonDecoder
 import zio.json.JsonEncoder
 
 /** Type for the primary key of table `humanresources.jobcandidate` */
-case class JobcandidateId(value: Int) extends AnyVal
+case class JobcandidateId(value: Int) extends scala.AnyVal
+
 object JobcandidateId {
   given arrayJdbcDecoder: JdbcDecoder[Array[JobcandidateId]] = adventureworks.IntArrayDecoder.map(_.map(JobcandidateId.apply))
+
   given arrayJdbcEncoder: JdbcEncoder[Array[JobcandidateId]] = adventureworks.IntArrayEncoder.contramap(_.map(_.value))
+
   given arraySetter: Setter[Array[JobcandidateId]] = adventureworks.IntArraySetter.contramap(_.map(_.value))
-  given bijection: Bijection[JobcandidateId, Int] = Bijection[JobcandidateId, Int](_.value)(JobcandidateId.apply)
+
+  given bijection: Bijection[JobcandidateId, Int] = Bijection.apply[JobcandidateId, Int](_.value)(JobcandidateId.apply)
+
   given jdbcDecoder: JdbcDecoder[JobcandidateId] = JdbcDecoder.intDecoder.map(JobcandidateId.apply)
+
   given jdbcEncoder: JdbcEncoder[JobcandidateId] = JdbcEncoder.intEncoder.contramap(_.value)
+
   given jsonDecoder: JsonDecoder[JobcandidateId] = JsonDecoder.int.map(JobcandidateId.apply)
+
   given jsonEncoder: JsonEncoder[JobcandidateId] = JsonEncoder.int.contramap(_.value)
-  given ordering: Ordering[JobcandidateId] = Ordering.by(_.value)
-  given pgType: PGType[JobcandidateId] = PGType.PGTypeInt.as
-  given setter: Setter[JobcandidateId] = Setter.intSetter.contramap(_.value)
-  given text: Text[JobcandidateId] = new Text[JobcandidateId] {
-    override def unsafeEncode(v: JobcandidateId, sb: StringBuilder): Unit = Text.intInstance.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: JobcandidateId, sb: StringBuilder): Unit = Text.intInstance.unsafeArrayEncode(v.value, sb)
+
+  given pgText: Text[JobcandidateId] = {
+    new Text[JobcandidateId] {
+      override def unsafeEncode(v: JobcandidateId, sb: StringBuilder): Unit = Text.intInstance.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: JobcandidateId, sb: StringBuilder): Unit = Text.intInstance.unsafeArrayEncode(v.value, sb)
+    }
   }
+
+  given pgType: PGType[JobcandidateId] = PGType.PGTypeInt.as
+
+  given setter: Setter[JobcandidateId] = Setter.intSetter.contramap(_.value)
 }

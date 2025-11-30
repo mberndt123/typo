@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package sth
+package adventureworks.sa.sth
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoUUID
@@ -25,59 +23,67 @@ import scala.util.Try
 
 /** View: sa.sth */
 case class SthViewRow(
-  /** Points to [[sales.salesterritoryhistory.SalesterritoryhistoryRow.territoryid]] */
+  /** Points to [[adventureworks.sales.salesterritoryhistory.SalesterritoryhistoryRow.territoryid]] */
   id: SalesterritoryId,
-  /** Points to [[sales.salesterritoryhistory.SalesterritoryhistoryRow.businessentityid]] */
+  /** Points to [[adventureworks.sales.salesterritoryhistory.SalesterritoryhistoryRow.businessentityid]] */
   businessentityid: BusinessentityId,
-  /** Points to [[sales.salesterritoryhistory.SalesterritoryhistoryRow.territoryid]] */
+  /** Points to [[adventureworks.sales.salesterritoryhistory.SalesterritoryhistoryRow.territoryid]] */
   territoryid: SalesterritoryId,
-  /** Points to [[sales.salesterritoryhistory.SalesterritoryhistoryRow.startdate]] */
+  /** Points to [[adventureworks.sales.salesterritoryhistory.SalesterritoryhistoryRow.startdate]] */
   startdate: TypoLocalDateTime,
-  /** Points to [[sales.salesterritoryhistory.SalesterritoryhistoryRow.enddate]] */
+  /** Points to [[adventureworks.sales.salesterritoryhistory.SalesterritoryhistoryRow.enddate]] */
   enddate: Option[TypoLocalDateTime],
-  /** Points to [[sales.salesterritoryhistory.SalesterritoryhistoryRow.rowguid]] */
+  /** Points to [[adventureworks.sales.salesterritoryhistory.SalesterritoryhistoryRow.rowguid]] */
   rowguid: TypoUUID,
-  /** Points to [[sales.salesterritoryhistory.SalesterritoryhistoryRow.modifieddate]] */
+  /** Points to [[adventureworks.sales.salesterritoryhistory.SalesterritoryhistoryRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object SthViewRow {
-  given reads: Reads[SthViewRow] = Reads[SthViewRow](json => JsResult.fromTry(
-      Try(
-        SthViewRow(
-          id = json.\("id").as(SalesterritoryId.reads),
-          businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
-          territoryid = json.\("territoryid").as(SalesterritoryId.reads),
-          startdate = json.\("startdate").as(TypoLocalDateTime.reads),
-          enddate = json.\("enddate").toOption.map(_.as(TypoLocalDateTime.reads)),
-          rowguid = json.\("rowguid").as(TypoUUID.reads),
-          modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+  given reads: Reads[SthViewRow] = {
+    Reads[SthViewRow](json => JsResult.fromTry(
+        Try(
+          SthViewRow(
+            id = json.\("id").as(SalesterritoryId.reads),
+            businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
+            territoryid = json.\("territoryid").as(SalesterritoryId.reads),
+            startdate = json.\("startdate").as(TypoLocalDateTime.reads),
+            enddate = json.\("enddate").toOption.map(_.as(TypoLocalDateTime.reads)),
+            rowguid = json.\("rowguid").as(TypoUUID.reads),
+            modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[SthViewRow] = RowParser[SthViewRow] { row =>
-    Success(
-      SthViewRow(
-        id = row(idx + 0)(using SalesterritoryId.column),
-        businessentityid = row(idx + 1)(using BusinessentityId.column),
-        territoryid = row(idx + 2)(using SalesterritoryId.column),
-        startdate = row(idx + 3)(using TypoLocalDateTime.column),
-        enddate = row(idx + 4)(using Column.columnToOption(using TypoLocalDateTime.column)),
-        rowguid = row(idx + 5)(using TypoUUID.column),
-        modifieddate = row(idx + 6)(using TypoLocalDateTime.column)
-      )
+      ),
     )
   }
-  given writes: OWrites[SthViewRow] = OWrites[SthViewRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "id" -> SalesterritoryId.writes.writes(o.id),
-      "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
-      "territoryid" -> SalesterritoryId.writes.writes(o.territoryid),
-      "startdate" -> TypoLocalDateTime.writes.writes(o.startdate),
-      "enddate" -> Writes.OptionWrites(using TypoLocalDateTime.writes).writes(o.enddate),
-      "rowguid" -> TypoUUID.writes.writes(o.rowguid),
-      "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
-    ))
-  )
+
+  def rowParser(idx: Int): RowParser[SthViewRow] = {
+    RowParser[SthViewRow] { row =>
+      Success(
+        SthViewRow(
+          id = row(idx + 0)(using SalesterritoryId.column),
+          businessentityid = row(idx + 1)(using BusinessentityId.column),
+          territoryid = row(idx + 2)(using SalesterritoryId.column),
+          startdate = row(idx + 3)(using TypoLocalDateTime.column),
+          enddate = row(idx + 4)(using Column.columnToOption(using TypoLocalDateTime.column)),
+          rowguid = row(idx + 5)(using TypoUUID.column),
+          modifieddate = row(idx + 6)(using TypoLocalDateTime.column)
+        )
+      )
+    }
+  }
+
+  given writes: OWrites[SthViewRow] = {
+    OWrites[SthViewRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "id" -> SalesterritoryId.writes.writes(o.id),
+        "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
+        "territoryid" -> SalesterritoryId.writes.writes(o.territoryid),
+        "startdate" -> TypoLocalDateTime.writes.writes(o.startdate),
+        "enddate" -> Writes.OptionWrites(using TypoLocalDateTime.writes).writes(o.enddate),
+        "rowguid" -> TypoUUID.writes.writes(o.rowguid),
+        "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
+      ))
+    )
+  }
 }

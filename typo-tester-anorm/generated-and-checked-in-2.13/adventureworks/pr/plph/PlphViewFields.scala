@@ -3,15 +3,13 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package plph
+package adventureworks.pr.plph
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.production.product.ProductId
 import typo.dsl.Path
 import typo.dsl.SqlExpr.Field
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.OptField
 import typo.dsl.Structure.Relation
 
@@ -26,11 +24,11 @@ trait PlphViewFields {
 
 object PlphViewFields {
   lazy val structure: Relation[PlphViewFields, PlphViewRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[PlphViewFields, PlphViewRow] {
-  
+
     override lazy val fields: PlphViewFields = new PlphViewFields {
       override def id = Field[ProductId, PlphViewRow](_path, "id", None, None, x => x.id, (row, value) => row.copy(id = value))
       override def productid = Field[ProductId, PlphViewRow](_path, "productid", None, None, x => x.productid, (row, value) => row.copy(productid = value))
@@ -39,12 +37,11 @@ object PlphViewFields {
       override def listprice = Field[BigDecimal, PlphViewRow](_path, "listprice", None, None, x => x.listprice, (row, value) => row.copy(listprice = value))
       override def modifieddate = Field[TypoLocalDateTime, PlphViewRow](_path, "modifieddate", Some("text"), None, x => x.modifieddate, (row, value) => row.copy(modifieddate = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, PlphViewRow]] =
-      List[FieldLikeNoHkt[?, PlphViewRow]](fields.id, fields.productid, fields.startdate, fields.enddate, fields.listprice, fields.modifieddate)
-  
+
+    override lazy val columns: List[FieldLike[?, PlphViewRow]] =
+      List[FieldLike[?, PlphViewRow]](fields.id, fields.productid, fields.startdate, fields.enddate, fields.listprice, fields.modifieddate)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

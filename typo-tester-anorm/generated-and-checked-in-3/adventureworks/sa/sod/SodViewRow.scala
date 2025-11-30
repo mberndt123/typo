@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package sod
+package adventureworks.sa.sod
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoShort
@@ -27,79 +25,87 @@ import scala.util.Try
 
 /** View: sa.sod */
 case class SodViewRow(
-  /** Points to [[sales.salesorderdetail.SalesorderdetailRow.salesorderdetailid]] */
+  /** Points to [[adventureworks.sales.salesorderdetail.SalesorderdetailRow.salesorderdetailid]] */
   id: Int,
-  /** Points to [[sales.salesorderdetail.SalesorderdetailRow.salesorderid]] */
+  /** Points to [[adventureworks.sales.salesorderdetail.SalesorderdetailRow.salesorderid]] */
   salesorderid: SalesorderheaderId,
-  /** Points to [[sales.salesorderdetail.SalesorderdetailRow.salesorderdetailid]] */
+  /** Points to [[adventureworks.sales.salesorderdetail.SalesorderdetailRow.salesorderdetailid]] */
   salesorderdetailid: Int,
-  /** Points to [[sales.salesorderdetail.SalesorderdetailRow.carriertrackingnumber]] */
+  /** Points to [[adventureworks.sales.salesorderdetail.SalesorderdetailRow.carriertrackingnumber]] */
   carriertrackingnumber: Option[/* max 25 chars */ String],
-  /** Points to [[sales.salesorderdetail.SalesorderdetailRow.orderqty]] */
+  /** Points to [[adventureworks.sales.salesorderdetail.SalesorderdetailRow.orderqty]] */
   orderqty: TypoShort,
-  /** Points to [[sales.salesorderdetail.SalesorderdetailRow.productid]] */
+  /** Points to [[adventureworks.sales.salesorderdetail.SalesorderdetailRow.productid]] */
   productid: ProductId,
-  /** Points to [[sales.salesorderdetail.SalesorderdetailRow.specialofferid]] */
+  /** Points to [[adventureworks.sales.salesorderdetail.SalesorderdetailRow.specialofferid]] */
   specialofferid: SpecialofferId,
-  /** Points to [[sales.salesorderdetail.SalesorderdetailRow.unitprice]] */
+  /** Points to [[adventureworks.sales.salesorderdetail.SalesorderdetailRow.unitprice]] */
   unitprice: BigDecimal,
-  /** Points to [[sales.salesorderdetail.SalesorderdetailRow.unitpricediscount]] */
+  /** Points to [[adventureworks.sales.salesorderdetail.SalesorderdetailRow.unitpricediscount]] */
   unitpricediscount: BigDecimal,
-  /** Points to [[sales.salesorderdetail.SalesorderdetailRow.rowguid]] */
+  /** Points to [[adventureworks.sales.salesorderdetail.SalesorderdetailRow.rowguid]] */
   rowguid: TypoUUID,
-  /** Points to [[sales.salesorderdetail.SalesorderdetailRow.modifieddate]] */
+  /** Points to [[adventureworks.sales.salesorderdetail.SalesorderdetailRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object SodViewRow {
-  given reads: Reads[SodViewRow] = Reads[SodViewRow](json => JsResult.fromTry(
-      Try(
-        SodViewRow(
-          id = json.\("id").as(Reads.IntReads),
-          salesorderid = json.\("salesorderid").as(SalesorderheaderId.reads),
-          salesorderdetailid = json.\("salesorderdetailid").as(Reads.IntReads),
-          carriertrackingnumber = json.\("carriertrackingnumber").toOption.map(_.as(Reads.StringReads)),
-          orderqty = json.\("orderqty").as(TypoShort.reads),
-          productid = json.\("productid").as(ProductId.reads),
-          specialofferid = json.\("specialofferid").as(SpecialofferId.reads),
-          unitprice = json.\("unitprice").as(Reads.bigDecReads),
-          unitpricediscount = json.\("unitpricediscount").as(Reads.bigDecReads),
-          rowguid = json.\("rowguid").as(TypoUUID.reads),
-          modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+  given reads: Reads[SodViewRow] = {
+    Reads[SodViewRow](json => JsResult.fromTry(
+        Try(
+          SodViewRow(
+            id = json.\("id").as(Reads.IntReads),
+            salesorderid = json.\("salesorderid").as(SalesorderheaderId.reads),
+            salesorderdetailid = json.\("salesorderdetailid").as(Reads.IntReads),
+            carriertrackingnumber = json.\("carriertrackingnumber").toOption.map(_.as(Reads.StringReads)),
+            orderqty = json.\("orderqty").as(TypoShort.reads),
+            productid = json.\("productid").as(ProductId.reads),
+            specialofferid = json.\("specialofferid").as(SpecialofferId.reads),
+            unitprice = json.\("unitprice").as(Reads.bigDecReads),
+            unitpricediscount = json.\("unitpricediscount").as(Reads.bigDecReads),
+            rowguid = json.\("rowguid").as(TypoUUID.reads),
+            modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[SodViewRow] = RowParser[SodViewRow] { row =>
-    Success(
-      SodViewRow(
-        id = row(idx + 0)(using Column.columnToInt),
-        salesorderid = row(idx + 1)(using SalesorderheaderId.column),
-        salesorderdetailid = row(idx + 2)(using Column.columnToInt),
-        carriertrackingnumber = row(idx + 3)(using Column.columnToOption(using Column.columnToString)),
-        orderqty = row(idx + 4)(using TypoShort.column),
-        productid = row(idx + 5)(using ProductId.column),
-        specialofferid = row(idx + 6)(using SpecialofferId.column),
-        unitprice = row(idx + 7)(using Column.columnToScalaBigDecimal),
-        unitpricediscount = row(idx + 8)(using Column.columnToScalaBigDecimal),
-        rowguid = row(idx + 9)(using TypoUUID.column),
-        modifieddate = row(idx + 10)(using TypoLocalDateTime.column)
-      )
+      ),
     )
   }
-  given writes: OWrites[SodViewRow] = OWrites[SodViewRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "id" -> Writes.IntWrites.writes(o.id),
-      "salesorderid" -> SalesorderheaderId.writes.writes(o.salesorderid),
-      "salesorderdetailid" -> Writes.IntWrites.writes(o.salesorderdetailid),
-      "carriertrackingnumber" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.carriertrackingnumber),
-      "orderqty" -> TypoShort.writes.writes(o.orderqty),
-      "productid" -> ProductId.writes.writes(o.productid),
-      "specialofferid" -> SpecialofferId.writes.writes(o.specialofferid),
-      "unitprice" -> Writes.BigDecimalWrites.writes(o.unitprice),
-      "unitpricediscount" -> Writes.BigDecimalWrites.writes(o.unitpricediscount),
-      "rowguid" -> TypoUUID.writes.writes(o.rowguid),
-      "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
-    ))
-  )
+
+  def rowParser(idx: Int): RowParser[SodViewRow] = {
+    RowParser[SodViewRow] { row =>
+      Success(
+        SodViewRow(
+          id = row(idx + 0)(using Column.columnToInt),
+          salesorderid = row(idx + 1)(using SalesorderheaderId.column),
+          salesorderdetailid = row(idx + 2)(using Column.columnToInt),
+          carriertrackingnumber = row(idx + 3)(using Column.columnToOption(using Column.columnToString)),
+          orderqty = row(idx + 4)(using TypoShort.column),
+          productid = row(idx + 5)(using ProductId.column),
+          specialofferid = row(idx + 6)(using SpecialofferId.column),
+          unitprice = row(idx + 7)(using Column.columnToScalaBigDecimal),
+          unitpricediscount = row(idx + 8)(using Column.columnToScalaBigDecimal),
+          rowguid = row(idx + 9)(using TypoUUID.column),
+          modifieddate = row(idx + 10)(using TypoLocalDateTime.column)
+        )
+      )
+    }
+  }
+
+  given writes: OWrites[SodViewRow] = {
+    OWrites[SodViewRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "id" -> Writes.IntWrites.writes(o.id),
+        "salesorderid" -> SalesorderheaderId.writes.writes(o.salesorderid),
+        "salesorderdetailid" -> Writes.IntWrites.writes(o.salesorderdetailid),
+        "carriertrackingnumber" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.carriertrackingnumber),
+        "orderqty" -> TypoShort.writes.writes(o.orderqty),
+        "productid" -> ProductId.writes.writes(o.productid),
+        "specialofferid" -> SpecialofferId.writes.writes(o.specialofferid),
+        "unitprice" -> Writes.BigDecimalWrites.writes(o.unitprice),
+        "unitpricediscount" -> Writes.BigDecimalWrites.writes(o.unitpricediscount),
+        "rowguid" -> TypoUUID.writes.writes(o.rowguid),
+        "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
+      ))
+    )
+  }
 }

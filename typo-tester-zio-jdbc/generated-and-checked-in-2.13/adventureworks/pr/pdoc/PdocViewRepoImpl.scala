@@ -3,21 +3,15 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pdoc
+package adventureworks.pr.pdoc
 
 import typo.dsl.SelectBuilder
-import typo.dsl.SelectBuilderSql
 import zio.jdbc.ZConnection
-import zio.jdbc.sqlInterpolator
 import zio.stream.ZStream
+import zio.jdbc.sqlInterpolator
 
 class PdocViewRepoImpl extends PdocViewRepo {
-  override def select: SelectBuilder[PdocViewFields, PdocViewRow] = {
-    SelectBuilderSql(""""pr"."pdoc"""", PdocViewFields.structure, PdocViewRow.jdbcDecoder)
-  }
-  override def selectAll: ZStream[ZConnection, Throwable, PdocViewRow] = {
-    sql"""select "id", "productid", "modifieddate"::text, "documentnode" from "pr"."pdoc"""".query(PdocViewRow.jdbcDecoder).selectStream()
-  }
+  def select: SelectBuilder[PdocViewFields, PdocViewRow] = SelectBuilder.of(""""pr"."pdoc"""", PdocViewFields.structure, PdocViewRow.jdbcDecoder)
+
+  def selectAll: ZStream[ZConnection, Throwable, PdocViewRow] = sql"""select "id", "productid", "modifieddate"::text, "documentnode" from "pr"."pdoc"""".query(PdocViewRow.jdbcDecoder).selectStream()
 }

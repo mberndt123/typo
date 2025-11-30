@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package person
-package emailaddress
+package adventureworks.person.emailaddress
 
 import adventureworks.person.businessentity.BusinessentityId
 import io.circe.Decoder
@@ -16,8 +14,9 @@ case class EmailaddressId(
   businessentityid: BusinessentityId,
   emailaddressid: Int
 )
+
 object EmailaddressId {
   given decoder: Decoder[EmailaddressId] = Decoder.forProduct2[EmailaddressId, BusinessentityId, Int]("businessentityid", "emailaddressid")(EmailaddressId.apply)(using BusinessentityId.decoder, Decoder.decodeInt)
+
   given encoder: Encoder[EmailaddressId] = Encoder.forProduct2[EmailaddressId, BusinessentityId, Int]("businessentityid", "emailaddressid")(x => (x.businessentityid, x.emailaddressid))(using BusinessentityId.encoder, Encoder.encodeInt)
-  given ordering: Ordering[EmailaddressId] = Ordering.by(x => (x.businessentityid, x.emailaddressid))
 }

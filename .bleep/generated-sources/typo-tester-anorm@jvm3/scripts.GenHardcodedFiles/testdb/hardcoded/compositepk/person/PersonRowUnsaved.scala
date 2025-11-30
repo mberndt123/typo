@@ -3,10 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN
  */
-package testdb
-package hardcoded
-package compositepk
-package person
+package testdb.hardcoded.compositepk.person
 
 import play.api.libs.json.JsObject
 import play.api.libs.json.JsResult
@@ -16,52 +13,55 @@ import play.api.libs.json.Reads
 import play.api.libs.json.Writes
 import scala.collection.immutable.ListMap
 import scala.util.Try
+import testdb.hardcoded.Text
 import testdb.hardcoded.customtypes.Defaulted
+import testdb.hardcoded.customtypes.Defaulted.UseDefault
 
 /** This class corresponds to a row in table `compositepk.person` which has not been persisted yet */
 case class PersonRowUnsaved(
-  name: Option[String],
+  name: Option[String] = None,
   /** Default: auto-increment */
-  one: Defaulted[Long] = Defaulted.UseDefault,
+  one: Defaulted[Long] = new UseDefault(),
   /** Default: auto-increment */
-  two: Defaulted[Option[String]] = Defaulted.UseDefault
+  two: Defaulted[Option[String]] = new UseDefault()
 ) {
-  def toRow(oneDefault: => Long, twoDefault: => Option[String]): PersonRow =
-    PersonRow(
-      name = name,
-      one = one match {
-              case Defaulted.UseDefault => oneDefault
-              case Defaulted.Provided(value) => value
-            },
-      two = two match {
-              case Defaulted.UseDefault => twoDefault
-              case Defaulted.Provided(value) => value
-            }
-    )
+  def toRow(
+    oneDefault: => Long,
+    twoDefault: => Option[String]
+  ): PersonRow = new PersonRow(one = one.getOrElse(oneDefault), two = two.getOrElse(twoDefault), name = name)
 }
+
 object PersonRowUnsaved {
-  given reads: Reads[PersonRowUnsaved] = Reads[PersonRowUnsaved](json => JsResult.fromTry(
-      Try(
-        PersonRowUnsaved(
-          name = json.\("name").toOption.map(_.as(Reads.StringReads)),
-          one = json.\("one").as(Defaulted.reads(using Reads.LongReads)),
-          two = json.\("two").as(Defaulted.readsOpt(using Reads.StringReads))
-        )
-      )
-    ),
-  )
-  given text: Text[PersonRowUnsaved] = Text.instance[PersonRowUnsaved]{ (row, sb) =>
-    Text.option(using Text.stringInstance).unsafeEncode(row.name, sb)
-    sb.append(Text.DELIMETER)
-    Defaulted.text(using Text.longInstance).unsafeEncode(row.one, sb)
-    sb.append(Text.DELIMETER)
-    Defaulted.text(using Text.option(using Text.stringInstance)).unsafeEncode(row.two, sb)
+  given pgText: Text[PersonRowUnsaved] = {
+    Text.instance[PersonRowUnsaved]{ (row, sb) =>
+      Text.option(using Text.stringInstance).unsafeEncode(row.name, sb)
+      sb.append(Text.DELIMETER)
+      Defaulted.pgText(using Text.longInstance).unsafeEncode(row.one, sb)
+      sb.append(Text.DELIMETER)
+      Defaulted.pgText(using Text.option(using Text.stringInstance)).unsafeEncode(row.two, sb)
+    }
   }
-  given writes: OWrites[PersonRowUnsaved] = OWrites[PersonRowUnsaved](o =>
-    new JsObject(ListMap[String, JsValue](
-      "name" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.name),
-      "one" -> Defaulted.writes(using Writes.LongWrites).writes(o.one),
-      "two" -> Defaulted.writes(using Writes.OptionWrites(using Writes.StringWrites)).writes(o.two)
-    ))
-  )
+
+  given reads: Reads[PersonRowUnsaved] = {
+    Reads[PersonRowUnsaved](json => JsResult.fromTry(
+        Try(
+          PersonRowUnsaved(
+            name = json.\("name").toOption.map(_.as(Reads.StringReads)),
+            one = json.\("one").as(Defaulted.reads(using Reads.LongReads)),
+            two = json.\("two").as(Defaulted.readsOpt(using Reads.StringReads))
+          )
+        )
+      ),
+    )
+  }
+
+  given writes: OWrites[PersonRowUnsaved] = {
+    OWrites[PersonRowUnsaved](o =>
+      new JsObject(ListMap[String, JsValue](
+        "name" -> Writes.OptionWrites(using Writes.StringWrites).writes(o.name),
+        "one" -> Defaulted.writes(using Writes.LongWrites).writes(o.one),
+        "two" -> Defaulted.writes(using Writes.OptionWrites(using Writes.StringWrites)).writes(o.two)
+      ))
+    )
+  }
 }

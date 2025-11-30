@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package cu
+package adventureworks.sa.cu
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.public.Name
@@ -16,30 +14,34 @@ import io.circe.Encoder
 
 /** View: sa.cu */
 case class CuViewRow(
-  /** Points to [[sales.currency.CurrencyRow.currencycode]] */
+  /** Points to [[adventureworks.sales.currency.CurrencyRow.currencycode]] */
   id: CurrencyId,
-  /** Points to [[sales.currency.CurrencyRow.currencycode]] */
+  /** Points to [[adventureworks.sales.currency.CurrencyRow.currencycode]] */
   currencycode: CurrencyId,
-  /** Points to [[sales.currency.CurrencyRow.name]] */
+  /** Points to [[adventureworks.sales.currency.CurrencyRow.name]] */
   name: Name,
-  /** Points to [[sales.currency.CurrencyRow.modifieddate]] */
+  /** Points to [[adventureworks.sales.currency.CurrencyRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object CuViewRow {
   implicit lazy val decoder: Decoder[CuViewRow] = Decoder.forProduct4[CuViewRow, CurrencyId, CurrencyId, Name, TypoLocalDateTime]("id", "currencycode", "name", "modifieddate")(CuViewRow.apply)(CurrencyId.decoder, CurrencyId.decoder, Name.decoder, TypoLocalDateTime.decoder)
+
   implicit lazy val encoder: Encoder[CuViewRow] = Encoder.forProduct4[CuViewRow, CurrencyId, CurrencyId, Name, TypoLocalDateTime]("id", "currencycode", "name", "modifieddate")(x => (x.id, x.currencycode, x.name, x.modifieddate))(CurrencyId.encoder, CurrencyId.encoder, Name.encoder, TypoLocalDateTime.encoder)
-  implicit lazy val read: Read[CuViewRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(CurrencyId.get).asInstanceOf[Read[Any]],
+
+  implicit lazy val read: Read[CuViewRow] = {
+    new Read.CompositeOfInstances(Array(
       new Read.Single(CurrencyId.get).asInstanceOf[Read[Any]],
-      new Read.Single(Name.get).asInstanceOf[Read[Any]],
-      new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
-  ))(scala.reflect.ClassTag.Any).map { arr =>
-    CuViewRow(
-      id = arr(0).asInstanceOf[CurrencyId],
-          currencycode = arr(1).asInstanceOf[CurrencyId],
-          name = arr(2).asInstanceOf[Name],
-          modifieddate = arr(3).asInstanceOf[TypoLocalDateTime]
-    )
+        new Read.Single(CurrencyId.get).asInstanceOf[Read[Any]],
+        new Read.Single(Name.get).asInstanceOf[Read[Any]],
+        new Read.Single(TypoLocalDateTime.get).asInstanceOf[Read[Any]]
+    ))(scala.reflect.ClassTag.Any).map { arr =>
+      CuViewRow(
+        id = arr(0).asInstanceOf[CurrencyId],
+            currencycode = arr(1).asInstanceOf[CurrencyId],
+            name = arr(2).asInstanceOf[Name],
+            modifieddate = arr(3).asInstanceOf[TypoLocalDateTime]
+      )
+    }
   }
 }

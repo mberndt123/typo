@@ -3,10 +3,9 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package flaff
+package adventureworks.public.flaff
 
+import adventureworks.public.ShortText
 import io.circe.Decoder
 import io.circe.Encoder
 
@@ -17,8 +16,9 @@ case class FlaffId(
   someNumber: Int,
   specifier: ShortText
 )
+
 object FlaffId {
   given decoder: Decoder[FlaffId] = Decoder.forProduct4[FlaffId, ShortText, /* max 20 chars */ String, Int, ShortText]("code", "another_code", "some_number", "specifier")(FlaffId.apply)(using ShortText.decoder, Decoder.decodeString, Decoder.decodeInt, ShortText.decoder)
+
   given encoder: Encoder[FlaffId] = Encoder.forProduct4[FlaffId, ShortText, /* max 20 chars */ String, Int, ShortText]("code", "another_code", "some_number", "specifier")(x => (x.code, x.anotherCode, x.someNumber, x.specifier))(using ShortText.encoder, Encoder.encodeString, Encoder.encodeInt, ShortText.encoder)
-  given ordering: Ordering[FlaffId] = Ordering.by(x => (x.code, x.anotherCode, x.someNumber, x.specifier))
 }

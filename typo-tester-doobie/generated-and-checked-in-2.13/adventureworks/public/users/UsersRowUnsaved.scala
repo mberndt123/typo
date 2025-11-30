@@ -3,11 +3,10 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package users
+package adventureworks.public.users
 
 import adventureworks.customtypes.Defaulted
+import adventureworks.customtypes.Defaulted.UseDefault
 import adventureworks.customtypes.TypoInstant
 import adventureworks.customtypes.TypoUnknownCitext
 import doobie.postgres.Text
@@ -18,43 +17,46 @@ import io.circe.Encoder
 case class UsersRowUnsaved(
   userId: UsersId,
   name: String,
-  lastName: Option[String],
+  lastName: Option[String] = None,
   email: TypoUnknownCitext,
   password: String,
-  verifiedOn: Option[TypoInstant],
+  verifiedOn: Option[TypoInstant] = None,
   /** Default: now() */
-  createdAt: Defaulted[TypoInstant] = Defaulted.UseDefault
+  createdAt: Defaulted[TypoInstant] = new UseDefault()
 ) {
-  def toRow(createdAtDefault: => TypoInstant): UsersRow =
-    UsersRow(
+  def toRow(createdAtDefault: => TypoInstant): UsersRow = {
+    new UsersRow(
       userId = userId,
       name = name,
       lastName = lastName,
       email = email,
       password = password,
-      verifiedOn = verifiedOn,
-      createdAt = createdAt match {
-                    case Defaulted.UseDefault => createdAtDefault
-                    case Defaulted.Provided(value) => value
-                  }
+      createdAt = createdAt.getOrElse(createdAtDefault),
+      verifiedOn = verifiedOn
     )
+  }
 }
+
 object UsersRowUnsaved {
   implicit lazy val decoder: Decoder[UsersRowUnsaved] = Decoder.forProduct7[UsersRowUnsaved, UsersId, String, Option[String], TypoUnknownCitext, String, Option[TypoInstant], Defaulted[TypoInstant]]("user_id", "name", "last_name", "email", "password", "verified_on", "created_at")(UsersRowUnsaved.apply)(UsersId.decoder, Decoder.decodeString, Decoder.decodeOption(Decoder.decodeString), TypoUnknownCitext.decoder, Decoder.decodeString, Decoder.decodeOption(TypoInstant.decoder), Defaulted.decoder(TypoInstant.decoder))
+
   implicit lazy val encoder: Encoder[UsersRowUnsaved] = Encoder.forProduct7[UsersRowUnsaved, UsersId, String, Option[String], TypoUnknownCitext, String, Option[TypoInstant], Defaulted[TypoInstant]]("user_id", "name", "last_name", "email", "password", "verified_on", "created_at")(x => (x.userId, x.name, x.lastName, x.email, x.password, x.verifiedOn, x.createdAt))(UsersId.encoder, Encoder.encodeString, Encoder.encodeOption(Encoder.encodeString), TypoUnknownCitext.encoder, Encoder.encodeString, Encoder.encodeOption(TypoInstant.encoder), Defaulted.encoder(TypoInstant.encoder))
-  implicit lazy val text: Text[UsersRowUnsaved] = Text.instance[UsersRowUnsaved]{ (row, sb) =>
-    UsersId.text.unsafeEncode(row.userId, sb)
-    sb.append(Text.DELIMETER)
-    Text.stringInstance.unsafeEncode(row.name, sb)
-    sb.append(Text.DELIMETER)
-    Text.option(Text.stringInstance).unsafeEncode(row.lastName, sb)
-    sb.append(Text.DELIMETER)
-    TypoUnknownCitext.text.unsafeEncode(row.email, sb)
-    sb.append(Text.DELIMETER)
-    Text.stringInstance.unsafeEncode(row.password, sb)
-    sb.append(Text.DELIMETER)
-    Text.option(TypoInstant.text).unsafeEncode(row.verifiedOn, sb)
-    sb.append(Text.DELIMETER)
-    Defaulted.text(TypoInstant.text).unsafeEncode(row.createdAt, sb)
+
+  implicit lazy val pgText: Text[UsersRowUnsaved] = {
+    Text.instance[UsersRowUnsaved]{ (row, sb) =>
+      UsersId.pgText.unsafeEncode(row.userId, sb)
+      sb.append(Text.DELIMETER)
+      Text.stringInstance.unsafeEncode(row.name, sb)
+      sb.append(Text.DELIMETER)
+      Text.option(Text.stringInstance).unsafeEncode(row.lastName, sb)
+      sb.append(Text.DELIMETER)
+      TypoUnknownCitext.pgText.unsafeEncode(row.email, sb)
+      sb.append(Text.DELIMETER)
+      Text.stringInstance.unsafeEncode(row.password, sb)
+      sb.append(Text.DELIMETER)
+      Text.option(TypoInstant.pgText).unsafeEncode(row.verifiedOn, sb)
+      sb.append(Text.DELIMETER)
+      Defaulted.pgText(TypoInstant.pgText).unsafeEncode(row.createdAt, sb)
+    }
   }
 }

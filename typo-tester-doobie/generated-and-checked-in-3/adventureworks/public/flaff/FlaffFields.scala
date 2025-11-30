@@ -3,17 +3,16 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package flaff
+package adventureworks.public.flaff
 
+import adventureworks.public.ShortText
 import typo.dsl.ForeignKey
 import typo.dsl.Path
-import typo.dsl.Required
 import typo.dsl.SqlExpr
 import typo.dsl.SqlExpr.CompositeIn
 import typo.dsl.SqlExpr.CompositeIn.TuplePart
-import typo.dsl.SqlExpr.FieldLikeNoHkt
+import typo.dsl.SqlExpr.Const.As.as
+import typo.dsl.SqlExpr.FieldLike
 import typo.dsl.SqlExpr.IdField
 import typo.dsl.SqlExpr.OptField
 import typo.dsl.Structure.Relation
@@ -30,20 +29,20 @@ trait FlaffFields {
       .withColumnPair(anotherCode, _.anotherCode)
       .withColumnPair(someNumber, _.someNumber)
       .withColumnPair(parentspecifier, _.specifier)
-  def compositeIdIs(compositeId: FlaffId): SqlExpr[Boolean, Required] =
+  def compositeIdIs(compositeId: FlaffId): SqlExpr[Boolean] =
     code.isEqual(compositeId.code).and(anotherCode.isEqual(compositeId.anotherCode)).and(someNumber.isEqual(compositeId.someNumber)).and(specifier.isEqual(compositeId.specifier))
-  def compositeIdIn(compositeIds: Array[FlaffId]): SqlExpr[Boolean, Required] =
-    new CompositeIn(compositeIds)(TuplePart(code)(_.code), TuplePart(anotherCode)(_.anotherCode), TuplePart(someNumber)(_.someNumber), TuplePart(specifier)(_.specifier))
-  
+  def compositeIdIn(compositeIds: Array[FlaffId]): SqlExpr[Boolean] =
+    new CompositeIn(compositeIds)(TuplePart[FlaffId](code)(_.code)(using as[Array[ShortText]](using ShortText.arrayPut), implicitly), TuplePart[FlaffId](anotherCode)(_.anotherCode)(using as[Array[/* max 20 chars */ String]](using adventureworks.StringArrayMeta.put), implicitly), TuplePart[FlaffId](someNumber)(_.someNumber)(using as[Array[Int]](using adventureworks.IntegerArrayMeta.put), implicitly), TuplePart[FlaffId](specifier)(_.specifier)(using as[Array[ShortText]](using ShortText.arrayPut), implicitly))
+
 }
 
 object FlaffFields {
   lazy val structure: Relation[FlaffFields, FlaffRow] =
-    new Impl(Nil)
-    
+    new Impl(List())
+
   private final class Impl(val _path: List[Path])
     extends Relation[FlaffFields, FlaffRow] {
-  
+
     override lazy val fields: FlaffFields = new FlaffFields {
       override def code = IdField[ShortText, FlaffRow](_path, "code", None, Some("text"), x => x.code, (row, value) => row.copy(code = value))
       override def anotherCode = IdField[/* max 20 chars */ String, FlaffRow](_path, "another_code", None, None, x => x.anotherCode, (row, value) => row.copy(anotherCode = value))
@@ -51,12 +50,11 @@ object FlaffFields {
       override def specifier = IdField[ShortText, FlaffRow](_path, "specifier", None, Some("text"), x => x.specifier, (row, value) => row.copy(specifier = value))
       override def parentspecifier = OptField[ShortText, FlaffRow](_path, "parentspecifier", None, Some("text"), x => x.parentspecifier, (row, value) => row.copy(parentspecifier = value))
     }
-  
-    override lazy val columns: List[FieldLikeNoHkt[?, FlaffRow]] =
-      List[FieldLikeNoHkt[?, FlaffRow]](fields.code, fields.anotherCode, fields.someNumber, fields.specifier, fields.parentspecifier)
-  
+
+    override lazy val columns: List[FieldLike[?, FlaffRow]] =
+      List[FieldLike[?, FlaffRow]](fields.code, fields.anotherCode, fields.someNumber, fields.specifier, fields.parentspecifier)
+
     override def copy(path: List[Path]): Impl =
       new Impl(path)
   }
-  
 }

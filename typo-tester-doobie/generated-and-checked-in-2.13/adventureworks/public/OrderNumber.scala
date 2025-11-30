@@ -3,8 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
+package adventureworks.public
 
 import doobie.postgres.Text
 import doobie.util.Get
@@ -15,20 +14,29 @@ import io.circe.Encoder
 import typo.dsl.Bijection
 
 /** Domain `public.OrderNumber`
-  * No constraint
-  */
+ * No constraint
+ */
 case class OrderNumber(value: String)
+
 object OrderNumber {
   implicit lazy val arrayGet: Get[Array[OrderNumber]] = adventureworks.StringArrayMeta.get.map(_.map(OrderNumber.apply))
+
   implicit lazy val arrayPut: Put[Array[OrderNumber]] = adventureworks.StringArrayMeta.put.contramap(_.map(_.value))
-  implicit lazy val bijection: Bijection[OrderNumber, String] = Bijection[OrderNumber, String](_.value)(OrderNumber.apply)
+
+  implicit lazy val bijection: Bijection[OrderNumber, String] = Bijection.apply[OrderNumber, String](_.value)(OrderNumber.apply)
+
   implicit lazy val decoder: Decoder[OrderNumber] = Decoder.decodeString.map(OrderNumber.apply)
+
   implicit lazy val encoder: Encoder[OrderNumber] = Encoder.encodeString.contramap(_.value)
+
   implicit lazy val get: Get[OrderNumber] = Meta.StringMeta.get.map(OrderNumber.apply)
-  implicit lazy val ordering: Ordering[OrderNumber] = Ordering.by(_.value)
-  implicit lazy val put: Put[OrderNumber] = Meta.StringMeta.put.contramap(_.value)
-  implicit lazy val text: Text[OrderNumber] = new Text[OrderNumber] {
-    override def unsafeEncode(v: OrderNumber, sb: StringBuilder): Unit = Text.stringInstance.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: OrderNumber, sb: StringBuilder): Unit = Text.stringInstance.unsafeArrayEncode(v.value, sb)
+
+  implicit lazy val pgText: Text[OrderNumber] = {
+    new Text[OrderNumber] {
+      override def unsafeEncode(v: OrderNumber, sb: StringBuilder): Unit = Text.stringInstance.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: OrderNumber, sb: StringBuilder): Unit = Text.stringInstance.unsafeArrayEncode(v.value, sb)
+    }
   }
+
+  implicit lazy val put: Put[OrderNumber] = Meta.StringMeta.put.contramap(_.value)
 }

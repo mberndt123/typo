@@ -3,10 +3,9 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package title_domain
+package adventureworks.public.title_domain
 
+import adventureworks.Text
 import anorm.RowParser
 import anorm.Success
 import play.api.libs.json.JsObject
@@ -18,35 +17,45 @@ import scala.collection.immutable.ListMap
 import scala.util.Try
 
 /** Table: public.title_domain
-    Primary key: code */
-case class TitleDomainRow(
-  code: TitleDomainId
-){
-   val id = code
- }
+ * Primary key: code
+ */
+case class TitleDomainRow(code: TitleDomainId) {
+  def id: TitleDomainId = code
+}
 
 object TitleDomainRow {
-  given reads: Reads[TitleDomainRow] = Reads[TitleDomainRow](json => JsResult.fromTry(
-      Try(
-        TitleDomainRow(
-          code = json.\("code").as(TitleDomainId.reads)
+  given pgText: Text[TitleDomainRow] = {
+    Text.instance[TitleDomainRow]{ (row, sb) =>
+      TitleDomainId.pgText.unsafeEncode(row.code, sb)
+    }
+  }
+
+  given reads: Reads[TitleDomainRow] = {
+    Reads[TitleDomainRow](json => JsResult.fromTry(
+        Try(
+          TitleDomainRow(
+            code = json.\("code").as(TitleDomainId.reads)
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[TitleDomainRow] = RowParser[TitleDomainRow] { row =>
-    Success(
-      TitleDomainRow(
-        code = row(idx + 0)(using TitleDomainId.column)
-      )
+      ),
     )
   }
-  given text: Text[TitleDomainRow] = Text.instance[TitleDomainRow]{ (row, sb) =>
-    TitleDomainId.text.unsafeEncode(row.code, sb)
+
+  def rowParser(idx: Int): RowParser[TitleDomainRow] = {
+    RowParser[TitleDomainRow] { row =>
+      Success(
+        TitleDomainRow(
+          code = row(idx + 0)(using TitleDomainId.column)
+        )
+      )
+    }
   }
-  given writes: OWrites[TitleDomainRow] = OWrites[TitleDomainRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "code" -> TitleDomainId.writes.writes(o.code)
-    ))
-  )
+
+  given writes: OWrites[TitleDomainRow] = {
+    OWrites[TitleDomainRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "code" -> TitleDomainId.writes.writes(o.code)
+      ))
+    )
+  }
 }

@@ -3,9 +3,9 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package information_schema
+package adventureworks.information_schema
 
+import adventureworks.Text
 import adventureworks.customtypes.TypoInstant
 import java.sql.Types
 import typo.dsl.Bijection
@@ -17,23 +17,35 @@ import zio.json.JsonDecoder
 import zio.json.JsonEncoder
 
 /** Domain `information_schema.time_stamp`
-  * No constraint
-  */
+ * No constraint
+ */
 case class TimeStamp(value: TypoInstant)
+
 object TimeStamp {
-  implicit lazy val arrayJdbcDecoder: JdbcDecoder[Array[TimeStamp]] = JdbcDecoder[Array[TypoInstant]].map(_.map(TimeStamp.apply))
-  implicit lazy val arrayJdbcEncoder: JdbcEncoder[Array[TimeStamp]] = JdbcEncoder[Array[TypoInstant]].contramap(_.map(_.value))
+  implicit lazy val arrayJdbcDecoder: JdbcDecoder[Array[TimeStamp]] = TypoInstant.arrayJdbcDecoder.map(_.map(TimeStamp.apply))
+
+  implicit lazy val arrayJdbcEncoder: JdbcEncoder[Array[TimeStamp]] = TypoInstant.arrayJdbcEncoder.contramap(_.map(_.value))
+
   implicit lazy val arraySetter: Setter[Array[TimeStamp]] = TypoInstant.arraySetter.contramap(_.map(_.value))
-  implicit lazy val bijection: Bijection[TimeStamp, TypoInstant] = Bijection[TimeStamp, TypoInstant](_.value)(TimeStamp.apply)
+
+  implicit lazy val bijection: Bijection[TimeStamp, TypoInstant] = Bijection.apply[TimeStamp, TypoInstant](_.value)(TimeStamp.apply)
+
   implicit lazy val jdbcDecoder: JdbcDecoder[TimeStamp] = TypoInstant.jdbcDecoder.map(TimeStamp.apply)
+
   implicit lazy val jdbcEncoder: JdbcEncoder[TimeStamp] = TypoInstant.jdbcEncoder.contramap(_.value)
+
   implicit lazy val jsonDecoder: JsonDecoder[TimeStamp] = TypoInstant.jsonDecoder.map(TimeStamp.apply)
+
   implicit lazy val jsonEncoder: JsonEncoder[TimeStamp] = TypoInstant.jsonEncoder.contramap(_.value)
-  implicit def ordering(implicit O0: Ordering[TypoInstant]): Ordering[TimeStamp] = Ordering.by(_.value)
-  implicit lazy val pgType: PGType[TimeStamp] = PGType.instance(""""information_schema"."time_stamp"""", Types.OTHER)
-  implicit lazy val setter: Setter[TimeStamp] = TypoInstant.setter.contramap(_.value)
-  implicit lazy val text: Text[TimeStamp] = new Text[TimeStamp] {
-    override def unsafeEncode(v: TimeStamp, sb: StringBuilder): Unit = TypoInstant.text.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: TimeStamp, sb: StringBuilder): Unit = TypoInstant.text.unsafeArrayEncode(v.value, sb)
+
+  implicit lazy val pgText: Text[TimeStamp] = {
+    new Text[TimeStamp] {
+      override def unsafeEncode(v: TimeStamp, sb: StringBuilder): Unit = TypoInstant.pgText.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: TimeStamp, sb: StringBuilder): Unit = TypoInstant.pgText.unsafeArrayEncode(v.value, sb)
+    }
   }
+
+  implicit lazy val pgType: PGType[TimeStamp] = PGType.instance(""""information_schema"."time_stamp"""", Types.OTHER)
+
+  implicit lazy val setter: Setter[TimeStamp] = TypoInstant.setter.contramap(_.value)
 }

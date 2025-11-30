@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package humanresources
-package employeedepartmenthistory
+package adventureworks.humanresources.employeedepartmenthistory
 
 import adventureworks.customtypes.TypoLocalDate
 import adventureworks.humanresources.department.DepartmentId
@@ -16,7 +14,6 @@ import play.api.libs.json.JsResult
 import play.api.libs.json.JsValue
 import play.api.libs.json.OWrites
 import play.api.libs.json.Reads
-import play.api.libs.json.Writes
 import scala.collection.immutable.ListMap
 import scala.util.Try
 
@@ -27,25 +24,30 @@ case class EmployeedepartmenthistoryId(
   departmentid: DepartmentId,
   shiftid: ShiftId
 )
+
 object EmployeedepartmenthistoryId {
-  given ordering(using O0: Ordering[TypoLocalDate]): Ordering[EmployeedepartmenthistoryId] = Ordering.by(x => (x.businessentityid, x.startdate, x.departmentid, x.shiftid))
-  given reads: Reads[EmployeedepartmenthistoryId] = Reads[EmployeedepartmenthistoryId](json => JsResult.fromTry(
-      Try(
-        EmployeedepartmenthistoryId(
-          businessentityid = json.\("businessentityid").as(summon[Reads[BusinessentityId]]),
-          startdate = json.\("startdate").as(summon[Reads[TypoLocalDate]]),
-          departmentid = json.\("departmentid").as(summon[Reads[DepartmentId]]),
-          shiftid = json.\("shiftid").as(summon[Reads[ShiftId]])
+  given reads: Reads[EmployeedepartmenthistoryId] = {
+    Reads[EmployeedepartmenthistoryId](json => JsResult.fromTry(
+        Try(
+          EmployeedepartmenthistoryId(
+            businessentityid = json.\("businessentityid").as(BusinessentityId.reads),
+            startdate = json.\("startdate").as(TypoLocalDate.reads),
+            departmentid = json.\("departmentid").as(DepartmentId.reads),
+            shiftid = json.\("shiftid").as(ShiftId.reads)
+          )
         )
-      )
-    ),
-  )
-  given writes: OWrites[EmployeedepartmenthistoryId] = OWrites[EmployeedepartmenthistoryId](o =>
-    new JsObject(ListMap[String, JsValue](
-      "businessentityid" -> summon[Writes[BusinessentityId]].writes(o.businessentityid),
-      "startdate" -> summon[Writes[TypoLocalDate]].writes(o.startdate),
-      "departmentid" -> summon[Writes[DepartmentId]].writes(o.departmentid),
-      "shiftid" -> summon[Writes[ShiftId]].writes(o.shiftid)
-    ))
-  )
+      ),
+    )
+  }
+
+  given writes: OWrites[EmployeedepartmenthistoryId] = {
+    OWrites[EmployeedepartmenthistoryId](o =>
+      new JsObject(ListMap[String, JsValue](
+        "businessentityid" -> BusinessentityId.writes.writes(o.businessentityid),
+        "startdate" -> TypoLocalDate.writes.writes(o.startdate),
+        "departmentid" -> DepartmentId.writes.writes(o.departmentid),
+        "shiftid" -> ShiftId.writes.writes(o.shiftid)
+      ))
+    )
+  }
 }

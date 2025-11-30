@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package humanresources
-package employeepayhistory
+package adventureworks.humanresources.employeepayhistory
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.person.businessentity.BusinessentityId
@@ -17,8 +15,9 @@ case class EmployeepayhistoryId(
   businessentityid: BusinessentityId,
   ratechangedate: TypoLocalDateTime
 )
+
 object EmployeepayhistoryId {
   given decoder: Decoder[EmployeepayhistoryId] = Decoder.forProduct2[EmployeepayhistoryId, BusinessentityId, TypoLocalDateTime]("businessentityid", "ratechangedate")(EmployeepayhistoryId.apply)(using BusinessentityId.decoder, TypoLocalDateTime.decoder)
+
   given encoder: Encoder[EmployeepayhistoryId] = Encoder.forProduct2[EmployeepayhistoryId, BusinessentityId, TypoLocalDateTime]("businessentityid", "ratechangedate")(x => (x.businessentityid, x.ratechangedate))(using BusinessentityId.encoder, TypoLocalDateTime.encoder)
-  given ordering(using O0: Ordering[TypoLocalDateTime]): Ordering[EmployeepayhistoryId] = Ordering.by(x => (x.businessentityid, x.ratechangedate))
 }

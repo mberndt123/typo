@@ -3,11 +3,9 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN
  */
-package testdb
-package hardcoded
-package myschema
-package football_club
+package testdb.hardcoded.myschema.football_club
 
+import testdb.hardcoded.Text
 import typo.dsl.Bijection
 import typo.dsl.PGType
 import zio.jdbc.JdbcDecoder
@@ -17,21 +15,33 @@ import zio.json.JsonDecoder
 import zio.json.JsonEncoder
 
 /** Type for the primary key of table `myschema.football_club` */
-case class FootballClubId(value: Long) extends AnyVal
+case class FootballClubId(value: Long) extends scala.AnyVal
+
 object FootballClubId {
   given arrayJdbcDecoder: JdbcDecoder[Array[FootballClubId]] = testdb.hardcoded.LongArrayDecoder.map(_.map(FootballClubId.apply))
+
   given arrayJdbcEncoder: JdbcEncoder[Array[FootballClubId]] = testdb.hardcoded.LongArrayEncoder.contramap(_.map(_.value))
+
   given arraySetter: Setter[Array[FootballClubId]] = testdb.hardcoded.LongArraySetter.contramap(_.map(_.value))
-  given bijection: Bijection[FootballClubId, Long] = Bijection[FootballClubId, Long](_.value)(FootballClubId.apply)
+
+  given bijection: Bijection[FootballClubId, Long] = Bijection.apply[FootballClubId, Long](_.value)(FootballClubId.apply)
+
   given jdbcDecoder: JdbcDecoder[FootballClubId] = JdbcDecoder.longDecoder.map(FootballClubId.apply)
+
   given jdbcEncoder: JdbcEncoder[FootballClubId] = JdbcEncoder.longEncoder.contramap(_.value)
+
   given jsonDecoder: JsonDecoder[FootballClubId] = JsonDecoder.long.map(FootballClubId.apply)
+
   given jsonEncoder: JsonEncoder[FootballClubId] = JsonEncoder.long.contramap(_.value)
-  given ordering: Ordering[FootballClubId] = Ordering.by(_.value)
-  given pgType: PGType[FootballClubId] = PGType.PGTypeLong.as
-  given setter: Setter[FootballClubId] = Setter.longSetter.contramap(_.value)
-  given text: Text[FootballClubId] = new Text[FootballClubId] {
-    override def unsafeEncode(v: FootballClubId, sb: StringBuilder): Unit = Text.longInstance.unsafeEncode(v.value, sb)
-    override def unsafeArrayEncode(v: FootballClubId, sb: StringBuilder): Unit = Text.longInstance.unsafeArrayEncode(v.value, sb)
+
+  given pgText: Text[FootballClubId] = {
+    new Text[FootballClubId] {
+      override def unsafeEncode(v: FootballClubId, sb: StringBuilder): Unit = Text.longInstance.unsafeEncode(v.value, sb)
+      override def unsafeArrayEncode(v: FootballClubId, sb: StringBuilder): Unit = Text.longInstance.unsafeArrayEncode(v.value, sb)
+    }
   }
+
+  given pgType: PGType[FootballClubId] = PGType.PGTypeLong.as
+
+  given setter: Setter[FootballClubId] = Setter.longSetter.contramap(_.value)
 }

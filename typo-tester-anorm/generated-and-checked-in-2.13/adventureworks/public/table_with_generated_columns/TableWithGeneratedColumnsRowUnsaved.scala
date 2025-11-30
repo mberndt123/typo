@@ -3,10 +3,9 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package table_with_generated_columns
+package adventureworks.public.table_with_generated_columns
 
+import adventureworks.Text
 import play.api.libs.json.JsObject
 import play.api.libs.json.JsResult
 import play.api.libs.json.JsValue
@@ -16,30 +15,33 @@ import scala.collection.immutable.ListMap
 import scala.util.Try
 
 /** This class corresponds to a row in table `public.table-with-generated-columns` which has not been persisted yet */
-case class TableWithGeneratedColumnsRowUnsaved(
-  name: TableWithGeneratedColumnsId
-) {
-  def toRow(nameTypeAlwaysDefault: => String): TableWithGeneratedColumnsRow =
-    TableWithGeneratedColumnsRow(
-      name = name,
-      nameTypeAlways = nameTypeAlwaysDefault
-    )
+case class TableWithGeneratedColumnsRowUnsaved(name: TableWithGeneratedColumnsId) {
+  def toRow(nameTypeAlwaysDefault: => String): TableWithGeneratedColumnsRow = new TableWithGeneratedColumnsRow(name = name, nameTypeAlways = nameTypeAlwaysDefault)
 }
+
 object TableWithGeneratedColumnsRowUnsaved {
-  implicit lazy val reads: Reads[TableWithGeneratedColumnsRowUnsaved] = Reads[TableWithGeneratedColumnsRowUnsaved](json => JsResult.fromTry(
-      Try(
-        TableWithGeneratedColumnsRowUnsaved(
-          name = json.\("name").as(TableWithGeneratedColumnsId.reads)
-        )
-      )
-    ),
-  )
-  implicit lazy val text: Text[TableWithGeneratedColumnsRowUnsaved] = Text.instance[TableWithGeneratedColumnsRowUnsaved]{ (row, sb) =>
-    TableWithGeneratedColumnsId.text.unsafeEncode(row.name, sb)
+  implicit lazy val pgText: Text[TableWithGeneratedColumnsRowUnsaved] = {
+    Text.instance[TableWithGeneratedColumnsRowUnsaved]{ (row, sb) =>
+      TableWithGeneratedColumnsId.pgText.unsafeEncode(row.name, sb)
+    }
   }
-  implicit lazy val writes: OWrites[TableWithGeneratedColumnsRowUnsaved] = OWrites[TableWithGeneratedColumnsRowUnsaved](o =>
-    new JsObject(ListMap[String, JsValue](
-      "name" -> TableWithGeneratedColumnsId.writes.writes(o.name)
-    ))
-  )
+
+  implicit lazy val reads: Reads[TableWithGeneratedColumnsRowUnsaved] = {
+    Reads[TableWithGeneratedColumnsRowUnsaved](json => JsResult.fromTry(
+        Try(
+          TableWithGeneratedColumnsRowUnsaved(
+            name = json.\("name").as(TableWithGeneratedColumnsId.reads)
+          )
+        )
+      ),
+    )
+  }
+
+  implicit lazy val writes: OWrites[TableWithGeneratedColumnsRowUnsaved] = {
+    OWrites[TableWithGeneratedColumnsRowUnsaved](o =>
+      new JsObject(ListMap[String, JsValue](
+        "name" -> TableWithGeneratedColumnsId.writes.writes(o.name)
+      ))
+    )
+  }
 }

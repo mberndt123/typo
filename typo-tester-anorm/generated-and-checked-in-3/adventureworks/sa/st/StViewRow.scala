@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package sa
-package st
+package adventureworks.sa.st
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.customtypes.TypoUUID
@@ -26,79 +24,87 @@ import scala.util.Try
 
 /** View: sa.st */
 case class StViewRow(
-  /** Points to [[sales.salesterritory.SalesterritoryRow.territoryid]] */
+  /** Points to [[adventureworks.sales.salesterritory.SalesterritoryRow.territoryid]] */
   id: SalesterritoryId,
-  /** Points to [[sales.salesterritory.SalesterritoryRow.territoryid]] */
+  /** Points to [[adventureworks.sales.salesterritory.SalesterritoryRow.territoryid]] */
   territoryid: SalesterritoryId,
-  /** Points to [[sales.salesterritory.SalesterritoryRow.name]] */
+  /** Points to [[adventureworks.sales.salesterritory.SalesterritoryRow.name]] */
   name: Name,
-  /** Points to [[sales.salesterritory.SalesterritoryRow.countryregioncode]] */
+  /** Points to [[adventureworks.sales.salesterritory.SalesterritoryRow.countryregioncode]] */
   countryregioncode: CountryregionId,
-  /** Points to [[sales.salesterritory.SalesterritoryRow.group]] */
+  /** Points to [[adventureworks.sales.salesterritory.SalesterritoryRow.group]] */
   group: /* max 50 chars */ String,
-  /** Points to [[sales.salesterritory.SalesterritoryRow.salesytd]] */
+  /** Points to [[adventureworks.sales.salesterritory.SalesterritoryRow.salesytd]] */
   salesytd: BigDecimal,
-  /** Points to [[sales.salesterritory.SalesterritoryRow.saleslastyear]] */
+  /** Points to [[adventureworks.sales.salesterritory.SalesterritoryRow.saleslastyear]] */
   saleslastyear: BigDecimal,
-  /** Points to [[sales.salesterritory.SalesterritoryRow.costytd]] */
+  /** Points to [[adventureworks.sales.salesterritory.SalesterritoryRow.costytd]] */
   costytd: BigDecimal,
-  /** Points to [[sales.salesterritory.SalesterritoryRow.costlastyear]] */
+  /** Points to [[adventureworks.sales.salesterritory.SalesterritoryRow.costlastyear]] */
   costlastyear: BigDecimal,
-  /** Points to [[sales.salesterritory.SalesterritoryRow.rowguid]] */
+  /** Points to [[adventureworks.sales.salesterritory.SalesterritoryRow.rowguid]] */
   rowguid: TypoUUID,
-  /** Points to [[sales.salesterritory.SalesterritoryRow.modifieddate]] */
+  /** Points to [[adventureworks.sales.salesterritory.SalesterritoryRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object StViewRow {
-  given reads: Reads[StViewRow] = Reads[StViewRow](json => JsResult.fromTry(
-      Try(
-        StViewRow(
-          id = json.\("id").as(SalesterritoryId.reads),
-          territoryid = json.\("territoryid").as(SalesterritoryId.reads),
-          name = json.\("name").as(Name.reads),
-          countryregioncode = json.\("countryregioncode").as(CountryregionId.reads),
-          group = json.\("group").as(Reads.StringReads),
-          salesytd = json.\("salesytd").as(Reads.bigDecReads),
-          saleslastyear = json.\("saleslastyear").as(Reads.bigDecReads),
-          costytd = json.\("costytd").as(Reads.bigDecReads),
-          costlastyear = json.\("costlastyear").as(Reads.bigDecReads),
-          rowguid = json.\("rowguid").as(TypoUUID.reads),
-          modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+  given reads: Reads[StViewRow] = {
+    Reads[StViewRow](json => JsResult.fromTry(
+        Try(
+          StViewRow(
+            id = json.\("id").as(SalesterritoryId.reads),
+            territoryid = json.\("territoryid").as(SalesterritoryId.reads),
+            name = json.\("name").as(Name.reads),
+            countryregioncode = json.\("countryregioncode").as(CountryregionId.reads),
+            group = json.\("group").as(Reads.StringReads),
+            salesytd = json.\("salesytd").as(Reads.bigDecReads),
+            saleslastyear = json.\("saleslastyear").as(Reads.bigDecReads),
+            costytd = json.\("costytd").as(Reads.bigDecReads),
+            costlastyear = json.\("costlastyear").as(Reads.bigDecReads),
+            rowguid = json.\("rowguid").as(TypoUUID.reads),
+            modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[StViewRow] = RowParser[StViewRow] { row =>
-    Success(
-      StViewRow(
-        id = row(idx + 0)(using SalesterritoryId.column),
-        territoryid = row(idx + 1)(using SalesterritoryId.column),
-        name = row(idx + 2)(using Name.column),
-        countryregioncode = row(idx + 3)(using CountryregionId.column),
-        group = row(idx + 4)(using Column.columnToString),
-        salesytd = row(idx + 5)(using Column.columnToScalaBigDecimal),
-        saleslastyear = row(idx + 6)(using Column.columnToScalaBigDecimal),
-        costytd = row(idx + 7)(using Column.columnToScalaBigDecimal),
-        costlastyear = row(idx + 8)(using Column.columnToScalaBigDecimal),
-        rowguid = row(idx + 9)(using TypoUUID.column),
-        modifieddate = row(idx + 10)(using TypoLocalDateTime.column)
-      )
+      ),
     )
   }
-  given writes: OWrites[StViewRow] = OWrites[StViewRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "id" -> SalesterritoryId.writes.writes(o.id),
-      "territoryid" -> SalesterritoryId.writes.writes(o.territoryid),
-      "name" -> Name.writes.writes(o.name),
-      "countryregioncode" -> CountryregionId.writes.writes(o.countryregioncode),
-      "group" -> Writes.StringWrites.writes(o.group),
-      "salesytd" -> Writes.BigDecimalWrites.writes(o.salesytd),
-      "saleslastyear" -> Writes.BigDecimalWrites.writes(o.saleslastyear),
-      "costytd" -> Writes.BigDecimalWrites.writes(o.costytd),
-      "costlastyear" -> Writes.BigDecimalWrites.writes(o.costlastyear),
-      "rowguid" -> TypoUUID.writes.writes(o.rowguid),
-      "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
-    ))
-  )
+
+  def rowParser(idx: Int): RowParser[StViewRow] = {
+    RowParser[StViewRow] { row =>
+      Success(
+        StViewRow(
+          id = row(idx + 0)(using SalesterritoryId.column),
+          territoryid = row(idx + 1)(using SalesterritoryId.column),
+          name = row(idx + 2)(using Name.column),
+          countryregioncode = row(idx + 3)(using CountryregionId.column),
+          group = row(idx + 4)(using Column.columnToString),
+          salesytd = row(idx + 5)(using Column.columnToScalaBigDecimal),
+          saleslastyear = row(idx + 6)(using Column.columnToScalaBigDecimal),
+          costytd = row(idx + 7)(using Column.columnToScalaBigDecimal),
+          costlastyear = row(idx + 8)(using Column.columnToScalaBigDecimal),
+          rowguid = row(idx + 9)(using TypoUUID.column),
+          modifieddate = row(idx + 10)(using TypoLocalDateTime.column)
+        )
+      )
+    }
+  }
+
+  given writes: OWrites[StViewRow] = {
+    OWrites[StViewRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "id" -> SalesterritoryId.writes.writes(o.id),
+        "territoryid" -> SalesterritoryId.writes.writes(o.territoryid),
+        "name" -> Name.writes.writes(o.name),
+        "countryregioncode" -> CountryregionId.writes.writes(o.countryregioncode),
+        "group" -> Writes.StringWrites.writes(o.group),
+        "salesytd" -> Writes.BigDecimalWrites.writes(o.salesytd),
+        "saleslastyear" -> Writes.BigDecimalWrites.writes(o.saleslastyear),
+        "costytd" -> Writes.BigDecimalWrites.writes(o.costytd),
+        "costlastyear" -> Writes.BigDecimalWrites.writes(o.costlastyear),
+        "rowguid" -> TypoUUID.writes.writes(o.rowguid),
+        "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
+      ))
+    )
+  }
 }

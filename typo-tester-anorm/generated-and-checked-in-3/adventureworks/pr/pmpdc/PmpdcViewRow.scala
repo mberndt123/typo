@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package pr
-package pmpdc
+package adventureworks.pr.pmpdc
 
 import adventureworks.customtypes.TypoLocalDateTime
 import adventureworks.production.culture.CultureId
@@ -23,44 +21,52 @@ import scala.util.Try
 
 /** View: pr.pmpdc */
 case class PmpdcViewRow(
-  /** Points to [[production.productmodelproductdescriptionculture.ProductmodelproductdescriptioncultureRow.productmodelid]] */
+  /** Points to [[adventureworks.production.productmodelproductdescriptionculture.ProductmodelproductdescriptioncultureRow.productmodelid]] */
   productmodelid: ProductmodelId,
-  /** Points to [[production.productmodelproductdescriptionculture.ProductmodelproductdescriptioncultureRow.productdescriptionid]] */
+  /** Points to [[adventureworks.production.productmodelproductdescriptionculture.ProductmodelproductdescriptioncultureRow.productdescriptionid]] */
   productdescriptionid: ProductdescriptionId,
-  /** Points to [[production.productmodelproductdescriptionculture.ProductmodelproductdescriptioncultureRow.cultureid]] */
+  /** Points to [[adventureworks.production.productmodelproductdescriptionculture.ProductmodelproductdescriptioncultureRow.cultureid]] */
   cultureid: CultureId,
-  /** Points to [[production.productmodelproductdescriptionculture.ProductmodelproductdescriptioncultureRow.modifieddate]] */
+  /** Points to [[adventureworks.production.productmodelproductdescriptionculture.ProductmodelproductdescriptioncultureRow.modifieddate]] */
   modifieddate: TypoLocalDateTime
 )
 
 object PmpdcViewRow {
-  given reads: Reads[PmpdcViewRow] = Reads[PmpdcViewRow](json => JsResult.fromTry(
-      Try(
-        PmpdcViewRow(
-          productmodelid = json.\("productmodelid").as(ProductmodelId.reads),
-          productdescriptionid = json.\("productdescriptionid").as(ProductdescriptionId.reads),
-          cultureid = json.\("cultureid").as(CultureId.reads),
-          modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+  given reads: Reads[PmpdcViewRow] = {
+    Reads[PmpdcViewRow](json => JsResult.fromTry(
+        Try(
+          PmpdcViewRow(
+            productmodelid = json.\("productmodelid").as(ProductmodelId.reads),
+            productdescriptionid = json.\("productdescriptionid").as(ProductdescriptionId.reads),
+            cultureid = json.\("cultureid").as(CultureId.reads),
+            modifieddate = json.\("modifieddate").as(TypoLocalDateTime.reads)
+          )
         )
-      )
-    ),
-  )
-  def rowParser(idx: Int): RowParser[PmpdcViewRow] = RowParser[PmpdcViewRow] { row =>
-    Success(
-      PmpdcViewRow(
-        productmodelid = row(idx + 0)(using ProductmodelId.column),
-        productdescriptionid = row(idx + 1)(using ProductdescriptionId.column),
-        cultureid = row(idx + 2)(using CultureId.column),
-        modifieddate = row(idx + 3)(using TypoLocalDateTime.column)
-      )
+      ),
     )
   }
-  given writes: OWrites[PmpdcViewRow] = OWrites[PmpdcViewRow](o =>
-    new JsObject(ListMap[String, JsValue](
-      "productmodelid" -> ProductmodelId.writes.writes(o.productmodelid),
-      "productdescriptionid" -> ProductdescriptionId.writes.writes(o.productdescriptionid),
-      "cultureid" -> CultureId.writes.writes(o.cultureid),
-      "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
-    ))
-  )
+
+  def rowParser(idx: Int): RowParser[PmpdcViewRow] = {
+    RowParser[PmpdcViewRow] { row =>
+      Success(
+        PmpdcViewRow(
+          productmodelid = row(idx + 0)(using ProductmodelId.column),
+          productdescriptionid = row(idx + 1)(using ProductdescriptionId.column),
+          cultureid = row(idx + 2)(using CultureId.column),
+          modifieddate = row(idx + 3)(using TypoLocalDateTime.column)
+        )
+      )
+    }
+  }
+
+  given writes: OWrites[PmpdcViewRow] = {
+    OWrites[PmpdcViewRow](o =>
+      new JsObject(ListMap[String, JsValue](
+        "productmodelid" -> ProductmodelId.writes.writes(o.productmodelid),
+        "productdescriptionid" -> ProductdescriptionId.writes.writes(o.productdescriptionid),
+        "cultureid" -> CultureId.writes.writes(o.cultureid),
+        "modifieddate" -> TypoLocalDateTime.writes.writes(o.modifieddate)
+      ))
+    )
+  }
 }

@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package public
-package test_organisasjon
+package adventureworks.public.test_organisasjon
 
 import doobie.postgres.Text
 import doobie.util.Read
@@ -14,28 +12,37 @@ import io.circe.Decoder
 import io.circe.Encoder
 
 /** Table: public.test_organisasjon
-    Primary key: organisasjonskode */
-case class TestOrganisasjonRow(
-  organisasjonskode: TestOrganisasjonId
-){
-   val id = organisasjonskode
- }
+ * Primary key: organisasjonskode
+ */
+case class TestOrganisasjonRow(organisasjonskode: TestOrganisasjonId) {
+  def id: TestOrganisasjonId = organisasjonskode
+}
 
 object TestOrganisasjonRow {
   implicit lazy val decoder: Decoder[TestOrganisasjonRow] = Decoder.forProduct1[TestOrganisasjonRow, TestOrganisasjonId]("organisasjonskode")(TestOrganisasjonRow.apply)(TestOrganisasjonId.decoder)
+
   implicit lazy val encoder: Encoder[TestOrganisasjonRow] = Encoder.forProduct1[TestOrganisasjonRow, TestOrganisasjonId]("organisasjonskode")(x => (x.organisasjonskode))(TestOrganisasjonId.encoder)
-  implicit lazy val read: Read[TestOrganisasjonRow] = new Read.CompositeOfInstances(Array(
-    new Read.Single(TestOrganisasjonId.get).asInstanceOf[Read[Any]]
-  ))(scala.reflect.ClassTag.Any).map { arr =>
-    TestOrganisasjonRow(
-      organisasjonskode = arr(0).asInstanceOf[TestOrganisasjonId]
+
+  implicit lazy val pgText: Text[TestOrganisasjonRow] = {
+    Text.instance[TestOrganisasjonRow]{ (row, sb) =>
+      TestOrganisasjonId.pgText.unsafeEncode(row.organisasjonskode, sb)
+    }
+  }
+
+  implicit lazy val read: Read[TestOrganisasjonRow] = {
+    new Read.CompositeOfInstances(Array(
+      new Read.Single(TestOrganisasjonId.get).asInstanceOf[Read[Any]]
+    ))(scala.reflect.ClassTag.Any).map { arr =>
+      TestOrganisasjonRow(
+        organisasjonskode = arr(0).asInstanceOf[TestOrganisasjonId]
+      )
+    }
+  }
+
+  implicit lazy val write: Write[TestOrganisasjonRow] = {
+    new Write.Composite[TestOrganisasjonRow](
+      List(new Write.Single(TestOrganisasjonId.put)),
+      a => List(a.organisasjonskode)
     )
   }
-  implicit lazy val text: Text[TestOrganisasjonRow] = Text.instance[TestOrganisasjonRow]{ (row, sb) =>
-    TestOrganisasjonId.text.unsafeEncode(row.organisasjonskode, sb)
-  }
-  implicit lazy val write: Write[TestOrganisasjonRow] = new Write.Composite[TestOrganisasjonRow](
-    List(new Write.Single(TestOrganisasjonId.put)),
-    a => List(a.organisasjonskode)
-  )
 }

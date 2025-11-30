@@ -3,9 +3,7 @@
  *
  * IF YOU CHANGE THIS FILE YOUR CHANGES WILL BE OVERWRITTEN.
  */
-package adventureworks
-package person
-package businessentitycontact
+package adventureworks.person.businessentitycontact
 
 import adventureworks.person.businessentity.BusinessentityId
 import adventureworks.person.contacttype.ContacttypeId
@@ -20,28 +18,33 @@ case class BusinessentitycontactId(
   personid: BusinessentityId,
   contacttypeid: ContacttypeId
 )
+
 object BusinessentitycontactId {
-  given jsonDecoder: JsonDecoder[BusinessentitycontactId] = JsonDecoder[Json.Obj].mapOrFail { jsonObj =>
-    val businessentityid = jsonObj.get("businessentityid").toRight("Missing field 'businessentityid'").flatMap(_.as(using BusinessentityId.jsonDecoder))
-    val personid = jsonObj.get("personid").toRight("Missing field 'personid'").flatMap(_.as(using BusinessentityId.jsonDecoder))
-    val contacttypeid = jsonObj.get("contacttypeid").toRight("Missing field 'contacttypeid'").flatMap(_.as(using ContacttypeId.jsonDecoder))
-    if (businessentityid.isRight && personid.isRight && contacttypeid.isRight)
-      Right(BusinessentitycontactId(businessentityid = businessentityid.toOption.get, personid = personid.toOption.get, contacttypeid = contacttypeid.toOption.get))
-    else Left(List[Either[String, Any]](businessentityid, personid, contacttypeid).flatMap(_.left.toOption).mkString(", "))
-  }
-  given jsonEncoder: JsonEncoder[BusinessentitycontactId] = new JsonEncoder[BusinessentitycontactId] {
-    override def unsafeEncode(a: BusinessentitycontactId, indent: Option[Int], out: Write): Unit = {
-      out.write("{")
-      out.write(""""businessentityid":""")
-      BusinessentityId.jsonEncoder.unsafeEncode(a.businessentityid, indent, out)
-      out.write(",")
-      out.write(""""personid":""")
-      BusinessentityId.jsonEncoder.unsafeEncode(a.personid, indent, out)
-      out.write(",")
-      out.write(""""contacttypeid":""")
-      ContacttypeId.jsonEncoder.unsafeEncode(a.contacttypeid, indent, out)
-      out.write("}")
+  given jsonDecoder: JsonDecoder[BusinessentitycontactId] = {
+    JsonDecoder[Json.Obj].mapOrFail { jsonObj =>
+      val businessentityid = jsonObj.get("businessentityid").toRight("Missing field 'businessentityid'").flatMap(_.as(using BusinessentityId.jsonDecoder))
+      val personid = jsonObj.get("personid").toRight("Missing field 'personid'").flatMap(_.as(using BusinessentityId.jsonDecoder))
+      val contacttypeid = jsonObj.get("contacttypeid").toRight("Missing field 'contacttypeid'").flatMap(_.as(using ContacttypeId.jsonDecoder))
+      if (businessentityid.isRight && personid.isRight && contacttypeid.isRight)
+        Right(BusinessentitycontactId(businessentityid = businessentityid.toOption.get, personid = personid.toOption.get, contacttypeid = contacttypeid.toOption.get))
+      else Left(List[Either[String, Any]](businessentityid, personid, contacttypeid).flatMap(_.left.toOption).mkString(", "))
     }
   }
-  given ordering: Ordering[BusinessentitycontactId] = Ordering.by(x => (x.businessentityid, x.personid, x.contacttypeid))
+
+  given jsonEncoder: JsonEncoder[BusinessentitycontactId] = {
+    new JsonEncoder[BusinessentitycontactId] {
+      override def unsafeEncode(a: BusinessentitycontactId, indent: Option[Int], out: Write): Unit = {
+        out.write("{")
+        out.write(""""businessentityid":""")
+        BusinessentityId.jsonEncoder.unsafeEncode(a.businessentityid, indent, out)
+        out.write(",")
+        out.write(""""personid":""")
+        BusinessentityId.jsonEncoder.unsafeEncode(a.personid, indent, out)
+        out.write(",")
+        out.write(""""contacttypeid":""")
+        ContacttypeId.jsonEncoder.unsafeEncode(a.contacttypeid, indent, out)
+        out.write("}")
+      }
+    }
+  }
 }
